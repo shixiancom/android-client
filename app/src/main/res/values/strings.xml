@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">AndroidClient</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world">实现客户端!</string>
     <string name="action_settings">Settings</string>
 
 </resources>
