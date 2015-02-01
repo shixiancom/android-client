@@ -1,0 +1,4 @@
+<resources>
+    <!-- 实现主色调 -->
+    <color name="common_main_color">#0088CC</color>
+</resources>
