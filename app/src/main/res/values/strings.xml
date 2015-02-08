@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">实现</string>
     <string name="activity_news_label">News</string>
+    <string name="weibosdk_demo_toast_auth_failed">认证失败</string>
+    <string name="weibosdk_demo_toast_auth_canceled">取消认证</string>
 </resources>
