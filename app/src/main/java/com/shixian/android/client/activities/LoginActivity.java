@@ -26,6 +26,13 @@ public class LoginActivity extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        init();
+
+        }
+
+    private void init() {
+
         AccessTokenKeeper.clear(this);
         mAccessToken=AccessTokenKeeper.readAccessToken(LoginActivity.this);
         Toast.makeText(this,mAccessToken.getToken(),Toast.LENGTH_LONG).show();
@@ -33,23 +40,20 @@ public class LoginActivity extends Activity
         if(mAccessToken!=null&&mAccessToken.isSessionValid()){
             //这里还要验证token是否可用
             LoginUtil.validationToken(LoginActivity.this,mAccessToken);
-
         }else{
             setContentView(R.layout.activity_login);
             Button main_login_btn= (Button) findViewById(R.id.main_login_btn);
             main_login_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                        LoginUtil.getToken(LoginActivity.this, new AuthListener());
+                    LoginUtil.getToken(LoginActivity.this, new AuthListener());
                 }
             });
 
         }
 
 
-
-
-        //大哥我先把这里注释掉了 到时候再打开阿
+    //大哥我先把这里注释掉了 到时候再打开阿
       /*  new Handler().postDelayed(new Runnable()
         {
             @Override
@@ -77,7 +81,6 @@ public class LoginActivity extends Activity
                 AccessTokenKeeper.writeAccessToken(LoginActivity.this, mAccessToken);
                 CommonUtil.logDebug(TAG,mAccessToken.getToken());
                 //从服务器请求cookie？？
-                //TODO
                 LoginUtil.validationToken(LoginActivity.this,mAccessToken);
 
 

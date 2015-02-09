@@ -9,7 +9,7 @@ import com.shixian.android.client.contants.AppContants;
  */
 public class CommonUtil {
 
-    public static void logUtil(String tag,String msg)
+    public static void logDebug(String tag,String msg)
     {
         if(AppContants.DEBUG)
             Log.d(tag,msg);

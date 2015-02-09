@@ -11,8 +11,9 @@ public class ApiUtils {
 
     public static AsyncHttpClient client = new AsyncHttpClient();
 
+
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler handler) {
-        client.get(url, params, handler);
+           client.get(url, params, handler);
     }
 
     public static void post(String url, RequestParams params, AsyncHttpResponseHandler handler) {
