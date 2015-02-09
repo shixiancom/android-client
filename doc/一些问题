@@ -1,0 +1,16 @@
+／／比如说登陆的时候　为什么不直接返回user信息　还要单开一次请求　这次请求时放在登陆界面做好　还是放在主界面需要显示数据的时候好？
+我的cookie :  _get_real_session_=BAh7B0kiD3Nlc3Npb25faWQGOgZFVEkiJWM0MmY0YzcxNWY5OWIxYzQ5ODQ1OTZiMmY0NWJkODkxBjsAVEkiGXdhcmRlbi51c2VyLnVzZXIua2V5BjsAVFsHWwZpAtM0SSIABjsAVA%3D%3D--c4ba08c51818a432c4a6a8f289ba4c214e83d883; domain=.www.shixian.com; path=/; expires=Mon, 16-Feb-2015 07:29:30 GMT; HttpOnly
+
+Set-Cookie: _get_real_session_=BAh7B0kiD3Nlc3Npb25faWQGOgZFVEkiJWM0MmY0YzcxNWY5OWIxYzQ5ODQ1OTZiMmY0NWJkODkxBjsAVEkiGXdhcmRlbi51c2VyLnVzZXIua2V5BjsAVFsHWwZpAtM0SSIABjsAVA%3D%3D--c4ba08c51818a432c4a6a8f289ba4c214e83d883; domain=.www.shixian.com; path=/; expires=Mon, 16-Feb-2015 07:29:30 GMT; HttpOnly
+
+Set-Cookie: _get_real_session_=BAh7B0kiD3Nlc3Npb25faWQGOgZFVEkiJWUwYWI2NTAzYTBmY2QyOTc5MDNjYmNkYmZiMTQxOWFmBjsAVEkiGXdhcmRlbi51c2VyLnVzZXIua2V5BjsAVFsHWwZpAtM0SSIABjsAVA%3D%3D--db01fdf51f87f9eccda3d9e92e4dbb34887c1274; domain=.www.shixian.com; path=/; expires=Mon, 16-Feb-2015 08:04:41 GMT; HttpOnly
+
+//搞定cookie了  用了一下午  无语 要在header中写的cookie 而不是set-cookie
+
+查看自己信息 获取的数据
+{"avatar":{"url":"/upload/user/avatar/13523/a96f600cd483ef1ed5594b197f3903b7","small":{"url":"/upload/user/avatar/13523/small_a96f600cd483ef1ed5594b197f3903b7"},"tiny":{"url":"/upload/user/avatar/13523/tiny_a96f600cd483ef1ed5594b197f3903b7"}},"ban":null,"created_at":"2015-02-02T17:15:38+08:00","description":"","email":"806355705@qq.com","email_unsubscribe":null,"feeds_count":1,"has_followed":false,"id":13523,"invitation_token":null,"is_admin":false,"last_seen":"2015-02-09T18:07:44+08:00","status":{"feeds_count":1,"followed_projects_count":6,"followers_count":2,"followings_count":1},"tag_list":"android","updated_at":"2015-02-09T18:07:44+08:00","username":"\u5417\u5566\u5566\u5566\u5566"}
+02-09 18:09:57.762  17058-17058/com.shixian.android.client D/MainActivity﹕ {"avatar":{"url":"/upload/user/avatar/13523/a96f600cd483ef1ed5594b197f3903b7","small":{"url":"/upload/user/avatar/13523/small_a96f600cd483ef1ed5594b197f3903b7"},"tiny":{"url":"/upload/user/avatar/13523/tiny_a96f600cd483ef1ed5594b197f3903b7"}},"ban":null,"created_at":"2015-02-02T17:15:38+08:00","description":"","email":"806355705@qq.com","email_unsubscribe":null,"feeds_count":1,"has_followed":false,"id":13523,"invitation_token":null,"is_admin":false,"last_seen":"2015-02-09T18:07:44+08:00","status":{"feeds_count":1,"followed_projects_count":6,"followers_count":2,"followings_count":1},"tag_list":"android","updated_at":"2015-02-09T18:07:44+08:00","username":"\u5417\u5566\u5566\u5566\u5566"}
+02-09 18:09:58.747  17058-17058/com.shixian.android.client D/MainActivity﹕ {"avatar":{"url":"/upload/user/avatar/13523/a96f600cd483ef1ed5594b197f3903b7","small":{"url":"/upload/user/avatar/13523/small_a96f600cd483ef1ed5594b197f3903b7"},"tiny":{"url":"/upload/user/avatar/13523/tiny_a96f600cd483ef1ed5594b197f3903b7"}},"ban":null,"created_at":"2015-02-02T17:15:38+08:00","description":"","email":"806355705@qq.com","email_unsubscribe":null,"feeds_count":1,"has_followed":false,"id":13523,"invitation_token":null,"is_admin":false,"last_seen":"2015-02-09T18:07:44+08:00","status":{"feeds_count":1,"followed_projects_count":6,"followers_count":2,"followings_count":1},"tag_list":"android","updated_at":"2015-02-09T18:07:44+08:00","username":"\u5417\u5566\u5566\u5566\u5566"}
+
+
+//考虑加载图片的问题 要不要用线程池？

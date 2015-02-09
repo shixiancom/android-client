@@ -63,11 +63,12 @@
                     android:text="asd"/>
             </LinearLayout>
 
-            <ListView
+            <com.shixian.android.client.views.ParentListView
+                android:id="@+id/lv_menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
+            </com.shixian.android.client.views.ParentListView>
 
-            </ListView>
         </LinearLayout>
     </android.support.v4.widget.DrawerLayout>
 </LinearLayout>

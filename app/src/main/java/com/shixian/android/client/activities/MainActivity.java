@@ -2,6 +2,7 @@ package com.shixian.android.client.activities;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -12,6 +13,8 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,15 +26,22 @@ import com.shixian.android.client.R;
 import com.shixian.android.client.activities.fragment.NewsFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.engine.CommonEngine;
+import com.shixian.android.client.model.SimpleProject;
 import com.shixian.android.client.model.User;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
 import com.shixian.android.client.utils.SharedPerenceUtil;
+import com.shixian.android.client.views.ParentListView;
+import com.shixian.android.client.views.SubListView;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by doom on 15/2/2.
@@ -40,6 +50,18 @@ public class MainActivity extends ActionBarActivity {
     private String TAG = "MainActivity";
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
+
+    //抽屉里的子listView
+    private List<SimpleProject> projectList;
+    private ProjectAdapter projectAdapter;
+    private SubListView subListView;
+
+
+
+    //抽屉里的主ListView
+    private ParentListView lv_menu;
+
+
 
 
 
@@ -72,7 +94,9 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void initUserProjects() {
-        //获取用户项目
+        projectList=new ArrayList<>();
+
+                //获取用户项目
         ApiUtils.get(AppContants.URL_MY_PROJECT_INFO,null,new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
@@ -80,8 +104,29 @@ public class MainActivity extends ActionBarActivity {
                 if(!AppContants.errorMsg.equals(json))
                 {
                     Gson gson=new Gson();
+                    try {
+                        JSONArray array=new JSONArray(json);
+                        for(int j=0;j<array.length();j++)
+                        {
+                            SimpleProject sp=gson.fromJson(array.getString(j),SimpleProject.class);
+                            projectList.add(sp);
 
-                        //TODO
+                            if(projectAdapter==null)
+                            {
+                                projectAdapter=new ProjectAdapter();
+                                //TODO 给listView设置上 现在设置到主lv里面了 明天再改 //还需要做缓存
+                                lv_menu.setAdapter(projectAdapter);
+
+                            }else{
+                                projectAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    //TODO
                         //这里需要解析json数组  放在listView里面，先不写这里了 还有三个条目没写呢
 
 
@@ -199,6 +244,10 @@ public class MainActivity extends ActionBarActivity {
 
         iv_icon.setImageBitmap(BitmapFactory.decodeFile(getFilesDir().getAbsolutePath()+AppContants.USER_ICON_NAME));
 
+        lv_menu= (ParentListView) findViewById(R.id.lv_menu);
+
+        subListView=new SubListView(MainActivity.this);
+
     }
 
     private void addFragment() {
@@ -212,6 +261,97 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+
+
+    private class ProjectAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return projectList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return projectList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            View view;
+            ProjectHolder holder;
+            if(convertView==null)
+            {
+                view=View.inflate(MainActivity.this,R.layout.lv_project_item,null);
+                holder=new ProjectHolder();
+                holder.tv_title= (TextView) view.findViewById(R.id.tv_title);
+                view.setTag(holder);
+
+            }else{
+                view= convertView;
+                holder= (ProjectHolder) view.getTag();
+            }
+
+
+
+
+            holder.tv_title.setText(projectList.get(position).getTitle());
+
+            return view;
+        }
+    }
+
+
+    class ProjectHolder{
+        TextView tv_title;
+    }
+
+
+    class MenuAdapter extends BaseAdapter{
+
+        @Override
+        public int getCount() {
+            return 5;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            TextView tv=new TextView(MainActivity.this);
+            tv.setBackgroundColor(Color.BLUE);
+            switch (position)
+            {
+                case 0:
+
+                case 1:
+                case 2:
+
+                case 3:
+                   return tv;
+                case 4:
+                    return subListView;
+            }
+
+            return tv;
+
+        }
     }
 
 }
