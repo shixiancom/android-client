@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.shixian.android.client.R;
 import com.shixian.android.client.activities.MainActivity;
 import com.shixian.android.client.model.Message;
 import com.shixian.android.client.sina.Constants;
@@ -76,19 +77,17 @@ public class LoginUtil {
                         }
 
                     }
-
                     context.startActivity(new Intent(context, MainActivity.class));
                     context.finish();
                 } else {
                     Toast.makeText(context, msg.getValue(), Toast.LENGTH_LONG);
                 }
 
-
             }
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context, "连接服务器失败，请检查网络", Toast.LENGTH_LONG).show();
+                Toast.makeText(context,context.getResources().getString(R.string.check_net), Toast.LENGTH_LONG).show();
             }
         });
     }

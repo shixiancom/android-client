@@ -14,7 +14,24 @@ public interface AppContants {
      */
     String DOMAIN="http://www.shixian.com";
 
+    /**
+     * 获取自身信息url
+     */
     String URL_MY_INFO=DOMAIN+"/api/v1/users/me.json";
+    /**
+     * 获取项目信息url
+     */
+    String URL_MY_PROJECT_INFO=DOMAIN+"/api/v1/projects/me.json";
+
+
+
+
+    String errorMsg="{\"value\":\"error\"}";
+
+    /**
+     * 用户头像
+     */
+    String USER_ICON_NAME="usre_icon";
 
 
 

@@ -4,4 +4,6 @@
     <string name="activity_news_label">News</string>
     <string name="weibosdk_demo_toast_auth_failed">认证失败</string>
     <string name="weibosdk_demo_toast_auth_canceled">取消认证</string>
+    <string name="error">错误</string>
+    <string name="check_net">"连接服务器失败，请检查网络"</string>
 </resources>

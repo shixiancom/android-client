@@ -8,10 +8,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
+import com.shixian.android.client.model.User;
 import com.shixian.android.client.sina.AccessTokenKeeper;
 import com.shixian.android.client.utils.CommonUtil;
 import com.shixian.android.client.utils.LoginUtil;
+import com.shixian.android.client.utils.SharedPerenceUtil;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.exception.WeiboException;
@@ -33,7 +37,7 @@ public class LoginActivity extends Activity
 
     private void init() {
 
-        AccessTokenKeeper.clear(this);
+//        AccessTokenKeeper.clear(this);
         mAccessToken=AccessTokenKeeper.readAccessToken(LoginActivity.this);
         Toast.makeText(this,mAccessToken.getToken(),Toast.LENGTH_LONG).show();
         //不为null 并且可用
@@ -113,4 +117,15 @@ public class LoginActivity extends Activity
         }
     }
 
+
+    @Override
+    protected void onDestroy() {
+        String userJson= SharedPerenceUtil.getUserInfo(this);
+        if("".equals(userJson))
+        {
+            Global.user= new Gson().fromJson(userJson,User.class);
+        }
+
+        super.onDestroy();
+    }
 }

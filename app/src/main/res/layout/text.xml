@@ -26,12 +26,6 @@
                 app:popupTheme="@style/PopupMenuStyle">
             </android.support.v7.widget.Toolbar>
 
-            <FrameLayout
-                android:id="@+id/main_fragment_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </FrameLayout>
         </LinearLayout>
 
 
@@ -39,7 +33,7 @@
             android:layout_width="300dp"
             android:layout_height="match_parent"
             android:layout_gravity="left"
-            android:background="@android:color/transparent"
+            android:background="@android:color/white"
             android:orientation="vertical">
 
             <LinearLayout
@@ -77,4 +71,14 @@
             </ListView>
         </LinearLayout>
     </android.support.v4.widget.DrawerLayout>
+
+    <FrameLayout
+        android:id="@+id/main_fragment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+    </FrameLayout>
 </RelativeLayout>
