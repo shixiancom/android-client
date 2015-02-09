@@ -26,21 +26,28 @@ public class LoginActivity extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        AccessTokenKeeper.clear(this);
+        mAccessToken=AccessTokenKeeper.readAccessToken(LoginActivity.this);
+        Toast.makeText(this,mAccessToken.getToken(),Toast.LENGTH_LONG).show();
+        //不为null 并且可用
+        if(mAccessToken!=null&&mAccessToken.isSessionValid()){
+            //这里还要验证token是否可用
+            LoginUtil.validationToken(LoginActivity.this,mAccessToken);
 
-        Button main_login_btn= (Button) findViewById(R.id.main_login_btn);
-        main_login_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               mAccessToken=AccessTokenKeeper.readAccessToken(LoginActivity.this);
-                if(mAccessToken!=null&&!mAccessToken.isSessionValid())
-                    LoginUtil.getToken(LoginActivity.this, new AuthListener());
-                else{
-                    //说明token还没有过期
-                    CommonUtil.logUtil(TAG,mAccessToken.getToken());
+        }else{
+            setContentView(R.layout.activity_login);
+            Button main_login_btn= (Button) findViewById(R.id.main_login_btn);
+            main_login_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                        LoginUtil.getToken(LoginActivity.this, new AuthListener());
                 }
-            }
-        });
+            });
+
+        }
+
+
+
 
         //大哥我先把这里注释掉了 到时候再打开阿
       /*  new Handler().postDelayed(new Runnable()
@@ -62,10 +69,19 @@ public class LoginActivity extends Activity
         public void onComplete(Bundle values) {
             // 从 Bundle 中解析 Token
             mAccessToken = Oauth2AccessToken.parseAccessToken(values);
+
+
+
             if (mAccessToken.isSessionValid()) {
                 // 保存 Token 到 SharedPreferences
                 AccessTokenKeeper.writeAccessToken(LoginActivity.this, mAccessToken);
+                CommonUtil.logDebug(TAG,mAccessToken.getToken());
                 //从服务器请求cookie？？
+                //TODO
+                LoginUtil.validationToken(LoginActivity.this,mAccessToken);
+
+
+
 
             } else {
                 // 以下几种情况，您会收到 Code：
