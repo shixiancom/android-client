@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +60,7 @@ public class MainActivity extends ActionBarActivity {
 
 
     //抽屉里的主ListView
-    private ParentListView lv_menu;
+    private ListView lv_menu;
 
 
 
@@ -91,6 +92,16 @@ public class MainActivity extends ActionBarActivity {
         //初始化用户的项目
         initUserProjects();
 
+        initIndexDate();
+
+    }
+
+    /**
+     * 初始化主页数据
+     */
+    private void initIndexDate() {
+
+
     }
 
     private void initUserProjects() {
@@ -115,7 +126,9 @@ public class MainActivity extends ActionBarActivity {
                             {
                                 projectAdapter=new ProjectAdapter();
                                 //TODO 给listView设置上 现在设置到主lv里面了 明天再改 //还需要做缓存
-                                lv_menu.setAdapter(projectAdapter);
+                                subListView.setAdapter(projectAdapter);
+                                lv_menu.setAdapter(new MenuAdapter() );
+//                                Utility.setListViewHeightBasedOnChildren(subListView);
 
                             }else{
                                 projectAdapter.notifyDataSetChanged();
@@ -246,6 +259,7 @@ public class MainActivity extends ActionBarActivity {
 
         lv_menu= (ParentListView) findViewById(R.id.lv_menu);
 
+
         subListView=new SubListView(MainActivity.this);
 
     }
@@ -336,6 +350,7 @@ public class MainActivity extends ActionBarActivity {
 
             TextView tv=new TextView(MainActivity.this);
             tv.setBackgroundColor(Color.BLUE);
+            tv.setText("xxxxxxxxxxxxxx");
             switch (position)
             {
                 case 0:

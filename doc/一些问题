@@ -14,3 +14,9 @@ Set-Cookie: _get_real_session_=BAh7B0kiD3Nlc3Npb25faWQGOgZFVEkiJWUwYWI2NTAzYTBmY
 
 
 //考虑加载图片的问题 要不要用线程池？
+
+
+
+缓存 问题： 所有缓存数据都 在 shareprefences中通过SharedPerenceUtil操作 你说好么？
+ 第一页数据缓存  头像和用户信息缓存
+ 我的项目缓存
