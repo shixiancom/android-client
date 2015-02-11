@@ -3,7 +3,10 @@ package com.shixian.android.client.utils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.shixian.android.client.contants.AppContants;
+import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
+import com.shixian.android.client.model.feeddate.BaseFeed;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,9 +48,9 @@ public class JsonUtils {
      * @param json
      * @return
      */
-    public static List<Feed2> ParseFeeds(String json)
+    public static List<BaseFeed> ParseFeeds(String json)
     {
-        List<Feed2> feeds=new ArrayList<Feed2>();
+        List<BaseFeed> feeds=new ArrayList<BaseFeed>();
 
 
         Gson gson=new Gson();
@@ -60,6 +63,22 @@ public class JsonUtils {
                 JSONObject jobj = jsonArrayrray.getJSONObject(j);
                 Feed2 feed = gson.fromJson(jobj.toString(), Feed2.class);
                 feeds.add(feed);
+
+
+                String commArrayStr=jobj.getJSONObject("data").getString("comments");
+                if(!"[]".equals(commArrayStr)){
+                    JSONArray array=new JSONArray(commArrayStr);
+
+                    for(int i=0;i<array.length();i++)
+                    {
+                        Comment comment=gson.fromJson(array.getString(i), Comment.class);
+                        comment.feedable_type= AppContants.FEADE_TYPE_COMMON;
+                        feeds.add(comment);
+
+                    }
+                }
+
+
 
             }
         }catch (Exception e)

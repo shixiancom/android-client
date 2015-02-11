@@ -5,5 +5,13 @@
     <string name="weibosdk_demo_toast_auth_failed">认证失败</string>
     <string name="weibosdk_demo_toast_auth_canceled">取消认证</string>
     <string name="error">错误</string>
-    <string name="check_net">"连接服务器失败，请检查网络"</string>
+    <string name="check_net">连接服务器失败，请检查网络</string>
+    <string name="add_idea">添加想法到</string>
+    <string name="add_project">创建项目</string>
+    <string name="add_image">发布图片到</string>
+    <string name="add_plan">发布计划到</string>
+    <string name="join">加入到</string>
+    <string name="user_recent">完成任务在</string>
+
+
 </resources>

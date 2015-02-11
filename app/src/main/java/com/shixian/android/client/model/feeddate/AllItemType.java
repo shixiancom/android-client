@@ -10,4 +10,6 @@ public class AllItemType extends  BaseFeedItem{
     public String id;
     public String description;
     public String status;
+    public String title;
+    public String finish_on;
 }

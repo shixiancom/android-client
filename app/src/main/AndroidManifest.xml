@@ -10,6 +10,8 @@
     <!-- 用于调用 JNI -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+    <user-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+"/>
 
     <application
         android:allowBackup="true"

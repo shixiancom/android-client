@@ -1,26 +1,19 @@
 package com.shixian.android.client.model;
 
+import com.shixian.android.client.model.feeddate.BaseFeed;
+
 /**
  * Created by sllt on 15/1/28.
  */
-public class Comment {
-    private int id;
-    private String content;
+public class Comment extends BaseFeed{
 
-    public String getContent() {
-        return content;
-    }
+    public String content;
+    public String content_html;
+    public String commentable_id;
+    public String commentable_type;
+    public User user;
 
-    public void setContent(String content) {
-        this.content = content;
-    }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
 }

@@ -6,6 +6,7 @@ package com.shixian.android.client.model.feeddate;
 public class Project extends BaseFeedItem {
     public String description;
     public String id;
+    public String title;
 
 
 }

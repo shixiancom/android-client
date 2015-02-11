@@ -25,7 +25,7 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
-import com.shixian.android.client.activities.fragment.base.IndexFragment;
+import com.shixian.android.client.activities.fragment.IndexFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.engine.CommonEngine;
 import com.shixian.android.client.model.SimpleProject;
@@ -82,6 +82,7 @@ public class MainActivity extends ActionBarActivity {
 //        setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_main);
 
+        Global.MAIN=this;
 
         initUI();
         addFragment();
