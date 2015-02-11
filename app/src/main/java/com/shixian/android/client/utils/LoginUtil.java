@@ -72,6 +72,8 @@ public class LoginUtil {
 
                            // ApiUtils.client.addHeader(headers[j].getName(), headers[j].getValue());
                             ApiUtils.client.addHeader("Cookie", headers[j].getValue());
+                            ApiUtils.client.addHeader("user-agent", "android");
+
                             CommonUtil.logDebug("AAAA", headers[j].getValue());
                             break;
                         }

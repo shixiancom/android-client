@@ -23,6 +23,10 @@ public interface AppContants {
      */
     String URL_MY_PROJECT_INFO=DOMAIN+"/api/v1/projects/me.json";
 
+    /**
+     * 获取首页信息url
+     */
+    String INDEX_URL=DOMAIN+"/api/v1/feeds.json";
 
 
 

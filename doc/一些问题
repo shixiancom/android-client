@@ -13,6 +13,62 @@ Set-Cookie: _get_real_session_=BAh7B0kiD3Nlc3Npb25faWQGOgZFVEkiJWUwYWI2NTAzYTBmY
 02-09 18:09:58.747  17058-17058/com.shixian.android.client D/MainActivity﹕ {"avatar":{"url":"/upload/user/avatar/13523/a96f600cd483ef1ed5594b197f3903b7","small":{"url":"/upload/user/avatar/13523/small_a96f600cd483ef1ed5594b197f3903b7"},"tiny":{"url":"/upload/user/avatar/13523/tiny_a96f600cd483ef1ed5594b197f3903b7"}},"ban":null,"created_at":"2015-02-02T17:15:38+08:00","description":"","email":"806355705@qq.com","email_unsubscribe":null,"feeds_count":1,"has_followed":false,"id":13523,"invitation_token":null,"is_admin":false,"last_seen":"2015-02-09T18:07:44+08:00","status":{"feeds_count":1,"followed_projects_count":6,"followers_count":2,"followings_count":1},"tag_list":"android","updated_at":"2015-02-09T18:07:44+08:00","username":"\u5417\u5566\u5566\u5566\u5566"}
 
 
+
+//主页json
+{"data":[
+{"action_type":"create","content":null,"created_at":"2015-02-10T09:35:22+08:00",
+"data":{"comments_count":null,"content":"\u62db\u52df\u56e2\u961f\u6210\u5458","created_at":"2015-02-10T09:35:22+08:00",
+"finish_on":"2015-02-15T00:00:00+08:00","id":1875,"updated_at":"2015-02-10T09:35:22+08:00","project":{"id":1607,"title":
+"\u79fb\u52a8API\u5f00\u653e\u5e73\u53f0"},"user":{"avatar":{"url":"/uplo
+ad/user/avatar/5552/0179c2a1c56b3787e9e60a8c01ad913c","small":
+{"url":"/upload/user/avatar/5552/small_0179c2a1c56b3787e9e60a8c01ad913c"},
+"tiny":{"url":"/upload/user/avatar/5552/tiny_0179c2a1c56b3787e9e60a8c01ad913c"}},"
+id":5552,"username":"Poping2014"},"comments":[]},
+"feedable_id":1875,"feedable_type":"Plan","id":13228,"is_archived":false,"project_id":1607,
+"updated_at":"2015-02-10T09:35:22+08:00","user_id":5552},{"action_type":"create","content":null,
+"created_at":"2015-02-10T00:49:46+08:00","data":{"attachment":{
+"url":"/upload/image/attachment/1180/904a5f56ab5e3af031124418b7fbe3e2.png",
+"thumb":{"url":"/upload/image/attachment/1180/thumb_904a5f56ab5e3af031124418b7fbe3e2.png"}},
+"comments_count":null,"content":"\u4e4c\u6258\u5e2e\u57fa\u7840\u7248---\u7cbe\u9009/\u53d1\u73b0/\u5386\u53f2/\u79c1\u4fe1/\u8bbe\u7f6e",
+"content_html":"<div>\u4e4c\u6258\u5e2e\u57fa\u7840\u7248---\u7cbe\u9009/\u53d1\u73b0/\u5386\u53f2/\u79c1\u4fe1/\u8bbe\u7f6e</div>",
+"content_type":"image/png","created_at":"2015-02-10T00:49:46+08:00",
+"file_name":"\u5c4f\u5e55\u5feb\u7167_2015-02-10_\u4e0a\u534812.44.02.png",
+"file_size":"247006","id":1180,"updated_at":"2015-02-10T00:49:46+08:00",
+"project":{"id":1439,"title":"\u4e4c\u6258\u5e2e\uff1a\u5728\u8fd9\u91cc\uff0c\u6240\u6709\u4e1c\u897f\u90fd\u662f\u514d\u8d39\u7684\uff01"},
+"user":{"avatar":{"url":"/upload/user/avatar/12554/949e463134731acf4e8c98eecc807171",
+"small":{"url":"/upload/user/avatar/12554/small_949e463134731acf4e8c98eecc807171"},
+"tiny":{"url":"/upload/user/avatar/12554/tiny_949e463134731acf4e8c98eecc807171"}},
+"id":12554,"username":"\u5c0f\u6167\u6167\u4ed6\u7239"},"comments":[]},
+"feedable_id":1180,"feedable_type":"Image","id":13224,"is_archived":
+false,"project_id":1439,"updated_at":"2015-02-10T00:49:46+08:00","user_id":12554},
+{"action_type":"create","content":null,"created_at":"2015-02-10T00:48:24+08:00",
+"data":{"attachment":{"url":"/upload/image/attachment/1179/cc87aef89fe7c42239d1c7f206c10c2a.png","thumb":
+{"url":"/upload/image/attachment/1179/thumb_cc87aef89fe7c42239d1c7f206c10c2a.png"}},
+"comments_count":null,"content":"\u4e4c\u6258\u5e2e\u57fa\u7840\u7248---\u767b\u9646/\u6ce8\u518c/\u5148\u8fdb\u53bb\u901b\u901b",
+"content_html":"<div>\u4e4c\u6258\u5e2e\u57fa\u7840\u7248---\u767b\u9646/\u6ce8\u518c/\u5148\u8fdb\u53bb\u901b\u901b</div>",
+"content_type":"image/png","created_at":"2015-02-10T00:48:24+08:00",
+"file_name":"\u5c4f\u5e55\u5feb\u7167_2015-02-10_\u4e0a\u534812.43.28.png",
+"file_size":"220451",
+"id":1179,"updated_at":"2015-02-10T00:48:24+08:00",
+"project":{"id":1439,"title":"\u4e4c\u6258\u5e2e\uff1a\u5728\u8fd9\u91cc\uff0c\u6240\u6709\u4e1c\u897f\u90fd\u662f\u514d\u8d39\u7684\uff01"},
+"user":{"avatar":{"url":"/upload/user/avatar/12554/949e463134731acf4e8c98eecc807171",
+"small":{"url":"/upload/user/avatar/12554/small_949e463134731acf4e8c98eecc807171"},
+"tiny":{"url":"/upload/user/avatar/12554/tiny_949e463134731acf4e8c98eecc807171"}},
+"id":12554,"username":"\u5c0f\u6167\u6167\u4ed6\u7239"},"comments":[]}
+,"feedable_id":1179,"feedable_type":
+"Image","id":13223,"is_archived":false,"project_id":1439,"updated_at":
+"2015-02-10T00:48:24+08:00","user_id":12554},{"action_type":"create","content":null,"created_at":"2015-02-09T18:29:32+08:00",
+"data":{"comments_count":null,"created_at":"2015-02-09T18:29:32+08:00","id":76188,"status":"join",
+"updated_at":"2015-02-09T18:29:32+08:00","project":{"id":1607,"title":"\u79fb\u52a8API\u5f00\u653e\u5e73\u53f0"},
+"user":{"avatar":{"url":"/upload/user/avatar/5582/a6d09fa1fc53c87ca2abb2a20660dc86",
+"small":{"url":"/upload/user/avatar/5582/small_a6d09fa1fc53c87ca2abb2a20660dc86"},"tiny":{"url":"/upload/use
+}
+
+
+
+
+
+
 //考虑加载图片的问题 要不要用线程池？
 
 

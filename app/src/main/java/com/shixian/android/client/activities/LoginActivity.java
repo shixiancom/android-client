@@ -87,9 +87,6 @@ public class LoginActivity extends Activity
                 //从服务器请求cookie？？
                 LoginUtil.validationToken(LoginActivity.this,mAccessToken);
 
-
-
-
             } else {
                 // 以下几种情况，您会收到 Code：
                 // 1. 当您未在平台上注册的应用程序的包名与签名时；

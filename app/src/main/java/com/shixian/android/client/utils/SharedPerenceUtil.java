@@ -38,10 +38,11 @@ public class SharedPerenceUtil {
     /**
      * 保存我的项目数据到本地
      */
-    public static void setMyProject(Context context,String json)
+    public static void putMyProject(Context context,String json)
     {
         context.getSharedPreferences("cachedate",context.MODE_PRIVATE).edit().putString("myproject",json);
 
     }
+
 
 }
