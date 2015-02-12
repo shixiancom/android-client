@@ -13,7 +13,7 @@ public class Comment extends BaseFeed{
     public String commentable_type;
     public User user;
     public boolean isLast;
-    public String project_id;
+
 
 
 

@@ -1,61 +1,34 @@
 package com.shixian.android.client.model;
 
+import java.io.Serializable;
+
 /**
- * Created by sllt on 15/1/28.
+ * Created by s0ng on 2015/2/12.
  */
-public class Project {
-    private int id;
-    private String  title,content;
-    private Idea ideas[] = null;
-    private Image images[] = null;
-    private Feed feeds[] = null;
+public class Project implements Serializable{
 
-    public int getId() {
-        return id;
-    }
+    // 项目ID
+    public int id;
+// 项目标题
+    public String title;
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Idea[] getIdeas() {
-        return ideas;
-    }
-
-    public void setIdeas(Idea[] ideas) {
-        this.ideas = ideas;
-    }
-
-    public Image[] getImages() {
-        return images;
-    }
-
-    public void setImages(Image[] images) {
-        this.images = images;
-    }
-
-    public Feed[] getFeeds() {
-        return feeds;
-    }
-
-    public void setFeeds(Feed[] feeds) {
-        this.feeds = feeds;
-    }
+    // 项目描述[html标签内容]
+   public String  description;
+    // 创建时间
+    public String created_at;
+    // 最后一次修改时间
+    public String updated_at;
+// 用户ID
+    public String user_id;
+// 是否被archived
+    public boolean is_archived;
+// 是否含有wiki
+    public boolean has_wiki;
+    //  标识是否已经follow
+    public  boolean has_followed;
+    //  标识是否已经join
+    public boolean has_joined;
+    //  标识项目被关注的次数
+    public int followed_count;
 
 }

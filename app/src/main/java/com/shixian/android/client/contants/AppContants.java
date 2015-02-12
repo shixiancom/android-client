@@ -29,9 +29,22 @@ public interface AppContants {
      */
     String INDEX_URL=DOMAIN+"/api/v1/feeds.json";
 
+    /**
+     * 用户信息
+     */
     String USER_INFO_INDEX_URL=DOMAIN+"/api/v1/users/{user_id}.json";
 
     String USER_FEED_INDEX_URL=DOMAIN+"/api/v1/users/{user_name}/feeds.json";
+
+    /**
+     * project 项目信息
+     */
+    String PROJECT_INFO_URL=DOMAIN+"/api/v1/projects/{project_id}.json";
+
+    String PROJECT_FEED_URL=DOMAIN+"/api/v1/projects/{project_id}/feeds.json";
+
+    String DESCORY_PROJECT_URL=DOMAIN+"/api/v1/projects.json";
+
 
 
 

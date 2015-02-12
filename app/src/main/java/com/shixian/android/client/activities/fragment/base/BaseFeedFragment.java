@@ -1,10 +1,13 @@
 package com.shixian.android.client.activities.fragment.base;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.shixian.android.client.R;
 import com.shixian.android.client.model.feeddate.BaseFeed;
@@ -72,7 +75,22 @@ public abstract  class BaseFeedFragment extends BaseFragment {
 
 
 
-    protected abstract void initImageCallBack();
+
+    protected void initImageCallBack() {
+        this.callback=new ImageCallback() {
+
+            @Override
+            public void imageLoaded(Bitmap bitmap, Object tag) {
+                ImageView imageView = (ImageView)pullToRefreshListView.getListView()
+                        .findViewWithTag(tag);
+
+                if (imageView != null) {
+                    imageView.setImageBitmap(bitmap);
+                }
+            }
+        };
+    }
+
 
     protected abstract  void getNextData();
 
@@ -81,4 +99,26 @@ public abstract  class BaseFeedFragment extends BaseFragment {
 
 
     protected abstract void initFirstData();
+
+
+    protected class FeedHolder {
+
+        //事件类型 比如发布一个项目
+        TextView tv_type;
+        //头像
+        ImageView iv_icon;
+        //用户名
+        TextView tv_name;
+        //项目
+        TextView tv_proect;
+        //时间
+        TextView tv_time;
+        //回复内容
+        TextView tv_content;
+        //图片内容 默认是隐藏的 当feedable_type为image时显示
+        ImageView iv_content;
+        //回复框 发表项目的时候是隐藏的
+        TextView tv_response;
+        View v_line;
+    }
 }

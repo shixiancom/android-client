@@ -8,7 +8,7 @@ import com.shixian.android.client.model.User;
 public class BaseFeedItem {
 
     public User user;
-    public Project project;
+    public SimpleProject project;
     public String create_at;
 
 

@@ -118,15 +118,14 @@ public class IndexFragment extends BaseFeedFragment {
      */
     public void initFirstData()
     {
-        CommonEngine.getIndexDate(page, new AsyncHttpResponseHandler() {
+        CommonEngine.getFeedData(AppContants.INDEX_URL,page, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, final byte[] bytes) {
-                final String temp=new String(bytes);
+                final String temp = new String(bytes);
                 if (!AppContants.errorMsg.equals(temp)) {
 
-                    new Thread()
-                    {
-                        public void run(){
+                    new Thread() {
+                        public void run() {
                             //获取第一页数据
                             firstPageDate = temp;
                             //数据格式
@@ -158,7 +157,6 @@ public class IndexFragment extends BaseFeedFragment {
                             });
 
 
-
                         }
                     }.start();
 
@@ -173,7 +171,7 @@ public class IndexFragment extends BaseFeedFragment {
 //                Log.i("AAAA", new String(bytes));
 
                 //TODO 错误可能定义的不是太准确  最后一天调整
-                Toast.makeText(context,getString(R.string.check_net),Toast.LENGTH_SHORT);
+                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
                 pullToRefreshListView.onPullDownRefreshComplete();
             }
         });
@@ -186,21 +184,19 @@ public class IndexFragment extends BaseFeedFragment {
     public void getNextData()
     {
         page+=1;
-        CommonEngine.getIndexDate(page, new AsyncHttpResponseHandler() {
+        CommonEngine.getFeedData(AppContants.INDEX_URL,page, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, final byte[] bytes) {
 
-                final String temp=new String(bytes);
+                final String temp = new String(bytes);
                 if (!AppContants.errorMsg.equals(temp)) {
 
-                    new Thread()
-                    {
-                        public void run()
-                        {
+                    new Thread() {
+                        public void run() {
                             //获取第一页数据
-                            firstPageDate = temp;
+
                             //数据格式
-                            CommonUtil.logDebug(TAG, new String(bytes));
+                            CommonUtil.logDebug(TAG, new String(temp));
 
 
                             feedList.addAll(JsonUtils.ParseFeeds(firstPageDate));
@@ -242,9 +238,9 @@ public class IndexFragment extends BaseFeedFragment {
 //                Log.i("AAAA", new String(bytes));
 
                 //TODO 错误可能定义的不是太准确  最后一天调整
-                Toast.makeText(context,getString(R.string.check_net),Toast.LENGTH_SHORT);
+                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
                 pullToRefreshListView.onPullUpRefreshComplete();
-                page-=1;
+                page -= 1;
             }
         });
     }

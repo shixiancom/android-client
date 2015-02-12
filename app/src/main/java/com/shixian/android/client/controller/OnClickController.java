@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.MainActivity;
+import com.shixian.android.client.activities.fragment.ProjectFeedFragment;
 import com.shixian.android.client.activities.fragment.UserIndexFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.model.Comment;
@@ -35,6 +36,7 @@ public class OnClickController implements View.OnClickListener{
     @Override
     public void onClick(View v) {
 
+        Bundle bundle=new Bundle();
         switch (v.getId())
         {
 
@@ -48,7 +50,7 @@ public class OnClickController implements View.OnClickListener{
                 Toast.makeText(context,"iv_ivcon",Toast.LENGTH_SHORT).show();
                 //跳转到个人主页
                 UserIndexFragment uf=new UserIndexFragment();
-                Bundle bundle=new Bundle();
+
 
                 String userid="";
                 if(mFeed.feedable_type.equals(AppContants.FEADE_TYPE_COMMON))
@@ -63,13 +65,21 @@ public class OnClickController implements View.OnClickListener{
                 }
 
                 uf.setArguments(bundle);
-                context.switchFragment(uf,"user_"+userid);
+                context.switchFragment(uf,null);
 
 //                Toast.makeText(context,"tv_name",Toast.LENGTH_SHORT).show();
                 break;
             //项目
             case R.id.tv_proect:
-                Toast.makeText(context,"tv_name",Toast.LENGTH_SHORT).show();
+                //点击项目要进入项目界面 我先把项目数据拿到看一看　
+
+
+                ProjectFeedFragment feedFragment=new ProjectFeedFragment();
+                bundle.putString("project_id",mFeed.project_id);
+                feedFragment.setArguments(bundle);
+                context.switchFragment(feedFragment,null);
+
+//                Toast.makeText(context,"tv_name",Toast.LENGTH_SHORT).show();
                 break;
             //内容
             case R.id.tv_content:

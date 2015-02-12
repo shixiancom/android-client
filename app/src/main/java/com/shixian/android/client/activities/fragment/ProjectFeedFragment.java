@@ -2,13 +2,13 @@ package com.shixian.android.client.activities.fragment;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,13 +22,12 @@ import com.shixian.android.client.controller.OnClickController;
 import com.shixian.android.client.engine.CommonEngine;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
-import com.shixian.android.client.model.User;
+import com.shixian.android.client.model.Project;
 import com.shixian.android.client.model.feeddate.BaseFeed;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
 import com.shixian.android.client.utils.DisplayUtil;
 import com.shixian.android.client.utils.ImageCache;
-import com.shixian.android.client.utils.ImageCallback;
 import com.shixian.android.client.utils.ImageDownload;
 import com.shixian.android.client.utils.ImageUtil;
 import com.shixian.android.client.utils.JsonUtils;
@@ -39,42 +38,22 @@ import org.apache.http.Header;
 
 /**
  * Created by s0ng on 2015/2/12.
- * 个人主页
  */
+public class ProjectFeedFragment extends BaseFeedFragment {
 
-public class UserIndexFragment extends BaseFeedFragment {
+    private Project project=new Project();
 
+    private ProjectFeedAdapter adapter;
 
-    private String TAG = "UserIndexFragment";
-    private User user;
-    private UserIndexFeedAdapte adapter;
+    private String project_info;
 
-    private static final String PERSON_ITEM = "PERSON_ITEM";
-    private static final String FEED_ITEM = "FEED_ITEM";
-    private static final int VIEW_TYPE_INDEX = 1;
-    private static final int HOLDER_INDEX = 2;
+    private String TAG="ProjectFeedFragment";
 
-
-    @Override
-    protected void initImageCallBack() {
-        this.callback = new ImageCallback() {
-
-            @Override
-            public void imageLoaded(Bitmap bitmap, Object tag) {
-                ImageView imageView = (ImageView) pullToRefreshListView.getListView()
-                        .findViewWithTag(tag);
-
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                }
-            }
-        };
-    }
 
     @Override
     protected void getNextData() {
         page += 1;
-        CommonEngine.getFeedData(AppContants.USER_FEED_INDEX_URL.replace("{user_name}",user.username),page, new AsyncHttpResponseHandler() {
+        CommonEngine.getFeedData(AppContants.PROJECT_FEED_URL.replace("{project_id}",project.id+"" ), page, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, final byte[] bytes) {
                 final String temp = new String(bytes);
@@ -94,28 +73,25 @@ public class UserIndexFragment extends BaseFeedFragment {
                             //TODO 第一页的缓存
 
                             //保存数据到本地
-
-
-
-
-
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (adapter == null) {
-                                        adapter = new UserIndexFeedAdapte();
+                                        adapter = new ProjectFeedAdapter();
 
                                         pullToRefreshListView.getRefreshableView().setAdapter(adapter);
                                     } else {
                                         adapter.notifyDataSetChanged();
                                     }
 
+                                    pullToRefreshListView.onPullUpRefreshComplete();
                                 }
                             });
 
                         }
                     }.start();
-                    pullToRefreshListView.onPullUpRefreshComplete();
+
+
                 }
             }
 
@@ -131,35 +107,35 @@ public class UserIndexFragment extends BaseFeedFragment {
                 page -= 1;
             }
         });
+
     }
 
     @Override
     public void initDate(Bundle savedInstanceState) {
+
+        project.id= Integer.parseInt((String) getArguments().get("project_id"));
+
         initImageCallBack();
         initFirstData();
+
 
     }
 
     @Override
     protected void initFirstData() {
+        //开始搞
+        initProjectInfo();
 
-        user = (User) getArguments().get("user");
+        initProjectFeed();
 
-        initUserInfo();
-
-        initUserFeed();
 
 
     }
 
-    /**
-     * 初始化用户信息
-     */
-    private void initUserFeed() {
-        //如果是自身 说明是我的主页 我的信息都已经在登陆的时候拿到了 所以就不需要获取了 否则获取用户信息
+    private void initProjectFeed() {
 
-        CommonEngine.getFeedData(AppContants.USER_FEED_INDEX_URL.replace("{user_name}",user.username),page, new AsyncHttpResponseHandler(){
-        @Override
+        CommonEngine.getFeedData(AppContants.PROJECT_FEED_URL.replace("{project_id}",project.id+"" ), page, new AsyncHttpResponseHandler() {
+            @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
 
                 final String temp = new String(bytes);
@@ -175,7 +151,7 @@ public class UserIndexFragment extends BaseFeedFragment {
                                 @Override
                                 public void run() {
                                     if (adapter == null) {
-                                        adapter = new UserIndexFeedAdapte();
+                                        adapter = new ProjectFeedAdapter();
                                         pullToRefreshListView.getRefreshableView().setAdapter(adapter);
                                     } else {
                                         adapter.notifyDataSetChanged();
@@ -205,117 +181,100 @@ public class UserIndexFragment extends BaseFeedFragment {
 
     }
 
+    private void initProjectInfo() {
 
-    private void initUserInfo() {
-
-
-        String url = AppContants.USER_INFO_INDEX_URL.replace("{user_id}", user.id);
-        ApiUtils.get(url, null, new AsyncHttpResponseHandler() {
+        ApiUtils.get(AppContants.PROJECT_INFO_URL.replace("{project_id}",project.id+""),null,new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
-                String userinfo = new String(bytes);
 
-                CommonUtil.logDebug("AAAA", userinfo);
+                //
+                final String temp=new String(bytes);
+                if(!AppContants.errorMsg.equals(temp))
+                    new Thread() {
+                        public void run() {
+                            project_info = temp;
+                            Gson gson = new Gson();
+                            project = gson.fromJson(project_info, Project.class);
 
-                if (!AppContants.errorMsg.equals(userinfo)) {
-                    Gson gson = new Gson();
-                    User user = gson.fromJson(userinfo, User.class);
-                    UserIndexFragment.this.user = user;
 
-                    if (adapter == null) {
-                        adapter = new UserIndexFeedAdapte();
-                        pullToRefreshListView.getRefreshableView().setAdapter(adapter);
-                    } else {
-                        adapter.notifyDataSetChanged();
-                    }
-                }
+                            context.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (adapter == null) {
+                                        adapter = new ProjectFeedAdapter();
+                                        pullToRefreshListView.getRefreshableView().setAdapter(adapter);
+                                    } else {
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }
+                            });
+
+                        }
+                    }.start();
+
             }
+
+
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
                 Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT);
             }
-
-
         });
-
-
     }
 
 
-    class UserIndexFeedAdapte extends BaseAdapter {
+    class ProjectFeedAdapter extends BaseAdapter{
 
         @Override
         public int getCount() {
-            return 1 + feedList.size();
+            return 1+feedList.size();
         }
 
         @Override
         public Object getItem(int position) {
-            if (position == 1)
-                return user;
-            return feedList.get(position - 1);
+            if(position==1)
+                return project;
+            return feedList.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            return position;
+            if(position==1)
+                return  position;
+            return position-1;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            View view = null;
+            View view=null;
             FeedHolder holder;
+            if(position==0)
+            {
+                view=View.inflate(context,R.layout.project_index_item,null);
 
+                if(project!=null)
+                {
+                    TextView tv_name= (TextView) view.findViewById(R.id.tv_name);
+                    TextView tv_follow= (TextView) view.findViewById(R.id.tv_follow);
+                    TextView tv_content= (TextView) view.findViewById(R.id.tv_content);
 
-            if (position == 0) {
-
-
-                //return 第一项 就是那个啥
-                view = View.inflate(context, R.layout.person_index_item, null);
-
-
-                TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
-                //头像
-                ImageView iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
-                //关注按钮
-                Button bt_follow = (Button) view.findViewById(R.id.bt_follow);
-                //签名
-                TextView tv_winess = (TextView) view.findViewById(R.id.tv_witness);
-
-                TextView tv_activitys = (TextView) view.findViewById(R.id.tv_activitys);
-                TextView tv_project = (TextView) view.findViewById(R.id.tv_project);
-                TextView tv_fllowen = (TextView) view.findViewById(R.id.tv_fllowen);
-                TextView tv_fllowing = (TextView) view.findViewById(R.id.tv_fllowing);
-
-
-                //下载头像
-                String keys[] = user.avatar.small.url.split("/");
-                String key = keys[keys.length - 1];
-
-                Bitmap bm = ImageCache.getInstance().get(key);
-
-                if (bm != null) {
-                    iv_icon.setImageBitmap(bm);
-                } else {
-                    iv_icon.setImageResource(R.drawable.ic_launcher);
-                    iv_icon.setTag(key);
-                    if (callback != null) {
-                        new ImageDownload(callback).execute(AppContants.DOMAIN + user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
+                    tv_name.setText(project.title);
+                    if(project.description!=null)
+                        tv_content.setText(Html.fromHtml(project.description));
+                    if(project.has_followed)
+                    {
+                        tv_follow.setBackgroundColor(Color.BLACK);
                     }
+
                 }
 
-                tv_activitys.setText(user.status.feeds_count + "");
-                tv_project.setText(user.status.followed_projects_count + "");
-                tv_fllowen.setText(user.status.followers_count + "");
-                tv_fllowing.setText(user.status.followings_count + "");
-
-                tv_winess.setText(user.description);
-                tv_name.setText(user.username);
 
 
-            } else {
+
+
+            }else{
                 if (convertView == null || (convertView instanceof PersonItemLinearLayout)) {
                     view = View.inflate(context, R.layout.feed_common_item, null);
                     holder = new FeedHolder();
@@ -502,23 +461,22 @@ public class UserIndexFragment extends BaseFeedFragment {
 
                 OnClickController controller = new OnClickController(context, baseFeed);
 
-                String userid = "";
-                if (AppContants.FEADE_TYPE_COMMON.equals(baseFeed.feedable_type)) {
-                    userid = ((Comment) baseFeed).user.id;
-                } else {
-                    userid = ((Feed2) baseFeed).data.user.id;
 
-                    ////////////////////
-                }
+
 
                 //点击头像和名字的响应事件是一致的 如果展示的是我的主页 再次点击不会响应
-                if (!userid.equals(user.id)) {
+
                     holder.iv_icon.setOnClickListener(controller);
                     holder.tv_name.setOnClickListener(controller);
-                }
+
 
                 //项目
-                holder.tv_proect.setOnClickListener(controller);
+                if(project!=null)
+                {
+                    if(!baseFeed.project_id.equals(ProjectFeedFragment.this.project))
+                        holder.tv_proect.setOnClickListener(controller);
+                }
+
 
                 if (holder.tv_content.getVisibility() == View.VISIBLE) {
                     holder.tv_content.setOnClickListener(controller);
@@ -535,16 +493,15 @@ public class UserIndexFragment extends BaseFeedFragment {
                 }
 
 
+
+
+
             }
 
             return view;
         }
     }
 
-
-    /**
-     * 有些控件要求隐藏
-     */
     class FeedHolder {
 
         //事件类型 比如发布一个项目
@@ -565,5 +522,4 @@ public class UserIndexFragment extends BaseFeedFragment {
         TextView tv_response;
         View v_line;
     }
-
 }

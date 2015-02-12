@@ -25,7 +25,7 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
-import com.shixian.android.client.activities.fragment.IndexFragment;
+import com.shixian.android.client.activities.fragment.DiscoryProjectFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.engine.CommonEngine;
@@ -295,8 +295,10 @@ public class MainActivity extends ActionBarActivity {
 
     private void addFragment() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        IndexFragment newsFragment=new IndexFragment();
+//        IndexFragment newsFragment=new IndexFragment();
 //        NewsFragment newsFragment = new NewsFragment();
+
+        DiscoryProjectFragment newsFragment=new DiscoryProjectFragment();
         fragmentTransaction.replace(R.id.main_fragment_layout, newsFragment);
         fragmentTransaction.commit();
     }

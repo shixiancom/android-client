@@ -23,13 +23,13 @@ public class CommonEngine {
      * @param page 要获取的页
      * @param heandler    //处理回调类
      */
-    public static void getIndexDate(int page,AsyncHttpResponseHandler heandler)
+    public static void getFeedData(String url,int page, AsyncHttpResponseHandler heandler)
     {
         RequestParams params=new RequestParams();
         params.add("page",page+"");
 
 
-                ApiUtils.get(AppContants.INDEX_URL,params,heandler);
+                ApiUtils.get(url,params,heandler);
     }
 
 }
