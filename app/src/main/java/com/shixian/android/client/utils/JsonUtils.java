@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
+import com.shixian.android.client.model.Project;
 import com.shixian.android.client.model.feeddate.BaseFeed;
 
 import org.json.JSONArray;
@@ -94,5 +95,30 @@ public class JsonUtils {
         }
 
         return feeds;
+    }
+
+
+    public static List<Project> ParsesProject(String json){
+        List<Project> projects=new ArrayList<>();
+
+        Gson gson=new Gson();
+        try {
+            JSONArray jsonArray=new JSONArray(json);
+
+            for(int i=0;i<jsonArray.length();i++)
+            {
+
+
+
+                Project project=gson.fromJson(jsonArray.getString(i), Project.class);
+                projects.add(project);
+            }
+
+        }catch (Exception e)
+        {
+
+        }
+
+        return projects;
     }
 }

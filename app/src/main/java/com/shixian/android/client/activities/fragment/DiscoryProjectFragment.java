@@ -1,21 +1,27 @@
 package com.shixian.android.client.activities.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.model.Project;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
+import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshBase;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView;
 
@@ -34,6 +40,7 @@ public class DiscoryProjectFragment extends BaseFragment {
     private String firstPageDate;
     private String TAG="DiscoryProjectFragment";
     private ProjectAdapter adapter;
+    private int page=1;
 
 
     @Override
@@ -79,16 +86,10 @@ public class DiscoryProjectFragment extends BaseFragment {
 
     private void getNextData() {
 
-    }
-
-    @Override
-    public void initDate(Bundle savedInstanceState) {
-        initFirstData();
-    }
-
-    private void initFirstData() {
-
-        ApiUtils.get(AppContants.DESCORY_PROJECT_URL,null,new AsyncHttpResponseHandler() {
+        page+=1;
+        RequestParams params=new RequestParams();
+        params.add("page",page+"");
+        ApiUtils.get(AppContants.DESCORY_PROJECT_URL,params,new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                 final String temp = new String(bytes);
@@ -100,12 +101,10 @@ public class DiscoryProjectFragment extends BaseFragment {
 
 
                             //数据格式
-                           CommonUtil.logDebug(TAG, new String(temp));
+                            CommonUtil.logDebug(TAG, new String(temp));
 
-
-
-
-                           // projectList.addAll(JsonUtils.ParseFeeds(firstPageDate));
+                            // projectList.addAll(JsonUtils.ParseFeeds(firstPageDate));
+                            projectList= JsonUtils.ParsesProject(temp);
 
                             //TODO 第一页的缓存
 
@@ -138,6 +137,71 @@ public class DiscoryProjectFragment extends BaseFragment {
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
                 Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
+                page-=1;
+                pullToRefreshListView.onPullUpRefreshComplete();
+            }
+        });
+    }
+
+    @Override
+    public void initDate(Bundle savedInstanceState) {
+        initFirstData();
+    }
+
+    private void initFirstData() {
+
+
+        ApiUtils.get(AppContants.DESCORY_PROJECT_URL,null,new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                final String temp = new String(bytes);
+                if (!AppContants.errorMsg.equals(bytes)) {
+                    //获取第一页数据
+
+                    new Thread() {
+                        public void run() {
+
+
+                            //数据格式
+                           CommonUtil.logDebug(TAG, new String(temp));
+
+                           // projectList.addAll(JsonUtils.ParseFeeds(firstPageDate));
+                            projectList.addAll(JsonUtils.ParsesProject(temp));
+
+                            page=1;
+
+                            //TODO 第一页的缓存
+
+                            //保存数据到本地
+
+
+
+
+
+                            context.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (adapter == null) {
+                                        adapter = new ProjectAdapter();
+
+                                        pullToRefreshListView.getRefreshableView().setAdapter(adapter);
+                                    } else {
+                                        adapter.notifyDataSetChanged();
+                                    }
+
+                                }
+                            });
+
+                        }
+                    }.start();
+                    pullToRefreshListView.onPullDownRefreshComplete();
+                }
+            }
+
+            @Override
+            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
+                pullToRefreshListView.onPullDownRefreshComplete();
             }
         });
     }
@@ -146,22 +210,58 @@ public class DiscoryProjectFragment extends BaseFragment {
 
         @Override
         public int getCount() {
-            return 0;
+            return projectList.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return null;
+            return projectList.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            return 0;
+            return position;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
+
+            View view;
+            Holder holder;
+
+            if(convertView==null)
+            {
+                view=View.inflate(context,R.layout.discoryproject_item,null);
+                holder=new Holder();
+                holder.tv_content= (TextView) view.findViewById(R.id.tv_content);
+                holder.tv_fllowen= (TextView) view.findViewById(R.id.tv_fllowen);
+                holder.tv_title= (TextView) view.findViewById(R.id.tv_title);
+                view.setTag(holder);
+            }else{
+                view=convertView;
+                holder= (Holder) view.getTag();
+            }
+
+            Project project=projectList.get(position);
+            holder.tv_title.setText(project.title);
+            if(!TextUtils.isEmpty(project.description))
+                holder.tv_content.setText(Html.fromHtml(project.description));
+
+            if(project.has_followed)
+            {
+                holder.tv_fllowen.setBackgroundColor(Color.BLACK);
+            }else{
+                holder.tv_fllowen.setBackgroundColor(Color.BLUE);
+            }
+
+
+            return view;
         }
+    }
+
+    class Holder{
+        TextView tv_title;
+        TextView tv_fllowen;
+        TextView tv_content;
     }
 }
