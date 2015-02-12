@@ -26,6 +26,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.fragment.IndexFragment;
+import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.engine.CommonEngine;
 import com.shixian.android.client.model.SimpleProject;
@@ -69,6 +70,10 @@ public class MainActivity extends ActionBarActivity {
 
     //存放我的项目
     private String myProjectjson;
+
+
+    //userinfo本地缓存
+    private String userInfo;
 
     /**
      * 丑陋的进度条 搞好逻辑之后替换
@@ -180,19 +185,22 @@ public class MainActivity extends ActionBarActivity {
      * 初始化左侧抽屉user 信息
      */
     private void initUserInfo() {
+        userInfo=SharedPerenceUtil.getUserInfo(this);
+
         CommonEngine.getMyUserInfo(new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
 
 //                CommonUtil.logDebug(TAG, new String(bytes));
 
-                String json = new String(bytes);
+                userInfo = new String(bytes);
                 //出错
-                if (!AppContants.errorMsg.equals(json)) {
+                if (!AppContants.errorMsg.equals(userInfo)) {
                     Gson gson = new Gson();
-                    User user = gson.fromJson(json, User.class);
+                    User user = gson.fromJson(userInfo, User.class);
+                    Global.USER_ID=user.id;
                     tv_uname.setText(user.username);
-                    SharedPerenceUtil.putUserInfo(MainActivity.this, json);
+                    SharedPerenceUtil.putUserInfo(MainActivity.this, userInfo);
 
                     //异步下载图片(头像)
                     ApiUtils.get(AppContants.DOMAIN + user.avatar.small.url, null, new AsyncHttpResponseHandler() {
@@ -395,6 +403,25 @@ public class MainActivity extends ActionBarActivity {
     public void dissProgress()
     {
         progressDialog.dismiss();
+    }
+
+
+    public void switchFragment(BaseFragment fragment,String key)
+    {
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+//        fragmentTransaction.
+
+
+        fragmentTransaction.addToBackStack(null);
+//        NewsFragment newsFragment = new NewsFragment();
+        fragmentTransaction.replace(R.id.main_fragment_layout, fragment);
+        fragmentTransaction.commit();
+
+
+
+
     }
 
 }

@@ -1,7 +1,7 @@
 package com.shixian.android.client.views.pulltorefreshlist;
 
 
-import com.qianlong.android.view.pullrefreshview.ILoadingLayout.State;
+import com.shixian.android.client.views.pulltorefreshlist.ILoadingLayout.State;
 
 import android.content.Context;
 import android.util.AttributeSet;

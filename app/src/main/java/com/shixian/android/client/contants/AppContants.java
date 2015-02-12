@@ -29,6 +29,10 @@ public interface AppContants {
      */
     String INDEX_URL=DOMAIN+"/api/v1/feeds.json";
 
+    String USER_INFO_INDEX_URL=DOMAIN+"/api/v1/users/{user_id}.json";
+
+    String USER_FEED_INDEX_URL=DOMAIN+"/api/v1/users/{user_name}/feeds.json";
+
 
 
     /******************************数据消息 **************************************************/
@@ -56,7 +60,9 @@ public interface AppContants {
     String FEADE_TYPE_COMMON="common";
 
 
-
-
+    /**
+     * 每一页大小
+     */
+    int PAGESIZE=10;
 
 }

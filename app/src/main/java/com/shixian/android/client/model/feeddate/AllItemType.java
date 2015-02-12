@@ -12,4 +12,11 @@ public class AllItemType extends  BaseFeedItem{
     public String status;
     public String title;
     public String finish_on;
+    public Attachment attachment;
+
+
+    public static class Attachment {
+        public String url;
+    }
+
 }

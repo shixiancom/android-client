@@ -1,9 +1,6 @@
 package com.shixian.android.client.views.pulltorefreshlist;
 
 
-
-import com.example.qianlong.R;
-
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -11,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.shixian.android.client.R;
 
 /**
  * 这个类封装了下拉刷新的布局
@@ -89,21 +88,21 @@ public class FooterLoadingLayout extends LoadingLayout {
     @Override
     protected void onReset() {
     	show(false);
-        mHintView.setText(R.string.pull_to_refresh_header_hint_loading);
+        mHintView.setText("123");
     }
 
     @Override
     protected void onPullToRefresh() {
     	show(true);
         mHintView.setVisibility(View.VISIBLE);
-        mHintView.setText(R.string.pull_to_refresh_header_hint_normal2);
+        mHintView.setText("456");
     }
 
     @Override
     protected void onReleaseToRefresh() {
     	show(true);
         mHintView.setVisibility(View.VISIBLE);
-        mHintView.setText(R.string.pull_to_refresh_header_hint_ready);
+        mHintView.setText("789");
     }
 
     @Override
@@ -111,13 +110,13 @@ public class FooterLoadingLayout extends LoadingLayout {
     	show(true);
         mProgressBar.setVisibility(View.VISIBLE);
         mHintView.setVisibility(View.VISIBLE);
-        mHintView.setText(R.string.pull_to_refresh_header_hint_loading);
+        mHintView.setText(R.string.pull_to_refresh_header_hint_loadin);
     }
     
     @Override
     protected void onNoMoreData() {
     	show(false);
-        mHintView.setText(R.string.pushmsg_center_no_more_msg);
+        mHintView.setText("jjj");
     }
 
 	@Override

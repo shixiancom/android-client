@@ -1,9 +1,11 @@
 package com.shixian.android.client.model;
 
+import java.io.Serializable;
+
 /**
  * Created by sllt on 15/1/28.
  */
-public class User {
+public class User implements Serializable{
 
 
 
@@ -33,13 +35,13 @@ public class User {
 
 
 
-    class Status{
+    public class Status implements  Serializable{
         public int feeds_count;
         public int followed_projects_count;
         public int followers_count;
         public int followings_count;
     }
-     public static class Avatar{
+     public static class Avatar implements  Serializable{
         //小头像
         public Small small;
         //更小的头像
@@ -47,11 +49,11 @@ public class User {
         //大头像
         public String url;
 
-      public static  class Small{
+      public static  class Small implements  Serializable{
             public String url;
         }
 
-       public static class Tiny{
+       public static class Tiny implements  Serializable{
             public String url;
         }
 

@@ -11,7 +11,13 @@
     <string name="add_image">发布图片到</string>
     <string name="add_plan">发布计划到</string>
     <string name="join">加入到</string>
-    <string name="user_recent">完成任务在</string>
+    <string name="finish_homework">完成任务在</string>
+    <string name="activity_index_label">首页</string>
+    <string name="pull_to_refresh_header_hint_normal">下拉刷新</string>
+    <string name="pull_to_refresh_header_hint_ready">释放刷新</string>
+    <string name="pull_to_refresh_header_hint_loading">正在刷新</string>
+    <string name="pull_to_refresh_header_hint_loadin">正在加载更多</string>
+
 
 
 </resources>

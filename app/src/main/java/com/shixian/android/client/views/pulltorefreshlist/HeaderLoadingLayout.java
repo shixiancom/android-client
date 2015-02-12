@@ -1,8 +1,5 @@
 package com.shixian.android.client.views.pulltorefreshlist;
 
-
-import com.example.qianlong.R;
-
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
@@ -15,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.shixian.android.client.R;
+
 
 /**
  * 这个类封装了下拉刷新的布局

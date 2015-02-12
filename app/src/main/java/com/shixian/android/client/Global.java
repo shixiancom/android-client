@@ -10,7 +10,11 @@ import com.shixian.android.client.utils.ImageCache;
  * 用于存放全局信息  比如说 user cookie 好吧
  */
 public class Global {
+
+    //TODO
+    //放在这里容易被回收
     public static User user;
+    public static String USER_ID;
 
     public static Context MAIN;
 

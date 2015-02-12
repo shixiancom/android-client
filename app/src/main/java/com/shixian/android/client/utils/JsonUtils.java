@@ -73,6 +73,13 @@ public class JsonUtils {
                     {
                         Comment comment=gson.fromJson(array.getString(i), Comment.class);
                         comment.feedable_type= AppContants.FEADE_TYPE_COMMON;
+                        if(i==array.length()-1)
+                        {
+                            comment.isLast=true;
+                        }
+
+                        comment.project_id=feed.project_id;
+
                         feeds.add(comment);
 
                     }

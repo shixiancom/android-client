@@ -12,9 +12,11 @@ import com.shixian.android.client.activities.MainActivity;
 /**
  * Created by s0ng on 2015/2/9.
  */
-public abstract class BaseFragment extends Fragment{
+public abstract class BaseFragment extends Fragment  {
+
 
     protected MainActivity context;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,5 +37,6 @@ public abstract class BaseFragment extends Fragment{
 
     public abstract View initView(LayoutInflater inflater);
     public abstract void initDate(Bundle savedInstanceState);
+
 
 }

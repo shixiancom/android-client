@@ -1,8 +1,6 @@
 package com.shixian.android.client.views.pulltorefreshlist;
 
 
-import com.qianlong.android.view.pullrefreshview.ILoadingLayout.State;
-
 import android.R;
 import android.content.Context;
 import android.util.AttributeSet;
@@ -10,8 +8,9 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Adapter;
-import android.widget.FrameLayout;
 import android.widget.ListView;
+
+import com.shixian.android.client.views.pulltorefreshlist.ILoadingLayout.State;
 
 /**
  * 这个类实现了ListView下拉刷新，上加载更多和滑到底部自动加载
@@ -68,7 +67,7 @@ public class PullToRefreshListView extends PullToRefreshBase<ListView> implement
         listView.setId(R.id.list);
         mListView = listView;
 //        mListView.setFooterDividersEnabled(true);
-        
+//
         android.view.ViewGroup.LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         mListView.setLayoutParams(params);
         listView.setOnScrollListener(this);
@@ -254,5 +253,12 @@ public class PullToRefreshListView extends PullToRefreshBase<ListView> implement
         }
 
         return false;
+    }
+
+
+
+    public ListView getListView()
+    {
+        return mListView;
     }
 }
