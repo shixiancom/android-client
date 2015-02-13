@@ -17,6 +17,32 @@
     <string name="pull_to_refresh_header_hint_ready">释放刷新</string>
     <string name="pull_to_refresh_header_hint_loading">正在刷新</string>
     <string name="pull_to_refresh_header_hint_loadin">正在加载更多</string>
+    <string name="please_fllow">邀请您关注</string>
+    <string name="join_accept">通过了您加入</string>
+    <string name="join_reject">拒绝了您加入</string>
+    <string name="addcomment">您的想法添加了新的 回复</string>
+    <string name="project_join_accept"><font color='red'>{project_title}</font>的请求</string>
+    <string name="attachment">您参加的项目</string>
+    <string name="project_attachment">{project_title} 添加了新的文件</string>
+    <string name="project_task">{project_title} 添加了新的任务提交</string>
+    <string name="project_idea">{project_title} 添加了新的任务提交</string>
+    <string name="project_image">{project_title} 添加了新的图片</string>
+    <string name="project_plan">{project_title} 添加了新的计划</string>
+    <string name="project_vote">{project_title} 添加了新的投票</string>
+    <string name="project_homework">{project_title} 完成了您分配的任务</string>
+    <string name="new_mention_attachment"><font color='blue'> 文件 </font> 中提到你</string>
+    <string name="new_mention_comment"><font color='blue'> 回复 </font> 中提到你</string>
+    <string name="new_mention_homework"><font color='blue'> 任务提交 </font> 中提到你</string>
+    <string name="new_mention_idea"><font color='blue'> 想法 </font> 中提到你</string>
+    <string name="new_mention_image"><font color='blue'> 图片 </font> 中提到你</string>
+    <string name="new_mention_task"><font color='blue'> 任务 </font> 中提到你</string>
+    <string name="new_reply">在你的想法添加新的<font color='blue'> 回复 </font> </string>
+    <string name="new_task">给你分配一个<font color='blue'> 任务 </font> 在 </string>
+    <string name="project_new_task"><font color='blue'>{project_title}</font> 中</string>
+
+
+
+
 
 
 

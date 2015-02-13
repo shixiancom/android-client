@@ -43,7 +43,12 @@ public interface AppContants {
 
     String PROJECT_FEED_URL=DOMAIN+"/api/v1/projects/{project_id}/feeds.json";
 
+
     String DESCORY_PROJECT_URL=DOMAIN+"/api/v1/projects.json";
+
+
+    //notification
+    String NOTIFICATION_URL=DOMAIN+"/api/v1/notifications.json";
 
 
 

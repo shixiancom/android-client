@@ -44,7 +44,7 @@ public class TimeUtil {
                 interval = h + "天前";
             } else {
                 // 大于3天，则显示正常的时间，但是不显示秒
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 ParsePosition pos2 = new ParsePosition(0);
                 Date d2 = (Date) sdf.parse(createtime, pos2);
                 interval = sdf.format(d2);

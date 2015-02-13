@@ -49,10 +49,7 @@ public class UserIndexFragment extends BaseFeedFragment {
     private User user;
     private UserIndexFeedAdapte adapter;
 
-    private static final String PERSON_ITEM = "PERSON_ITEM";
-    private static final String FEED_ITEM = "FEED_ITEM";
-    private static final int VIEW_TYPE_INDEX = 1;
-    private static final int HOLDER_INDEX = 2;
+
 
 
     @Override
@@ -266,7 +263,7 @@ public class UserIndexFragment extends BaseFeedFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             View view = null;
-            FeedHolder holder;
+            FeedHolder holder=null;
 
 
             if (position == 0) {
@@ -391,6 +388,7 @@ public class UserIndexFragment extends BaseFeedFragment {
 
                             String keys[] = feed.data.attachment.url.split("/");
                             String key = keys[keys.length - 1];
+                            holder.iv_content.setTag(key);
                             ImageUtil.loadingImage(holder.iv_icon, BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher), callback, key, AppContants.DOMAIN + feed.data.attachment.url);
                             holder.iv_icon.setTag(key);
 
