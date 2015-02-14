@@ -70,7 +70,7 @@ public class OnClickController implements View.OnClickListener{
 //                Toast.makeText(context,"tv_name",Toast.LENGTH_SHORT).show();
                 break;
             //项目
-            case R.id.tv_proect:
+            case R.id.tv_project:
                 //点击项目要进入项目界面 我先把项目数据拿到看一看　
 
 

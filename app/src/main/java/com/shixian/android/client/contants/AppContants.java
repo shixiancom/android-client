@@ -7,7 +7,7 @@ package com.shixian.android.client.contants;
 public interface AppContants {
 
     //调试的时候为真 输出log
-    boolean DEBUG=true;
+    boolean DEBUG=false;
 
     /***********************API接口地址***************************************************/
     /**

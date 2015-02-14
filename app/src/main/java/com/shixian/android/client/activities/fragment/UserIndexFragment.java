@@ -32,6 +32,7 @@ import com.shixian.android.client.utils.ImageCallback;
 import com.shixian.android.client.utils.ImageDownload;
 import com.shixian.android.client.utils.ImageUtil;
 import com.shixian.android.client.utils.JsonUtils;
+import com.shixian.android.client.utils.SharedPerenceUtil;
 import com.shixian.android.client.utils.TimeUtil;
 import com.shixian.android.client.views.PersonItemLinearLayout;
 
@@ -51,6 +52,34 @@ public class UserIndexFragment extends BaseFeedFragment {
 
 
 
+    protected void initCacheData() {
+        firstPageDate= SharedPerenceUtil.getUserIndexFeed(context,user.id);
+
+        String userInfo=SharedPerenceUtil.getUserIndexInfo(context,user.id);
+        if(!TextUtils.isEmpty(userInfo))
+            user=new Gson().fromJson(userInfo,User.class);
+        feedList = JsonUtils.ParseFeeds(firstPageDate);
+
+        if(user.status!=null)
+        if (adapter == null) {
+            adapter = new UserIndexFeedAdapte();
+            pullToRefreshListView.getRefreshableView().setAdapter(adapter);
+        } else {
+            adapter.notifyDataSetChanged();
+        }
+
+    }
+
+    @Override
+    protected void initFirst() {
+        initImageCallBack();
+        initFirstData();
+    }
+
+    @Override
+    protected void initLable() {
+        context.setLable("个人主页");
+    }
 
     @Override
     protected void initImageCallBack() {
@@ -88,7 +117,7 @@ public class UserIndexFragment extends BaseFeedFragment {
 
                             feedList.addAll(JsonUtils.ParseFeeds(temp));
 
-                            //TODO 第一页的缓存
+
 
                             //保存数据到本地
 
@@ -133,7 +162,22 @@ public class UserIndexFragment extends BaseFeedFragment {
     @Override
     public void initDate(Bundle savedInstanceState) {
         initImageCallBack();
-        initFirstData();
+        if(feedList!=null&&feedList.size()>0)
+        {
+            if (adapter == null) {
+                adapter = new UserIndexFeedAdapte();
+
+
+                pullToRefreshListView.getRefreshableView().setAdapter(adapter);
+            } else {
+                adapter.notifyDataSetChanged();
+            }
+
+
+        }else{
+
+            initFirstData();
+        }
 
     }
 
@@ -141,6 +185,7 @@ public class UserIndexFragment extends BaseFeedFragment {
     protected void initFirstData() {
 
         user = (User) getArguments().get("user");
+        initCacheData();
 
         initUserInfo();
 
@@ -155,6 +200,7 @@ public class UserIndexFragment extends BaseFeedFragment {
     private void initUserFeed() {
         //如果是自身 说明是我的主页 我的信息都已经在登陆的时候拿到了 所以就不需要获取了 否则获取用户信息
 
+        context.showProgress();
         CommonEngine.getFeedData(AppContants.USER_FEED_INDEX_URL.replace("{user_name}",user.username),page, new AsyncHttpResponseHandler(){
         @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
@@ -168,17 +214,21 @@ public class UserIndexFragment extends BaseFeedFragment {
                             feedList = JsonUtils.ParseFeeds(firstPageDate);
                             pullToRefreshListView.onPullDownRefreshComplete();
 
+                            SharedPerenceUtil.putUserIndexFeed(context,firstPageDate,user.id);
+
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (adapter == null) {
                                         adapter = new UserIndexFeedAdapte();
                                         pullToRefreshListView.getRefreshableView().setAdapter(adapter);
+
                                     } else {
                                         adapter.notifyDataSetChanged();
                                     }
 
                                     pullToRefreshListView.onPullDownRefreshComplete();
+                                    context.dissProgress();
                                 }
                             });
 
@@ -194,6 +244,7 @@ public class UserIndexFragment extends BaseFeedFragment {
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
                 Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT);
                 pullToRefreshListView.onPullDownRefreshComplete();
+                context.dissProgress();
             }
 
 
@@ -214,10 +265,15 @@ public class UserIndexFragment extends BaseFeedFragment {
 
                 CommonUtil.logDebug("AAAA", userinfo);
 
+
+
                 if (!AppContants.errorMsg.equals(userinfo)) {
                     Gson gson = new Gson();
                     User user = gson.fromJson(userinfo, User.class);
                     UserIndexFragment.this.user = user;
+
+                    //保存userinfo
+                    SharedPerenceUtil.putUserIndexInfo(context, userinfo, user.id + "");
 
                     if (adapter == null) {
                         adapter = new UserIndexFeedAdapte();
@@ -318,7 +374,7 @@ public class UserIndexFragment extends BaseFeedFragment {
                     holder = new FeedHolder();
                     holder.iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
                     holder.tv_name = (TextView) view.findViewById(R.id.tv_name);
-                    holder.tv_proect = (TextView) view.findViewById(R.id.tv_proect);
+                    holder.tv_proect = (TextView) view.findViewById(R.id.tv_project);
                     holder.tv_time = (TextView) view.findViewById(R.id.tv_time);
                     ;
                     holder.tv_content = (TextView) view.findViewById(R.id.tv_content);
@@ -362,51 +418,57 @@ public class UserIndexFragment extends BaseFeedFragment {
                     switch (feed.feedable_type) {
                         case "Idea":
                             type = context.getResources().getString(R.string.add_idea);
-                            content = Html.fromHtml(feed.data.content_html).toString();
-                            holder.tv_content.setText(content);
+                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
                             break;
                         case "Project":
                             type = context.getResources().getString(R.string.add_project);
                             project = feed.data.title;
-                            content = Html.fromHtml(feed.data.description).toString();
-                            holder.tv_content.setText(content);
-
+                            holder.tv_content.setText(Html.fromHtml(feed.data.description));
                             //隐藏回复框
                             holder.tv_response.setVisibility(View.GONE);
-
                             break;
                         case "Plan":
                             type = context.getResources().getString(R.string.add_plan);
-                            content = feed.data.content + "   截至到: " + feed.data.finish_on;
+
+                            holder.tv_content.setText(feed.data.content + "   截至到: " + feed.data.finish_on);
                             break;
                         case "Image":
-                            content = Html.fromHtml(feed.data.content_html).toString();
+
                             type = context.getResources().getString(R.string.add_image);
-                            holder.tv_content.setText(content);
+                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
 
-                            holder.iv_content.setVisibility(View.VISIBLE);
+                            String keys[]=feed.data.attachment.url.split("/");
+                            String key=keys[keys.length-1];
 
-                            String keys[] = feed.data.attachment.url.split("/");
-                            String key = keys[keys.length - 1];
                             holder.iv_content.setTag(key);
-                            ImageUtil.loadingImage(holder.iv_icon, BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher), callback, key, AppContants.DOMAIN + feed.data.attachment.url);
-                            holder.iv_icon.setTag(key);
-
+                            ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.attachment.url);
 
                             break;
                         case "UserProjectRelation":
                             type = context.getResources().getString(R.string.join);
-
+                            //隐藏回复框
+                            holder.tv_response.setVisibility(View.GONE);
+                            holder.tv_content.setVisibility(View.GONE);
                             break;
                         case "Homework":
                             type = context.getResources().getString(R.string.finish_homework);
+                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
                             break;
                         case "Task":
-                            type = context.getResources().getString(R.string.finish_homework);
+                            type = context.getResources().getString(R.string.finish_task);
+                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
                             break;
+                        case "Vote":
+                            type = context.getResources().getString(R.string.finish_task);
 
-
+                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
+                            break;
+                        case "Attachment":
+                            type = context.getResources().getString(R.string.feed_attachment);
+                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
+                            break;
                     }
+
 
 
                     //头像图片处理
@@ -435,9 +497,10 @@ public class UserIndexFragment extends BaseFeedFragment {
 
                     //设置样式
 //                int textSize=DisplayUtil.sp2px(context,13);
-                    holder.tv_name.setTextSize(18);
-                    holder.tv_time.setTextSize(18);
-                    holder.tv_content.setTextSize(18);
+                    holder.tv_name.setTextSize(13);
+                    holder.tv_time.setTextSize(13);
+                    holder.tv_content.setTextSize(13);
+
 
                     ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
                     int imageSize = DisplayUtil.dip2px(context, 40);
@@ -455,6 +518,7 @@ public class UserIndexFragment extends BaseFeedFragment {
                     holder.tv_time.setText(TimeUtil.getDistanceTime(comment.created_at));
                     holder.tv_proect.setVisibility(View.GONE);
                     holder.tv_type.setVisibility(View.GONE);
+                    holder.tv_content.setVisibility(View.VISIBLE);
                     holder.tv_content.setText(Html.fromHtml(comment.content_html));
 
 

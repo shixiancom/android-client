@@ -25,6 +25,7 @@ import com.shixian.android.client.utils.ImageCache;
 import com.shixian.android.client.utils.ImageCallback;
 import com.shixian.android.client.utils.ImageDownload;
 import com.shixian.android.client.utils.JsonUtils;
+import com.shixian.android.client.utils.SharedPerenceUtil;
 import com.shixian.android.client.utils.TimeUtil;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshBase;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView;
@@ -56,6 +57,7 @@ public class NewsFragment extends BaseFragment
 
         View view=inflater.inflate(R.layout.fragment_index,null,false);
 
+        context.setLable("消息");
 
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.lv_index);
         // 滚动到底自动加载可用
@@ -71,7 +73,7 @@ public class NewsFragment extends BaseFragment
 
                 //上啦刷新
                 Log.i("AAAA", "1111-------------------------------------------------------------------");
-                initDate(null);
+                initFirst();
             }
 
             @Override
@@ -90,14 +92,53 @@ public class NewsFragment extends BaseFragment
         newsList = new ArrayList<News>();
 
 
+        initCacheData();
 
         return view;
     }
 
+    private void initCacheData() {
+
+        newsList=JsonUtils.parseNews(SharedPerenceUtil.getNews(context)) ;
+
+
+        if (adapter == null) {
+            adapter = new NewsAdapter();
+            pullToRefreshListView.getListView().setAdapter(adapter);
+
+        } else {
+            adapter.notifyDataSetChanged();
+        }
+
+
+    }
+
     @Override
     public void initDate(Bundle savedInstanceState) {
-        initImageCallBack();
 
+        initImageCallBack();
+        if(newsList!=null&&newsList.size()>0)
+        {
+            if (adapter == null) {
+                adapter = new NewsAdapter();
+
+
+                pullToRefreshListView.getRefreshableView().setAdapter(adapter);
+            } else {
+                adapter.notifyDataSetChanged();
+            }
+
+
+        }else{
+
+            initFirst();
+        }
+
+    }
+
+    private void initFirst() {
+        initImageCallBack();
+        context.showProgress();
         ApiUtils.get(AppContants.NOTIFICATION_URL,null,new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
@@ -113,6 +154,7 @@ public class NewsFragment extends BaseFragment
                             newsList= JsonUtils.parseNews(temp);
 
 
+                            SharedPerenceUtil.putNews(context,temp);
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -130,6 +172,7 @@ public class NewsFragment extends BaseFragment
                     page=1;
 
                     pullToRefreshListView.onPullDownRefreshComplete();
+                    context.dissProgress();
 
 
                 }
@@ -140,6 +183,7 @@ public class NewsFragment extends BaseFragment
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
                 Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT);
                 pullToRefreshListView.onPullDownRefreshComplete();
+                context.dissProgress();
             }
         });
     }

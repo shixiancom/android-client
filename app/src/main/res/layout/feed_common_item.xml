@@ -4,7 +4,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    >
     
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -12,8 +13,8 @@
         android:orientation="horizontal"
         >
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:src="@drawable/ic_launcher"
@@ -29,8 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:text="测试xxxxxx"
-            android:textColor="#A18141"
-            android:textSize="@dimen/content_text_size" />
+            android:textColor="#005580"
+            android:textSize="@dimen/actor_text_size" />
 
         <TextView
             android:layout_marginLeft="3dp"
@@ -41,8 +42,8 @@
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/content_text_size"
-            android:textColor="#A5A5A5"
+            android:textSize="@dimen/actor_text_size"
+            android:textColor="#9B9B9B"
             android:layout_marginRight="10dp"
             android:layout_gravity="center_vertical"
             android:text="19小时以前"
@@ -53,12 +54,12 @@
 
         <TextView
             android:singleLine="true"
-            android:id="@+id/tv_proect"
+            android:id="@+id/tv_project"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="测试"
-            android:textColor="#A18141"
-            android:textSize="@dimen/content_text_size"
+            android:textColor="#005580"
+            android:textSize="@dimen/actor_text_size"
             android:layout_alignLeft="@id/tv_name"
             android:layout_below="@id/tv_name"
             android:layout_marginTop="2dp"
@@ -75,7 +76,7 @@
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/content_text_size"
+            android:textSize="@dimen/time_text_size"
             android:textColor="#888888"
             android:layout_marginRight="10dp"
             android:layout_gravity="center_vertical"
@@ -91,7 +92,7 @@
         android:id="@+id/tv_content" 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textColor="#7B7B7B"
+        android:textColor="#666666"
         android:textSize="@dimen/content_text_size"
         android:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
         android:layout_marginLeft="10dp"
@@ -108,7 +109,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_response"
-        android:text="回复框"
+        android:background="@drawable/text_response"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         />
     <View
         android:id="@+id/v_line"
@@ -117,6 +120,7 @@
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
         android:background="#888888"
+        android:layout_marginBottom="5dp"
         />
    
 </LinearLayout>

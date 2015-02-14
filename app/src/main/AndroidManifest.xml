@@ -1,6 +1,9 @@
 <manifest
     package="com.shixian.android.client"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:versionCode="1"
+    android:versionName="1.0"
+    >
 
    <!--微薄认证所需要的权限-->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -26,7 +29,6 @@
                 <action android:name="android.intent.action.main"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
         </activity>
 
         <activity

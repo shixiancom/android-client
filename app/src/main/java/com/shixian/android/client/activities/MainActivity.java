@@ -1,9 +1,7 @@
 package com.shixian.android.client.activities;
 
-import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -15,8 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +25,8 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
-import com.shixian.android.client.activities.fragment.NewsFragment;
+import com.shixian.android.client.activities.fragment.IndexFragment;
+import com.shixian.android.client.activities.fragment.ProjectFeedFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.engine.CommonEngine;
@@ -33,8 +34,6 @@ import com.shixian.android.client.model.SimpleProject;
 import com.shixian.android.client.model.User;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
-import com.shixian.android.client.views.ParentListView;
-import com.shixian.android.client.views.SubListView;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -45,18 +44,21 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
+
 /**
  * Created by doom on 15/2/2.
  */
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements View.OnClickListener {
     private String TAG = "MainActivity";
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
 
     //抽屉里的子listView
     private List<SimpleProject> projectList;
-    private ProjectAdapter projectAdapter;
-    private SubListView subListView;
+    private MenuAdapter projectAdapter;
 
 
     //抽屉里的主ListView
@@ -78,7 +80,15 @@ public class MainActivity extends ActionBarActivity {
     /**
      * 丑陋的进度条 搞好逻辑之后替换
      */
-    private ProgressDialog progressDialog;
+    private SmoothProgressBar mProgressBar ;
+
+
+    private LinearLayout ll_descory;
+    private LinearLayout ll_index;
+    private LinearLayout ll_msg;
+
+    //用于记录 当前属于哪个
+    private int current_menuid=R.id.ll_index;
 
 
     @Override
@@ -102,22 +112,8 @@ public class MainActivity extends ActionBarActivity {
         //初始化用户的项目
         initUserProjects();
 
-        initIndexDate();
-
     }
 
-    /**
-     * 初始化主页数据
-     */
-    private void initIndexDate() {
-        //终于搞主页了  在搞主页之前我觉得应该弄一个牛逼的进度条  算了 有空再弄吧 先把逻辑写出来吧
-
-//        progressDialog.show();
-
-
-
-
-    }
 
     private void initUserProjects() {
         projectList = new ArrayList<>();
@@ -150,10 +146,10 @@ public class MainActivity extends ActionBarActivity {
                             SharedPerenceUtil.putMyProject(MainActivity.this, myProjectjson);
 
                             if (projectAdapter == null) {
-                                projectAdapter = new ProjectAdapter();
+                                projectAdapter = new MenuAdapter();
                                 //TODO 给listView设置上 现在设置到主lv里面了 明天再改 //还需要做缓存
-                                subListView.setAdapter(projectAdapter);
-                                lv_menu.setAdapter(new MenuAdapter());
+
+                                lv_menu.setAdapter(projectAdapter);
 //                                Utility.setListViewHeightBasedOnChildren(subListView);
 
 
@@ -245,7 +241,10 @@ public class MainActivity extends ActionBarActivity {
     private void initUI() {
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
         setSupportActionBar(toolbar);
+
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -270,6 +269,13 @@ public class MainActivity extends ActionBarActivity {
                 super.onDrawerClosed(drawerView);
             }
         };
+
+        mProgressBar= (SmoothProgressBar) findViewById(R.id.pocket);
+        mProgressBar.setSmoothProgressDrawableBackgroundDrawable(
+                SmoothProgressBarUtils.generateDrawableWithColors(
+                        getResources().getIntArray(R.array.pocket_background_colors),
+                        ((SmoothProgressDrawable) mProgressBar.getIndeterminateDrawable()).getStrokeWidth()));
+
         drawerToggle.syncState();
         drawerLayout.setDrawerListener(drawerToggle);
 
@@ -284,22 +290,46 @@ public class MainActivity extends ActionBarActivity {
 
         iv_icon.setImageBitmap(BitmapFactory.decodeFile(getFilesDir().getAbsolutePath() + AppContants.USER_ICON_NAME));
 
-        lv_menu = (ParentListView) findViewById(R.id.lv_menu);
+        lv_menu = (ListView) findViewById(R.id.lv_menu);
+
+        lv_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                SimpleProject project=projectList.get(position);
+                if(project!=null)
+                {
+                    //跳转到项目页面
+                    Bundle bundle=new Bundle();
+                    ProjectFeedFragment feedFragment=new ProjectFeedFragment();
+                    bundle.putString("project_id",project.getId()+"");
+                    feedFragment.setArguments(bundle);
+                    MainActivity.this.switchFragment(feedFragment,null);
+                }
+
+            }
+        });
+
+        /**
+         * 抽屉中的三个选项
+         */
+        ll_descory= (LinearLayout) findViewById(R.id.ll_descory);
+        ll_msg= (LinearLayout) findViewById(R.id.ll_msg);
+        ll_index= (LinearLayout) findViewById(R.id.ll_index);
+
+        ll_descory.setOnClickListener(this);
+        ll_msg.setOnClickListener(this);
+        ll_index.setOnClickListener(this);
 
 
-        subListView = new SubListView(MainActivity.this);
 
-        progressDialog =new ProgressDialog(MainActivity.this);
 
     }
 
     private void addFragment() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//        IndexFragment newsFragment=new IndexFragment();
-        NewsFragment newsFragment = new NewsFragment();
-
-//        DiscoryProjectFragment newsFragment=new DiscoryProjectFragment();
-        fragmentTransaction.replace(R.id.main_fragment_layout, newsFragment);
+        IndexFragment indexFragment=new IndexFragment();
+        fragmentTransaction.replace(R.id.main_fragment_layout, indexFragment);
         fragmentTransaction.commit();
     }
 
@@ -309,8 +339,24 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
+    @Override
+    public void onClick(View v) {
 
-    private class ProjectAdapter extends BaseAdapter {
+        switch (v.getId())
+        {
+            case R.id.ll_descory:
+
+                break;
+            case R.id.ll_index:
+                break;
+            case R.id.ll_msg:
+                break;
+        }
+
+    }
+
+
+    private class MenuAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -356,55 +402,19 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-    class MenuAdapter extends BaseAdapter {
 
-        @Override
-        public int getCount() {
-            return 5;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            TextView tv = new TextView(MainActivity.this);
-            tv.setBackgroundColor(Color.BLUE);
-            tv.setText("xxxxxxxxxxxxxx");
-            switch (position) {
-                case 0:
-
-                case 1:
-                case 2:
-
-                case 3:
-                    return tv;
-                case 4:
-                    return subListView;
-            }
-
-            return tv;
-
-        }
-    }
 
 
     public void showProgress()
     {
-        progressDialog.show();
+        mProgressBar.progressiveStart();
+        mProgressBar.setVisibility(View.VISIBLE);
     }
 
     public void dissProgress()
     {
-        progressDialog.dismiss();
+        mProgressBar.progressiveStop();
+        mProgressBar.setVisibility(View.GONE);
     }
 
 
@@ -416,14 +426,21 @@ public class MainActivity extends ActionBarActivity {
 //        fragmentTransaction.
 
 
-        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.addToBackStack(key);
 //        NewsFragment newsFragment = new NewsFragment();
         fragmentTransaction.replace(R.id.main_fragment_layout, fragment);
         fragmentTransaction.commit();
+        drawerLayout.closeDrawers();
 
 
 
 
+
+    }
+
+    public void  setLable(String lable)
+    {
+        toolbar.setTitle(lable);
     }
 
 }

@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.shixian.android.client.R;
@@ -20,6 +21,7 @@ import com.shixian.android.client.model.Project;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
 import com.shixian.android.client.utils.JsonUtils;
+import com.shixian.android.client.utils.SharedPerenceUtil;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshBase;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView;
 
@@ -46,6 +48,8 @@ public class DiscoryProjectFragment extends BaseFragment {
 
         View view = View.inflate(context, R.layout.fragment_index, null);
 
+        context.setLable("发现");
+
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.lv_index);
         // 滚动到底自动加载可用
         pullToRefreshListView.setScrollLoadEnabled(true);
@@ -59,8 +63,10 @@ public class DiscoryProjectFragment extends BaseFragment {
                     PullToRefreshBase<ListView> refreshView) {
 
                 //上啦刷新
-                initDate(null);
+                initFirst();
             }
+
+
 
             @Override
             public void onPullUpToRefresh(
@@ -75,8 +81,29 @@ public class DiscoryProjectFragment extends BaseFragment {
 
         projectList = new ArrayList<Project>();
 
+        initCacheData();
+
 
         return view;
+    }
+
+    private void initFirst() {
+        initFirstData();
+
+    }
+
+    private void initCacheData() {
+        firstPageDate= SharedPerenceUtil.getProjectDiscoryProject(context);
+
+        projectList= JsonUtils.ParsesProject(firstPageDate);
+
+        if (adapter == null) {
+            adapter = new ProjectAdapter();
+
+        } else {
+            adapter.notifyDataSetChanged();
+        }
+
     }
 
     private void getNextData() {
@@ -136,11 +163,28 @@ public class DiscoryProjectFragment extends BaseFragment {
 
     @Override
     public void initDate(Bundle savedInstanceState) {
-        initFirstData();
+
+        if(projectList!=null&&projectList.size()>0)
+        {
+            if (adapter == null) {
+                adapter = new ProjectAdapter();
+
+
+                pullToRefreshListView.getRefreshableView().setAdapter(adapter);
+            } else {
+                adapter.notifyDataSetChanged();
+            }
+
+
+        }else{
+
+            initFirst();
+        }
+
     }
 
     private void initFirstData() {
-
+        context.showProgress();
 
         ApiUtils.get(AppContants.DESCORY_PROJECT_URL, null, new AsyncHttpResponseHandler() {
             @Override
@@ -161,7 +205,8 @@ public class DiscoryProjectFragment extends BaseFragment {
 
                             page = 1;
 
-                            //TODO 第一页的缓存
+
+                            SharedPerenceUtil.putProjectDiscoryProject(context,temp);
 
                             //保存数据到本地
 
@@ -183,6 +228,7 @@ public class DiscoryProjectFragment extends BaseFragment {
                         }
                     }.start();
                     pullToRefreshListView.onPullDownRefreshComplete();
+                    context.dissProgress();
                 }
             }
 
@@ -190,6 +236,7 @@ public class DiscoryProjectFragment extends BaseFragment {
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
                 Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
                 pullToRefreshListView.onPullDownRefreshComplete();
+                context.dissProgress();
             }
         });
     }

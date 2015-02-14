@@ -39,7 +39,7 @@ public class LoginActivity extends Activity
 
 //        AccessTokenKeeper.clear(this);
         mAccessToken=AccessTokenKeeper.readAccessToken(LoginActivity.this);
-        Toast.makeText(this,mAccessToken.getToken(),Toast.LENGTH_LONG).show();
+      // Toast.makeText(this,mAccessToken.getToken(),Toast.LENGTH_LONG).show();
         //不为null 并且可用
         if(mAccessToken!=null&&mAccessToken.isSessionValid()){
             //这里还要验证token是否可用

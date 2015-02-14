@@ -15,19 +15,20 @@
        <TextView
            android:layout_width="250dp"
            android:layout_height="wrap_content"
-           android:textSize="18sp"
-           android:textColor="#000000"
+           android:textSize="17sp"
            android:layout_marginTop="10dp"
            android:layout_marginLeft="10dp"
            android:singleLine="true"
            android:id="@+id/tv_name"
+           android:textColor="#005580"
            />
 
        <TextView
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           android:textSize="18sp"
-           android:text="guanzhu"
+           android:textSize="15sp"
+           android:text="关注"
+           android:background="#20C8AF"
            android:layout_alignParentRight="true"
            android:layout_alignTop="@id/tv_name"
            android:id="@+id/tv_follow"
@@ -36,11 +37,20 @@
        </RelativeLayout>
 
     <TextView
+        android:layout_marginTop="20px"
         android:id="@+id/tv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="15sp"
+        android:textColor="#666666"
         android:text="xxxxxxxx"
         />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#666666"
+        />
+
 
 </com.shixian.android.client.views.PersonItemLinearLayout>

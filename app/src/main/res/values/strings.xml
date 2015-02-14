@@ -11,7 +11,10 @@
     <string name="add_image">发布图片到</string>
     <string name="add_plan">发布计划到</string>
     <string name="join">加入到</string>
-    <string name="finish_homework">完成任务在</string>
+    <string name="finish_task">添加了任务在</string>
+    <string name="vote">添加了投票在</string>
+    <string name="finish_homework">提交了任务在</string>
+    <string name="feed_attachment">添加了新文件</string>
     <string name="activity_index_label">首页</string>
     <string name="pull_to_refresh_header_hint_normal">下拉刷新</string>
     <string name="pull_to_refresh_header_hint_ready">释放刷新</string>

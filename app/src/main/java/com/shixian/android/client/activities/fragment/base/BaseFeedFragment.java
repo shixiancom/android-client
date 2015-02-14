@@ -34,6 +34,9 @@ public abstract  class BaseFeedFragment extends BaseFragment {
     public View initView(LayoutInflater inflater) {
 
         View view = inflater.inflate(R.layout.fragment_index, null, false);
+
+        initLable();
+
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.lv_index);
         // 滚动到底自动加载可用
         pullToRefreshListView.setScrollLoadEnabled(true);
@@ -48,7 +51,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
 
                 //上啦刷新
                 Log.i("AAAA", "1111-------------------------------------------------------------------");
-                initDate(null);
+                initFirst();
             }
 
             @Override
@@ -67,13 +70,13 @@ public abstract  class BaseFeedFragment extends BaseFragment {
         feedList = new ArrayList<BaseFeed>();
 
 
+
         return view;
     }
 
+    protected abstract void initFirst();
 
-
-
-
+    protected abstract void initLable();
 
 
     protected void initImageCallBack() {

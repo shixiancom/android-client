@@ -31,6 +31,7 @@ import com.shixian.android.client.utils.ImageCache;
 import com.shixian.android.client.utils.ImageDownload;
 import com.shixian.android.client.utils.ImageUtil;
 import com.shixian.android.client.utils.JsonUtils;
+import com.shixian.android.client.utils.SharedPerenceUtil;
 import com.shixian.android.client.utils.TimeUtil;
 import com.shixian.android.client.views.PersonItemLinearLayout;
 
@@ -49,6 +50,40 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
     private String TAG="ProjectFeedFragment";
 
+
+
+    protected void initCacheData() {
+
+        firstPageDate= SharedPerenceUtil.getProjectIndexFeed(context, project.id);
+
+        String projectInfo=SharedPerenceUtil.getProjectIndexInfo(context, project.id + "");
+
+        if(!TextUtils.isEmpty(projectInfo))
+            project=new Gson().fromJson(projectInfo, Project.class);
+        feedList = JsonUtils.ParseFeeds(firstPageDate);
+
+        if (adapter == null) {
+            adapter = new ProjectFeedAdapter();
+            pullToRefreshListView.getListView().setAdapter(adapter);
+
+        } else {
+            adapter.notifyDataSetChanged();
+        }
+
+    }
+
+    @Override
+    protected void initFirst() {
+        project.id= Integer.parseInt((String) getArguments().get("project_id"));
+
+        initImageCallBack();
+        initFirstData();
+    }
+
+    @Override
+    protected void initLable() {
+        context.setLable("项目主页");
+    }
 
     @Override
     protected void getNextData() {
@@ -113,10 +148,25 @@ public class ProjectFeedFragment extends BaseFeedFragment {
     @Override
     public void initDate(Bundle savedInstanceState) {
 
-        project.id= Integer.parseInt((String) getArguments().get("project_id"));
+        if(feedList!=null&&feedList.size()>0)
+        {
+            if (adapter == null) {
+                adapter = new ProjectFeedAdapter();
 
-        initImageCallBack();
-        initFirstData();
+
+                pullToRefreshListView.getRefreshableView().setAdapter(adapter);
+            } else {
+                adapter.notifyDataSetChanged();
+            }
+
+
+        }else{
+
+            initFirst();
+        }
+
+
+
 
 
     }
@@ -124,6 +174,9 @@ public class ProjectFeedFragment extends BaseFeedFragment {
     @Override
     protected void initFirstData() {
         //开始搞
+        initCacheData();
+
+
         initProjectInfo();
 
         initProjectFeed();
@@ -134,6 +187,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
     private void initProjectFeed() {
 
+        context.showProgress();
         CommonEngine.getFeedData(AppContants.PROJECT_FEED_URL.replace("{project_id}",project.id+"" ), page, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
@@ -147,6 +201,9 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                             feedList = JsonUtils.ParseFeeds(firstPageDate);
                             pullToRefreshListView.onPullDownRefreshComplete();
 
+
+                             SharedPerenceUtil.putProjectIndexFeed(context, temp, project.id);
+
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -158,6 +215,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                                     }
 
                                     pullToRefreshListView.onPullDownRefreshComplete();
+                                    context.dissProgress();
                                 }
                             });
 
@@ -173,6 +231,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
                 Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT);
                 pullToRefreshListView.onPullDownRefreshComplete();
+                context.dissProgress();
             }
 
 
@@ -195,6 +254,8 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                             project_info = temp;
                             Gson gson = new Gson();
                             project = gson.fromJson(project_info, Project.class);
+
+                            SharedPerenceUtil.putProjectIndexInfo(context, temp, project.id);
 
 
                             context.runOnUiThread(new Runnable() {
@@ -280,7 +341,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                     holder = new FeedHolder();
                     holder.iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
                     holder.tv_name = (TextView) view.findViewById(R.id.tv_name);
-                    holder.tv_proect = (TextView) view.findViewById(R.id.tv_proect);
+                    holder.tv_proect = (TextView) view.findViewById(R.id.tv_project);
                     holder.tv_time = (TextView) view.findViewById(R.id.tv_time);
                     ;
                     holder.tv_content = (TextView) view.findViewById(R.id.tv_content);
@@ -313,6 +374,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
                 if (!baseFeed.feedable_type.equals(AppContants.FEADE_TYPE_COMMON)) {
 
+
                     Feed2 feed = (Feed2) baseFeed;
 
                     if (feed.data.project != null && !TextUtils.isEmpty(feed.data.project.title))
@@ -324,51 +386,56 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                     switch (feed.feedable_type) {
                         case "Idea":
                             type = context.getResources().getString(R.string.add_idea);
-                            content = Html.fromHtml(feed.data.content_html).toString();
-                            holder.tv_content.setText(content);
+                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
                             break;
                         case "Project":
                             type = context.getResources().getString(R.string.add_project);
                             project = feed.data.title;
-                            content = Html.fromHtml(feed.data.description).toString();
-                            holder.tv_content.setText(content);
-
+                            holder.tv_content.setText(Html.fromHtml(feed.data.description));
                             //隐藏回复框
                             holder.tv_response.setVisibility(View.GONE);
-
                             break;
                         case "Plan":
                             type = context.getResources().getString(R.string.add_plan);
-                            content = feed.data.content + "   截至到: " + feed.data.finish_on;
+
+                            holder.tv_content.setText(feed.data.content + "   截至到: " + feed.data.finish_on);
                             break;
                         case "Image":
-                            content = Html.fromHtml(feed.data.content_html).toString();
+
                             type = context.getResources().getString(R.string.add_image);
-                            holder.tv_content.setText(content);
+                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
 
-                            holder.iv_content.setVisibility(View.VISIBLE);
+                            String keys[]=feed.data.attachment.url.split("/");
+                            String key=keys[keys.length-1];
 
-                            String keys[] = feed.data.attachment.url.split("/");
-                            String key = keys[keys.length - 1];
-                            ImageUtil.loadingImage(holder.iv_icon, BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher), callback, key, AppContants.DOMAIN + feed.data.attachment.url);
-                            holder.iv_icon.setTag(key);
-
+                            holder.iv_content.setTag(key);
+                            ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.attachment.url);
 
                             break;
                         case "UserProjectRelation":
                             type = context.getResources().getString(R.string.join);
-
+                            //隐藏回复框
+                            holder.tv_response.setVisibility(View.GONE);
+                            holder.tv_content.setVisibility(View.GONE);
                             break;
                         case "Homework":
                             type = context.getResources().getString(R.string.finish_homework);
+                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
                             break;
                         case "Task":
-                            type = context.getResources().getString(R.string.finish_homework);
+                            type = context.getResources().getString(R.string.finish_task);
+                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
                             break;
+                        case "Vote":
+                            type = context.getResources().getString(R.string.finish_task);
 
-
+                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
+                            break;
+                        case "Attachment":
+                            type = context.getResources().getString(R.string.feed_attachment);
+                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
+                            break;
                     }
-
 
                     //头像图片处理
                     String keys[] = feed.data.user.avatar.small.url.split("/");
@@ -396,9 +463,9 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
                     //设置样式
 //                int textSize=DisplayUtil.sp2px(context,13);
-                    holder.tv_name.setTextSize(18);
-                    holder.tv_time.setTextSize(18);
-                    holder.tv_content.setTextSize(18);
+                    holder.tv_name.setTextSize(13);
+                    holder.tv_time.setTextSize(13);
+                    holder.tv_content.setTextSize(13);
 
                     ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
                     int imageSize = DisplayUtil.dip2px(context, 40);
@@ -416,6 +483,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                     holder.tv_time.setText(TimeUtil.getDistanceTime(comment.created_at));
                     holder.tv_proect.setVisibility(View.GONE);
                     holder.tv_type.setVisibility(View.GONE);
+                    holder.tv_content.setVisibility(View.VISIBLE);
                     holder.tv_content.setText(Html.fromHtml(comment.content_html));
 
 

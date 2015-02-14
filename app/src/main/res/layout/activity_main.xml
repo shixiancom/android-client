@@ -25,6 +25,13 @@
                 app:popupTheme="@style/PopupMenuStyle">
             </android.support.v7.widget.Toolbar>
 
+            <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+                android:id="@+id/pocket"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                style="@style/PocketProgressBar"
+                android:indeterminate="true"/>
+
             <FrameLayout
                 android:id="@+id/main_fragment_layout"
                 android:layout_width="match_parent"
@@ -49,6 +56,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:background="#FFF"
                     android:layout_marginLeft="20dp"
                     android:id="@+id/iv_icon"
                     android:layout_width="wrap_content"
@@ -56,20 +64,89 @@
 
                 <TextView
                     android:layout_marginTop="10dp"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:id="@+id/tv_uname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="asd"/>
+                    android:text="用户名"/>
             </LinearLayout>
 
-            <com.shixian.android.client.views.ParentListView
-                android:id="@+id/lv_menu"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/ll_index"
+                android:gravity="center_vertical"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                
                 >
-            </com.shixian.android.client.views.ParentListView>
+                <ImageView
+                    android:src="@android:drawable/ic_menu_upload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+               <TextView
+                   android:layout_marginLeft="60dp"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="首页"/>
+                </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_msg"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <ImageView
+                    android:src="@android:drawable/ic_lock_silent_mode_off"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+                <TextView
+                    android:layout_marginLeft="60dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="消息"
+
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_descory"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                >
+                <ImageView
+                    android:src="@android:drawable/btn_star_big_off"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+                <TextView
+                    android:layout_marginLeft="60dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="发现"
+
+                    />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#888888"
+                />
+
+
+            <ListView
+                android:id="@+id/lv_menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+            </ListView>
 
         </LinearLayout>
     </android.support.v4.widget.DrawerLayout>

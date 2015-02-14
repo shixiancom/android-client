@@ -13,8 +13,8 @@
 
         <ImageView
             android:id="@+id/iv_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:src="@drawable/ic_launcher" />
@@ -28,8 +28,8 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/iv_icon"
             android:text="测试"
-            android:textColor="#0000ff"
-            android:textSize="@dimen/content_text_size" />
+            android:textColor="#005580"
+            android:textSize="13sp" />
 
 
         <Button
@@ -40,7 +40,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@id/iv_icon"
             android:layout_marginRight="10dp"
-            android:background="#0000ff"
+            android:background="#20C8AF"
             android:text="关注"
             android:textColor="#44000000" />
 
@@ -54,8 +54,8 @@
             android:layout_below="@id/tv_name"
             android:layout_marginTop="0dp"
             android:text="夜的第七章夜的第七章xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-            android:textColor="#0000ff"
-            android:textSize="@dimen/content_text_size" />
+            android:textColor="#888888"
+            android:textSize="13sp"/>
     </RelativeLayout>
 
     <View
