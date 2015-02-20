@@ -416,6 +416,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                             String key=keys[keys.length-1];
 
                             holder.iv_content.setTag(key);
+                            holder.iv_content.setVisibility(View.VISIBLE);
                             ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.attachment.url);
 
                             break;
