@@ -49,7 +49,7 @@ public class IndexFragment extends BaseFeedFragment {
     private List<BaseFeed> feedList;
 
 
-    private FeedAdapter adapter;
+    //private FeedAdapter adapter;
 
     private ImageCallback callback;
 
@@ -66,6 +66,7 @@ public class IndexFragment extends BaseFeedFragment {
 //        pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.lv_index);
 //        // 滚动到底自动加载可用
 //        pullToRefreshListView.setScrollLoadEnabled(true);
+//
 //
 //        // 设置下拉刷新的listener
 //        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
@@ -85,7 +86,7 @@ public class IndexFragment extends BaseFeedFragment {
 //                    PullToRefreshBase<ListView> refreshView) {
 //                //getNewsList(moreUrl, false);
 //                //下拉加载更多
-//                Log.i("AAAA","-------------------------------------------------------------------");
+//                Log.i("AAAA", "-------------------------------------------------------------------");
 //                getNextData();
 //
 //
@@ -100,7 +101,8 @@ public class IndexFragment extends BaseFeedFragment {
 //
 //        return view;
 //    }
-
+//
+//
     protected void initCacheData() {
 
         firstPageDate= SharedPerenceUtil.getIndexFeed(context);
@@ -142,7 +144,7 @@ public class IndexFragment extends BaseFeedFragment {
      */
     public void initFirstData()
     {
-
+        page=1;
         context.showProgress();
         CommonEngine.getFeedData(AppContants.INDEX_URL,page, new AsyncHttpResponseHandler() {
             @Override
@@ -314,11 +316,6 @@ public class IndexFragment extends BaseFeedFragment {
 
 
 
-
-
-
-
-
     /************************************Adapter**********************************************/
 
     /**
@@ -370,7 +367,8 @@ public class IndexFragment extends BaseFeedFragment {
 
 
 
-            BaseFeed baseFeed=feedList.get(position);
+            final BaseFeed baseFeed=feedList.get(position);
+            baseFeed.position=position;
 
             String type="";
             String project="";
@@ -559,11 +557,14 @@ public class IndexFragment extends BaseFeedFragment {
 
             if(holder.tv_response.getVisibility()==View.VISIBLE)
             {
-                holder.tv_response.setOnClickListener(controller);
+                holder.tv_response.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popComment(v,baseFeed,lv);
+                    }
+                });
+
             }
-
-
-
 
             return view;
 
@@ -571,28 +572,5 @@ public class IndexFragment extends BaseFeedFragment {
     }
 
 
-    /**
-     * 有些控件要求隐藏
-     */
-    class FeedHolder{
-
-        //事件类型 比如发布一个项目
-        TextView tv_type;
-        //头像
-        ImageView iv_icon;
-        //用户名
-        TextView tv_name;
-        //项目
-        TextView tv_proect;
-        //时间
-        TextView tv_time;
-        //回复内容
-        TextView tv_content;
-        //图片内容 默认是隐藏的 当feedable_type为image时显示
-        ImageView iv_content;
-        //回复框 发表项目的时候是隐藏的
-        TextView tv_response;
-        View v_line;
-    }
 
 }

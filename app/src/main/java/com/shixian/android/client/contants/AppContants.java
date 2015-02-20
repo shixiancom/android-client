@@ -34,7 +34,8 @@ public interface AppContants {
      */
     String USER_INFO_INDEX_URL=DOMAIN+"/api/v1/users/{user_id}.json";
 
-    String USER_FEED_INDEX_URL=DOMAIN+"/api/v1/users/{user_name}/feeds.json";
+    String USER_FEED_INDEX_URL=DOMAIN+"" +
+            "/api/v1/users/{user_name}/feeds.json";
 
     /**
      * project 项目信息
@@ -49,6 +50,23 @@ public interface AppContants {
 
     //notification
     String NOTIFICATION_URL=DOMAIN+"/api/v1/notifications.json";
+
+    String COMMENT_URL=DOMAIN+"/api/v1/%s/%s/comments.json";
+
+    //用户关注地址
+    String USER_FOLLOW_URL=DOMAIN+"/api/v1/users/%s/follow.json";
+
+    //用户取消关注地址
+    String USER_UNFOLLOW_URL=DOMAIN+"/api/v1/users/%s/unfollow.json";
+
+    //生成项目关注信息
+    String PROJECT_FOLLOW_URL=DOMAIN+"/api/v1/projects/%s/follow.json";
+
+    //取消项目关注
+    String PROJECT_UNFOLLOW_URL=DOMAIN+"/api/v1/projects/{project_id}/unfollow.json";
+
+    String MSG_STATUS_URL=DOMAIN+"/api/v1/notifications/status.json";
+
 
 
 

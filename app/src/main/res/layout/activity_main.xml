@@ -35,9 +35,13 @@
             <FrameLayout
                 android:id="@+id/main_fragment_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                >
             </FrameLayout>
+            <include layout="@layout/common_enter_emoji" />
+
+
         </LinearLayout>
 
 
@@ -71,6 +75,7 @@
                     android:text="用户名"/>
             </LinearLayout>
 
+
             <LinearLayout
                 android:id="@+id/ll_index"
                 android:gravity="center_vertical"
@@ -80,7 +85,7 @@
                 >
                 <ImageView
                     android:src="@android:drawable/ic_menu_upload"
-                    android:layout_width="wrap_content"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     />
 
@@ -96,13 +101,29 @@
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 >
+                <FrameLayout
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content">
                 <ImageView
                     android:src="@android:drawable/ic_lock_silent_mode_off"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
 
+                    <Button
+                        android:visibility="gone"
+                        android:id="@+id/bt_msg_count"
+                        android:gravity="center"
+                        android:textSize="15sp"
+                        android:layout_gravity="center_vertical"
+                        android:text="12"
+                        android:background="@drawable/news_cicle_bt"
+                        android:layout_width="60px"
+                        android:layout_height="wrap_content" />
+
+                </FrameLayout>
                 <TextView
                     android:layout_marginLeft="60dp"
                     android:layout_width="wrap_content"
@@ -121,7 +142,7 @@
                 >
                 <ImageView
                     android:src="@android:drawable/btn_star_big_off"
-                    android:layout_width="wrap_content"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     />
 

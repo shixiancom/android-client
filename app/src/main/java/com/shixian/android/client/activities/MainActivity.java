@@ -2,6 +2,8 @@ package com.shixian.android.client.activities;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -25,11 +28,14 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
+import com.shixian.android.client.activities.fragment.DiscoryProjectFragment;
 import com.shixian.android.client.activities.fragment.IndexFragment;
+import com.shixian.android.client.activities.fragment.NewsFragment;
 import com.shixian.android.client.activities.fragment.ProjectFeedFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.engine.CommonEngine;
+import com.shixian.android.client.model.NewsSataus;
 import com.shixian.android.client.model.SimpleProject;
 import com.shixian.android.client.model.User;
 import com.shixian.android.client.utils.ApiUtils;
@@ -43,6 +49,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils;
@@ -55,6 +62,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private String TAG = "MainActivity";
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
+
+    private Drawable drawable;
 
     //抽屉里的子listView
     private List<SimpleProject> projectList;
@@ -90,6 +99,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     //用于记录 当前属于哪个
     private int current_menuid=R.id.ll_index;
 
+    //消息个数
+   private Button bt_msg_count;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +110,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         Global.MAIN=this;
+        Global.context=this;
 
         initUI();
         addFragment();
@@ -112,6 +125,32 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         //初始化用户的项目
         initUserProjects();
 
+        initMsgStatus();
+
+    }
+
+    private void initMsgStatus() {
+        ApiUtils.get(AppContants.MSG_STATUS_URL,null,new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, Header[] headers, final byte[] bytes) {
+                Gson gson=new Gson();
+                final NewsSataus status=gson.fromJson(new String(bytes), NewsSataus.class);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //TODO 设置消息状态
+                        if(status.total!=0)
+                            settingMsgCount(View.VISIBLE,status.total);
+
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                Toast.makeText(MainActivity.this, getString(R.string.check_net), Toast.LENGTH_SHORT);
+            }
+        });
     }
 
 
@@ -242,6 +281,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
+        drawable=toolbar.getNavigationIcon();
+
+        bt_msg_count= (Button) findViewById(R.id.bt_msg_count);
+
 
         setSupportActionBar(toolbar);
 
@@ -320,10 +363,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         ll_descory.setOnClickListener(this);
         ll_msg.setOnClickListener(this);
         ll_index.setOnClickListener(this);
-
-
-
-
     }
 
     private void addFragment() {
@@ -339,17 +378,31 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         return true;
     }
 
+
+    //TODO  这里单纯的切换还不太好  由于对Toolbar不熟悉 所以先这么做了
     @Override
     public void onClick(View v) {
 
         switch (v.getId())
         {
             case R.id.ll_descory:
-
+                switchFragment(new DiscoryProjectFragment(),null);
+                ll_descory.setBackgroundColor(Color.BLUE);
+                ll_index.setBackgroundColor(Color.WHITE);
+                ll_msg.setBackgroundColor(Color.WHITE);
                 break;
             case R.id.ll_index:
+                switchFragment(new IndexFragment(),null);
+                ll_index.setBackgroundColor(Color.BLUE);
+                ll_index.setBackgroundColor(Color.WHITE);
+                ll_msg.setBackgroundColor(Color.WHITE);
                 break;
             case R.id.ll_msg:
+                settingMsgCount(View.GONE,0);
+                switchFragment(new NewsFragment(),null);
+                ll_index.setBackgroundColor(Color.WHITE);
+                ll_index.setBackgroundColor(Color.WHITE);
+                ll_msg.setBackgroundColor(Color.BLUE);
                 break;
         }
 
@@ -421,26 +474,33 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     public void switchFragment(BaseFragment fragment,String key)
     {
 
+
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
 //        fragmentTransaction.
 
-
-        fragmentTransaction.addToBackStack(key);
 //        NewsFragment newsFragment = new NewsFragment();
-        fragmentTransaction.replace(R.id.main_fragment_layout, fragment);
+        fragmentTransaction.replace(R.id.main_fragment_layout, fragment,"xxx"+ new Random().nextInt(1000));
+        fragmentTransaction.addToBackStack(key);
         fragmentTransaction.commit();
         drawerLayout.closeDrawers();
-
-
-
-
 
     }
 
     public void  setLable(String lable)
     {
         toolbar.setTitle(lable);
+    }
+
+
+    public void settingMsgCount(int visibity,int count)
+    {
+        bt_msg_count.setVisibility(visibity);
+        if(count>99)
+            bt_msg_count.setText("99+");
+        else
+            bt_msg_count.setText(count+"");
+
     }
 
 }

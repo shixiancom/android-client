@@ -1,34 +1,17 @@
-package com.shixian.android.client;
+package com.shixian.android.client.enter;
 
 import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.shixian.android.client.model.User;
-import com.shixian.android.client.utils.ImageCache;
-
 /**
- * Created by s0ng on 2015/2/9.
- * 用于存放全局信息  比如说 user cookie 好吧
+ * Created by s0ng on 15-02-17
  */
 public class Global {
-
-    //TODO
-    //放在这里容易被回收
-    public static User user;
-    public static String USER_ID;
 
     public static Context context;
 
 
-    public static Context MAIN;
-
-    //cookie的格式是  key=value  传送的时候记得拆分
-    public static String cookie;
-
-    public static ImageCache IMGCACHE=ImageCache.getInstance();
-
-    //弹出软键盘
     public static void popSoftkeyboard(Context ctx, View view, boolean wantPop) {
         InputMethodManager imm = (InputMethodManager) ctx.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (wantPop) {
@@ -38,4 +21,15 @@ public class Global {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
+    public static int Dp2Px(Context context, float dp) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
+    }
+
+    public static int Px2Dp(Context context, float px) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (px / scale + 0.5f);
+    }
+
 }

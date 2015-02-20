@@ -109,9 +109,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_response"
-        android:background="@drawable/text_response"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:background="@android:drawable/edit_text"
         />
     <View
         android:id="@+id/v_line"

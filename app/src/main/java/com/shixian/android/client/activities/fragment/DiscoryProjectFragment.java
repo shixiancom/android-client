@@ -17,6 +17,7 @@ import com.loopj.android.http.RequestParams;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
+import com.shixian.android.client.controller.DiscoryOnClickColler;
 import com.shixian.android.client.model.Project;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
@@ -99,6 +100,7 @@ public class DiscoryProjectFragment extends BaseFragment {
 
         if (adapter == null) {
             adapter = new ProjectAdapter();
+            pullToRefreshListView.getListView().setAdapter(adapter);
 
         } else {
             adapter.notifyDataSetChanged();
@@ -181,6 +183,7 @@ public class DiscoryProjectFragment extends BaseFragment {
             initFirst();
         }
 
+
     }
 
     private void initFirstData() {
@@ -201,7 +204,7 @@ public class DiscoryProjectFragment extends BaseFragment {
                             CommonUtil.logDebug(TAG, new String(temp));
 
                             // projectList.addAll(JsonUtils.ParseFeeds(firstPageDate));
-                            projectList.addAll(JsonUtils.ParsesProject(temp));
+                            projectList=JsonUtils.ParsesProject(temp);
 
                             page = 1;
 
@@ -262,7 +265,7 @@ public class DiscoryProjectFragment extends BaseFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             View view;
-            Holder holder;
+            final Holder holder;
 
             if (convertView == null) {
                 view = View.inflate(context, R.layout.discoryproject_item, null);
@@ -276,16 +279,67 @@ public class DiscoryProjectFragment extends BaseFragment {
                 holder = (Holder) view.getTag();
             }
 
-            Project project = projectList.get(position);
+            final Project project = projectList.get(position);
             holder.tv_title.setText(project.title);
             if (!TextUtils.isEmpty(project.description))
                 holder.tv_content.setText(Html.fromHtml(project.description));
 
-            if (project.has_followed) {
-                holder.tv_fllowen.setBackgroundColor(Color.BLACK);
-            } else {
-                holder.tv_fllowen.setBackgroundColor(Color.BLUE);
+            if(project.has_followed)
+            {
+                holder.tv_fllowen.setBackgroundColor(Color.GRAY);
+
+            }else{
+                holder.tv_fllowen.setBackgroundColor(Color.argb(1,32,168,192+15));
             }
+
+
+            //设置监听事件
+            DiscoryOnClickColler onClickColler=new DiscoryOnClickColler(context,project);
+            holder.tv_content .setOnClickListener(onClickColler);
+            holder.tv_title.setOnClickListener(onClickColler);
+            holder.tv_fllowen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(project.has_followed)
+                    {
+                        //取消关注api
+                        //关注api
+//                           ApiUtils.post(String.format(AppContants.USER_UNFOLLOW_URL,user.id),null,new AsyncHttpResponseHandler() {
+//                               @Override
+//                               public void onSuccess(int i, Header[] headers, byte[] bytes) {
+//                                   Toast.makeText(context,"取消关注成功",Toast.LENGTH_SHORT).show();
+//                                   bt_follow.setBackgroundColor(Color.argb(0,32,168,192+15));//20a8cf
+//                                   user.has_followed=false;
+//                               }
+//
+//                               @Override
+//                               public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+//                                   Toast.makeText(context,"取消关注失败，稍后再试",Toast.LENGTH_SHORT).show();
+//                               }
+//                           });
+
+                        Toast.makeText(context,"赞不支持取消功能，我们正在飞速开发",Toast.LENGTH_SHORT).show();
+                    }else{
+                        //关注api
+                        ApiUtils.post(String.format(AppContants.PROJECT_FOLLOW_URL,project.id),null,new AsyncHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                                Toast.makeText(context,"关注成功",Toast.LENGTH_SHORT).show();
+                                holder.tv_fllowen.setBackgroundColor(Color.GRAY);
+                                project.has_followed=true;
+                            }
+
+                            @Override
+                            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                                Toast.makeText(context,"关注失败，稍后再试",Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+                    }
+
+                }
+            });
+
 
 
             return view;

@@ -2,6 +2,7 @@ package com.shixian.android.client.activities.fragment;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -120,11 +121,6 @@ public class UserIndexFragment extends BaseFeedFragment {
 
 
                             //保存数据到本地
-
-
-
-
-
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -199,6 +195,7 @@ public class UserIndexFragment extends BaseFeedFragment {
      */
     private void initUserFeed() {
         //如果是自身 说明是我的主页 我的信息都已经在登陆的时候拿到了 所以就不需要获取了 否则获取用户信息
+        page=1;
 
         context.showProgress();
         CommonEngine.getFeedData(AppContants.USER_FEED_INDEX_URL.replace("{user_name}",user.username),page, new AsyncHttpResponseHandler(){
@@ -307,7 +304,7 @@ public class UserIndexFragment extends BaseFeedFragment {
         public Object getItem(int position) {
             if (position == 1)
                 return user;
-            return feedList.get(position - 1);
+            return feedList.get(position - 1) ;
         }
 
         @Override
@@ -333,7 +330,7 @@ public class UserIndexFragment extends BaseFeedFragment {
                 //头像
                 ImageView iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
                 //关注按钮
-                Button bt_follow = (Button) view.findViewById(R.id.bt_follow);
+                final Button bt_follow = (Button) view.findViewById(R.id.bt_follow);
                 //签名
                 TextView tv_winess = (TextView) view.findViewById(R.id.tv_witness);
 
@@ -359,6 +356,15 @@ public class UserIndexFragment extends BaseFeedFragment {
                     }
                 }
 
+                if(user.has_followed)
+                {
+                    bt_follow.setBackgroundColor(Color.GRAY);
+
+                }else{
+                    bt_follow.setBackgroundColor(Color.argb(1,32,168,192+15));
+                }
+
+
                 tv_activitys.setText(user.status.feeds_count + "");
                 tv_project.setText(user.status.followed_projects_count + "");
                 tv_fllowen.setText(user.status.followers_count + "");
@@ -366,6 +372,51 @@ public class UserIndexFragment extends BaseFeedFragment {
 
                 tv_winess.setText(user.description);
                 tv_name.setText(user.username);
+
+                //监听事件
+                bt_follow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                       if(user.has_followed)
+                       {
+                           //取消关注api
+                           //关注api
+//                           ApiUtils.post(String.format(AppContants.USER_UNFOLLOW_URL,user.id),null,new AsyncHttpResponseHandler() {
+//                               @Override
+//                               public void onSuccess(int i, Header[] headers, byte[] bytes) {
+//                                   Toast.makeText(context,"取消关注成功",Toast.LENGTH_SHORT).show();
+//                                   bt_follow.setBackgroundColor(Color.argb(0,32,168,192+15));//20a8cf
+//                                   user.has_followed=false;
+//                               }
+//
+//                               @Override
+//                               public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+//                                   Toast.makeText(context,"取消关注失败，稍后再试",Toast.LENGTH_SHORT).show();
+//                               }
+//                           });
+
+                           Toast.makeText(context,"赞不支持取消功能，我们正在飞速开发",Toast.LENGTH_SHORT).show();
+                       }else{
+                           //关注api
+                           ApiUtils.post(String.format(AppContants.USER_FOLLOW_URL,user.id),null,new AsyncHttpResponseHandler() {
+                               @Override
+                               public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                                   Toast.makeText(context,"关注成功",Toast.LENGTH_SHORT).show();
+                                   bt_follow.setBackgroundColor(Color.GRAY);
+                                   user.has_followed=true;
+                               }
+
+                               @Override
+                               public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                                   Toast.makeText(context,"关注失败，稍后再试",Toast.LENGTH_SHORT).show();
+
+                               }
+                           });
+                       }
+
+                    }
+                });
+
 
 
             } else {
@@ -395,7 +446,8 @@ public class UserIndexFragment extends BaseFeedFragment {
 
                 }
 
-                BaseFeed baseFeed = feedList.get(position - 1);
+                final BaseFeed baseFeed = feedList.get(position - 1);
+                baseFeed.position=position-1;
 
                 String type = "";
                 String project = "";
@@ -593,7 +645,12 @@ public class UserIndexFragment extends BaseFeedFragment {
 
 
                 if (holder.tv_response.getVisibility() == View.VISIBLE) {
-                    holder.tv_response.setOnClickListener(controller);
+                    holder.tv_response.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            popComment(v,baseFeed,lv);
+                        }
+                    });
                 }
 
 
@@ -603,29 +660,5 @@ public class UserIndexFragment extends BaseFeedFragment {
         }
     }
 
-
-    /**
-     * 有些控件要求隐藏
-     */
-    class FeedHolder {
-
-        //事件类型 比如发布一个项目
-        TextView tv_type;
-        //头像
-        ImageView iv_icon;
-        //用户名
-        TextView tv_name;
-        //项目
-        TextView tv_proect;
-        //时间
-        TextView tv_time;
-        //回复内容
-        TextView tv_content;
-        //图片内容 默认是隐藏的 当feedable_type为image时显示
-        ImageView iv_content;
-        //回复框 发表项目的时候是隐藏的
-        TextView tv_response;
-        View v_line;
-    }
 
 }

@@ -8,13 +8,14 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:textColor="#005580"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:id="@+id/tv_title"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:text="帮助失眠人群入眠的产品"
             />
 
@@ -30,8 +31,9 @@
             android:id="@+id/tv_fllowen"
             android:layout_alignTop="@id/tv_title"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="10dp"
             android:text="关注 "
+            android:background="#20C8AF"
             />
 
         </RelativeLayout>
@@ -40,11 +42,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_content"
-        android:textSize="18sp"
+        android:textSize="15sp"
+        android:textColor="#666666"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
         />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="#888888"
+        />
+
 
 </LinearLayout>

@@ -13,6 +13,7 @@ public class BaseFeed implements Serializable{
     public String updated_at;
     public String feedable_type;
     public String project_id;;
+    public int position;
 
 
 }

@@ -72,8 +72,6 @@ public class OnClickController implements View.OnClickListener{
             //项目
             case R.id.tv_project:
                 //点击项目要进入项目界面 我先把项目数据拿到看一看　
-
-
                 ProjectFeedFragment feedFragment=new ProjectFeedFragment();
                 bundle.putString("project_id",mFeed.project_id);
                 feedFragment.setArguments(bundle);

@@ -82,6 +82,7 @@ public class JsonUtils {
                         }
 
                         comment.project_id=feed.project_id;
+                        comment.parent_id=feed.id;
 
                         feeds.add(comment);
 

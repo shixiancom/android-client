@@ -52,6 +52,9 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
 
 
+
+
+
     protected void initCacheData() {
 
         firstPageDate= SharedPerenceUtil.getProjectIndexFeed(context, project.id);
@@ -187,7 +190,9 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
     private void initProjectFeed() {
 
+        page=1;
         context.showProgress();
+
         CommonEngine.getFeedData(AppContants.PROJECT_FEED_URL.replace("{project_id}",project.id+"" ), page, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
@@ -242,6 +247,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
     private void initProjectInfo() {
 
+
         ApiUtils.get(AppContants.PROJECT_INFO_URL.replace("{project_id}",project.id+""),null,new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
@@ -289,14 +295,14 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
         @Override
         public int getCount() {
-            return 1+feedList.size();
+            return (1+feedList.size());
         }
 
         @Override
         public Object getItem(int position) {
             if(position==1)
                 return project;
-            return feedList.get(position);
+            return feedList.get(position-1);
         }
 
         @Override
@@ -362,7 +368,8 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
                 }
 
-                BaseFeed baseFeed = feedList.get(position - 1);
+                final BaseFeed baseFeed = feedList.get(position - 1);
+                baseFeed.position=position-1;
 
                 String type = "";
                 String project = "";
@@ -557,7 +564,12 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
 
                 if (holder.tv_response.getVisibility() == View.VISIBLE) {
-                    holder.tv_response.setOnClickListener(controller);
+                    holder.tv_response.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            popComment(v,baseFeed,lv);
+                        }
+                    });
                 }
 
 
@@ -570,24 +582,5 @@ public class ProjectFeedFragment extends BaseFeedFragment {
         }
     }
 
-    class FeedHolder {
 
-        //事件类型 比如发布一个项目
-        TextView tv_type;
-        //头像
-        ImageView iv_icon;
-        //用户名
-        TextView tv_name;
-        //项目
-        TextView tv_proect;
-        //时间
-        TextView tv_time;
-        //回复内容
-        TextView tv_content;
-        //图片内容 默认是隐藏的 当feedable_type为image时显示
-        ImageView iv_content;
-        //回复框 发表项目的时候是隐藏的
-        TextView tv_response;
-        View v_line;
-    }
 }
