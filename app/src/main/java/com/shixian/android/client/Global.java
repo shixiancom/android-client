@@ -28,6 +28,9 @@ public class Global {
 
     public static ImageCache IMGCACHE=ImageCache.getInstance();
 
+    public static int screenWidth;
+
+
     //弹出软键盘
     public static void popSoftkeyboard(Context ctx, View view, boolean wantPop) {
         InputMethodManager imm = (InputMethodManager) ctx.getSystemService(Context.INPUT_METHOD_SERVICE);

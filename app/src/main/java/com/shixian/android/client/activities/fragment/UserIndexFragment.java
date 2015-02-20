@@ -93,6 +93,7 @@ public class UserIndexFragment extends BaseFeedFragment {
 
                 if (imageView != null) {
                     imageView.setImageBitmap(bitmap);
+
                 }
             }
         };
@@ -166,9 +167,11 @@ public class UserIndexFragment extends BaseFeedFragment {
 
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
             } else {
+                pullToRefreshListView.getRefreshableView().setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
-
+            if(currentFirstPos<=feedList.size())
+                pullToRefreshListView.getListView().setSelection(currentFirstPos);
 
         }else{
 

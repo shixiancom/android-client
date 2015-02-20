@@ -20,6 +20,7 @@ public abstract class BaseFragment extends Fragment  {
 
 
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,5 +41,9 @@ public abstract class BaseFragment extends Fragment  {
     public abstract View initView(LayoutInflater inflater);
     public abstract void initDate(Bundle savedInstanceState);
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
 
+    }
 }

@@ -45,6 +45,8 @@ public abstract  class BaseFeedFragment extends BaseFragment {
     protected List<BaseFeed> feedList;
     protected ImageCallback callback;
     protected BaseAdapter adapter;
+    protected int currentFirstPos=0;
+
 
 
     /*************************************用于管理回复框 一级软键盘弹出 到这listView 变小  要滚动listView 这里网上资料很少 研究了差不多一天多***
@@ -164,7 +166,8 @@ public abstract  class BaseFeedFragment extends BaseFragment {
             }
         });
 
-        feedList = new ArrayList<BaseFeed>();
+        if(feedList==null)
+            feedList = new ArrayList<BaseFeed>();
 
 
 
@@ -321,6 +324,12 @@ public abstract  class BaseFeedFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onDestroyView() {
+        currentFirstPos=pullToRefreshListView.getListView().getFirstVisiblePosition();
+        super.onDestroyView();
+
+    }
 
 
 

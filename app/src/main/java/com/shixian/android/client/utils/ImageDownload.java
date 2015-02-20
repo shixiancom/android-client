@@ -74,7 +74,7 @@ public class ImageDownload extends AsyncTask<String, Integer, Bitmap> {
 			BitmapFactory.Options opt = new BitmapFactory.Options();
 			opt.inPreferredConfig = Bitmap.Config.RGB_565;
 			opt.inPurgeable = true;
-			opt.inInputShareable = true;
+			opt.inInputShareable = true;    
 
 			return BitmapFactory.decodeStream(i, null, opt);
 		} catch (Exception e) {

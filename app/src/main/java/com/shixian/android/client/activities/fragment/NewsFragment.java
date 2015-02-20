@@ -125,6 +125,7 @@ public class NewsFragment extends BaseFragment
 
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
             } else {
+                pullToRefreshListView.getRefreshableView().setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
 

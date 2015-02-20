@@ -33,8 +33,6 @@ import com.shixian.android.client.utils.TimeUtil;
 
 import org.apache.http.Header;
 
-import java.util.List;
-
 /**
  * Created by s0ng on 2015/2/10.
  */
@@ -46,7 +44,7 @@ public class IndexFragment extends BaseFeedFragment {
 
 
     private String firstPageDate;
-    private List<BaseFeed> feedList;
+
 
 
     //private FeedAdapter adapter;
@@ -124,12 +122,15 @@ public class IndexFragment extends BaseFeedFragment {
         {
             if (adapter == null) {
                 adapter = new FeedAdapter();
-
-
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
             } else {
+                pullToRefreshListView.getRefreshableView().setAdapter(adapter);
                 adapter.notifyDataSetChanged();
+
             }
+
+            if(currentFirstPos<=feedList.size())
+                pullToRefreshListView.getListView().setSelection(currentFirstPos);
 
 
         }else{

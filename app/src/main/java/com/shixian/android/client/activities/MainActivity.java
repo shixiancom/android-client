@@ -39,6 +39,7 @@ import com.shixian.android.client.model.NewsSataus;
 import com.shixian.android.client.model.SimpleProject;
 import com.shixian.android.client.model.User;
 import com.shixian.android.client.utils.ApiUtils;
+import com.shixian.android.client.utils.CommonUtil;
 import com.shixian.android.client.utils.SharedPerenceUtil;
 
 import org.apache.http.Header;
@@ -111,6 +112,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         Global.MAIN=this;
         Global.context=this;
+        Global.screenWidth= CommonUtil.getScreenWidth(this);
 
         initUI();
         addFragment();
@@ -186,10 +188,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
                             if (projectAdapter == null) {
                                 projectAdapter = new MenuAdapter();
-                                //TODO 给listView设置上 现在设置到主lv里面了 明天再改 //还需要做缓存
+
 
                                 lv_menu.setAdapter(projectAdapter);
-//                                Utility.setListViewHeightBasedOnChildren(subListView);
 
 
                             } else {

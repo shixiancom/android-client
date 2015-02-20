@@ -43,6 +43,10 @@ public class DiscoryProjectFragment extends BaseFragment {
     private ProjectAdapter adapter;
     private int page = 1;
 
+    private int currentFirstPos=0;
+
+
+
 
     @Override
     public View initView(LayoutInflater inflater) {
@@ -170,13 +174,13 @@ public class DiscoryProjectFragment extends BaseFragment {
         {
             if (adapter == null) {
                 adapter = new ProjectAdapter();
-
-
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
             } else {
+                pullToRefreshListView.getRefreshableView().setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
-
+            if(currentFirstPos<=projectList.size())
+                pullToRefreshListView.getListView().setSelection(currentFirstPos);
 
         }else{
 
@@ -242,6 +246,13 @@ public class DiscoryProjectFragment extends BaseFragment {
                 context.dissProgress();
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        currentFirstPos=pullToRefreshListView.getListView().getFirstVisiblePosition();
+        super.onDestroyView();
+
     }
 
     class ProjectAdapter extends BaseAdapter {

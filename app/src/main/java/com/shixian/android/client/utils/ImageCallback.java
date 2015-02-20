@@ -13,4 +13,6 @@ public interface ImageCallback {
 	 * @param tag：操作的ImageView 的 标记
 	 */
 	void imageLoaded(Bitmap bitmap, Object tag);
+
+
 }
