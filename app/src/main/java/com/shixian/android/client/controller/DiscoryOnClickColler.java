@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.shixian.android.client.R;
-import com.shixian.android.client.activities.MainActivity;
+import com.shixian.android.client.activities.BaseActivity;
 import com.shixian.android.client.activities.fragment.ProjectFeedFragment;
 import com.shixian.android.client.model.Project;
 
@@ -13,10 +13,10 @@ import com.shixian.android.client.model.Project;
  */
 public class DiscoryOnClickColler implements View.OnClickListener {
 
-    private MainActivity context;
+    private BaseActivity context;
     private Project project;
 
-    public  DiscoryOnClickColler(MainActivity activity,Project project)
+    public  DiscoryOnClickColler(BaseActivity activity,Project project)
     {
         this.project=project;
         this.context=activity;

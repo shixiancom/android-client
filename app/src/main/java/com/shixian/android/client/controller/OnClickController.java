@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.shixian.android.client.R;
-import com.shixian.android.client.activities.MainActivity;
+import com.shixian.android.client.activities.BaseActivity;
 import com.shixian.android.client.activities.fragment.ProjectFeedFragment;
 import com.shixian.android.client.activities.fragment.UserIndexFragment;
 import com.shixian.android.client.contants.AppContants;
@@ -22,14 +22,14 @@ import com.shixian.android.client.model.feeddate.BaseFeed;
 public class OnClickController implements View.OnClickListener{
 
     private BaseFeed mFeed;
-    private MainActivity context;
+    private BaseActivity context;
 
 
     //穿过来的feed
     public OnClickController(Activity context,BaseFeed mFeed)
     {
         this.mFeed=mFeed;
-        this.context= (MainActivity) context;
+        this.context= (BaseActivity) context;
     }
 
 

@@ -16,7 +16,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
-import com.shixian.android.client.controller.OnClickController;
+import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.engine.CommonEngine;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
@@ -539,7 +539,7 @@ public class IndexFragment extends BaseFeedFragment {
             //设置点击事件
 
 
-            OnClickController controller=new OnClickController(context,baseFeed);
+            IndexOnClickController controller=new IndexOnClickController(context,baseFeed);
             holder.iv_icon.setOnClickListener(controller);
             holder.tv_name.setOnClickListener(controller);
             //项目

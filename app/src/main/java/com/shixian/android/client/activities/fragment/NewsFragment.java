@@ -397,7 +397,8 @@ public class NewsFragment extends BaseFragment
                                 holder.tv_project.setText(getResources().getString(R.string.project_plan).replace("{project_title}",news.project.getTitle()));
                                 holder.tv_name.setText(news.user.username);
                                 holder.tv_type.setText(R.string.attachment);
-                                holder.tv_content.setText(Html.fromHtml(news.data.content_html));
+                                if(news.data!=null)
+                                    holder.tv_content.setText(news.data.content);
                                 break;
                             case "Vote":
                                 holder.tv_content.setVisibility(View.VISIBLE);

@@ -37,6 +37,8 @@
             android:configChanges="keyboardHidden|orientation"
             >
         </activity>
+        
+        <activity android:name=".activities.DetailActivity"/>
 
         <!-- 必须注册在微博授权，分享微博时候用到 -->
         <activity android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"

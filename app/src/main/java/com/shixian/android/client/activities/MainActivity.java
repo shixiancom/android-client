@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -59,7 +58,7 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 /**
  * Created by doom on 15/2/2.
  */
-public class MainActivity extends ActionBarActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
     private String TAG = "MainActivity";
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -366,7 +365,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         ll_index.setOnClickListener(this);
     }
 
-    private void addFragment() {
+    protected void addFragment() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         IndexFragment indexFragment=new IndexFragment();
         fragmentTransaction.replace(R.id.main_fragment_layout, indexFragment);
