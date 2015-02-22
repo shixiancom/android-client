@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".DetailActivity">
+
+
+
+<android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:transitionName="actionBar"
+        >
+    </android.support.v7.widget.Toolbar>
+
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        android:id="@+id/pocket"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        style="@style/PocketProgressBar"
+        android:indeterminate="true"/>
+
+
+
+
+    <!--
+    <RelativeLayout
+        android:id="@+id/holder_view"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:transitionName="actionBar"
+        android:background="?android:colorPrimary">
+        <ImageView android:id="@+id/appIcon"
+                   android:transitionName="appIcon"
+                   android:layout_marginTop="8dp"
+                   android:layout_marginBottom="8dp"
+                   android:layout_width="72dp"
+                   android:layout_height="72dp"/>
+    </RelativeLayout>
+    -->
+
+
+    <FrameLayout
+        android:id="@+id/main_fragment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+    </FrameLayout>
+    <include layout="@layout/common_enter_emoji" />
+
+
+
+</LinearLayout>
