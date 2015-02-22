@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.shixian.android.client.activities.MainActivity;
+import com.shixian.android.client.activities.BaseActivity;
 
 /**
  * Created by s0ng on 2015/2/9.
@@ -15,7 +15,7 @@ import com.shixian.android.client.activities.MainActivity;
 public abstract class BaseFragment extends Fragment  {
 
 
-    protected MainActivity context;
+    protected BaseActivity context;
 
 
 
@@ -31,7 +31,7 @@ public abstract class BaseFragment extends Fragment  {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        context= (MainActivity) getActivity();
+        context= (BaseActivity) getActivity();
 
         View view=initView(inflater);
         initDate(savedInstanceState);
