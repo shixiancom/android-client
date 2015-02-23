@@ -1,5 +1,6 @@
 package com.shixian.android.client.activities.fragment;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.R;
+import com.shixian.android.client.activities.BigImageActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
@@ -344,7 +346,7 @@ public class IndexFragment extends BaseFeedFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
            View view=null;
-           FeedHolder holder;
+           final FeedHolder holder;
 
             if(convertView==null)
             {
@@ -553,7 +555,14 @@ public class IndexFragment extends BaseFeedFragment {
 
             if(holder.iv_content.getVisibility()==View.VISIBLE)
             {
-                holder.iv_content.setOnClickListener(controller);
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(context, BigImageActivity.class);
+                        intent.putExtra("key",(String)holder.iv_content.getTag());
+                        context.startActivity(intent);
+                    }
+                });
             }
 
 
