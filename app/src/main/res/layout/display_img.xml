@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding ="utf-8" ?>
+<FrameLayout   xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+     android:id="@+id/flayout_img_display"
+    >
+    
+        <LinearLayout   
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:id="@+id/llayout_img_display"
+            >
+            <ImageView
+                android:id="@+id/img_display"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dip"
+                android:paddingBottom="5dip"
+                android:scaleType="matrix"
+                />
+        </LinearLayout >
+   
+
+
+    <!--<RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+		  <Button
+			 android:id="@+id/btn_zoomin"
+			 android:layout_width="wrap_content"
+			 android:layout_height="wrap_content"
+			 android:layout_alignParentLeft="true"
+			 android:layout_alignParentBottom="true"
+			 android:enabled="false"
+			 android:text="缩小"
+		   />
+		   <Button
+			 android:id="@+id/btn_zoomout"
+			 android:layout_width="wrap_content"
+			 android:layout_height="wrap_content"
+			 android:layout_alignParentRight="true"
+			 android:layout_alignParentBottom="true"
+			 android:text="放大"
+		   />
+    </RelativeLayout >-->
+</FrameLayout >

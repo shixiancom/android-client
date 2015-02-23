@@ -50,6 +50,7 @@
             android:layout_height="wrap_content"
             android:text="xxxxxxxxxxxx"
             android:layout_toRightOf="@id/iv_icon"
+            android:layout_marginBottom="10px"
 
             />
 
@@ -63,6 +64,7 @@
             android:layout_marginRight="5dp"
             android:textColor="#888888"
             android:textSize="11sp"
+            android:layout_marginTop="10px"
             />
 
 
@@ -90,6 +92,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:background="#20C8AF"
+
             />
 
 
