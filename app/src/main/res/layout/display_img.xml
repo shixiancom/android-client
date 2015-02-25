@@ -1,10 +1,38 @@
 <?xml version="1.0" encoding ="utf-8" ?>
-<FrameLayout   xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout   xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
      android:id="@+id/flayout_img_display"
+    android:background="@android:color/background_light"
     >
+
+
+    <RelativeLayout
+        android:background="@android:color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        >
+        <TextView
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:text="图片"
+            android:layout_centerHorizontal="true"
+            />
+        <Button
+            android:id="@+id/bt_save"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="保存"
+            android:layout_centerHorizontal="true"
+            />
+
+        </RelativeLayout>
     
         <LinearLayout   
             android:orientation="horizontal"
@@ -48,4 +76,4 @@
 			 android:text="放大"
 		   />
     </RelativeLayout >-->
-</FrameLayout >
+</LinearLayout>
