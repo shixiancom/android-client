@@ -1,5 +1,6 @@
 package com.shixian.android.client.activities;
 
+import android.app.FragmentManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -59,7 +60,11 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
  * Created by doom on 15/2/2.
  */
 public class MainActivity extends BaseActivity implements View.OnClickListener {
+
     private String TAG = "MainActivity";
+
+    private boolean onBackQuit=false;
+
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
 
@@ -95,6 +100,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout ll_descory;
     private LinearLayout ll_index;
     private LinearLayout ll_msg;
+
+
+
 
     //用于记录 当前属于哪个
     private int current_menuid=R.id.ll_index;
@@ -383,6 +391,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
+        onBackQuit=false;
         switch (v.getId())
         {
             case R.id.ll_descory:
@@ -392,6 +401,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 ll_msg.setBackgroundColor(Color.WHITE);
                 break;
             case R.id.ll_index:
+
                 switchFragment(new IndexFragment(),null);
                 ll_index.setBackgroundColor(Color.BLUE);
                 ll_index.setBackgroundColor(Color.WHITE);
@@ -474,8 +484,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void switchFragment(BaseFragment fragment,String key)
     {
 
-
+        onBackQuit=false;
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+        if(fragment instanceof  IndexFragment)
+        {
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+        }
 
 //        fragmentTransaction.
 
@@ -503,4 +519,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+        if(onBackQuit)
+        {
+
+            super.onBackPressed();
+        }else {
+            onBackQuit=true;
+            Toast.makeText(this,"再次按返回键退出",Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
 }

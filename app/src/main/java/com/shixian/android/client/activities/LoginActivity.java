@@ -33,9 +33,11 @@ public class LoginActivity extends Activity
 
         init();
 
+
         }
 
     private void init() {
+        setContentView(R.layout.activity_login);
 
 //        AccessTokenKeeper.clear(this);
           mAccessToken=AccessTokenKeeper.readAccessToken(LoginActivity.this);
@@ -45,7 +47,7 @@ public class LoginActivity extends Activity
             //这里还要验证token是否可用
             LoginUtil.validationToken(LoginActivity.this,mAccessToken);
         }else{
-            setContentView(R.layout.activity_login);
+
             Button main_login_btn= (Button) findViewById(R.id.main_login_btn);
             main_login_btn.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -8,21 +8,28 @@ package com.shixian.android.client.activities;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.util.FloatMath;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.shixian.android.client.R;
 import com.shixian.android.client.utils.ImageCache;
 
+import java.io.File;
+import java.io.FileOutputStream;
 
 
 public class BigImageActivity extends Activity
@@ -33,9 +40,10 @@ public class BigImageActivity extends Activity
 	private ImageView imgDisplay;
 //	private Button btnZoomin;
 //	private Button btnZoomout;
-  private FrameLayout fLayoutDisplay;
+  private LinearLayout LLayoutDisplay;
   private LinearLayout lLayoutDisplay;
   private Bitmap bitmap;
+  private Button bt_save;
   
   private int imgId=0;
   
@@ -74,12 +82,13 @@ public class BigImageActivity extends Activity
 	{
 		
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.display_img);
-		
+        setContentView(R.layout.display_img);
+
 		
 		lLayoutDisplay = (LinearLayout) this.findViewById(R.id.llayout_img_display);
-		fLayoutDisplay = (FrameLayout) this.findViewById(R.id.flayout_img_display);
+		LLayoutDisplay = (LinearLayout) this.findViewById(R.id.flayout_img_display);
 		imgDisplay = (ImageView) this.findViewById(R.id.img_display);
+        bt_save= (Button) findViewById(R.id.bt_save);
 		/*btnZoomin = (Button) this.findViewById(R.id.btn_zoomin);
 		btnZoomout = (Button) this.findViewById(R.id.btn_zoomout);*/
 		
@@ -111,7 +120,7 @@ public class BigImageActivity extends Activity
 
 
 
-        String key=getIntent().getStringExtra("key");
+        final String key=getIntent().getStringExtra("key");
         Bitmap bt= ImageCache.getInstance().get(key);
 
 
@@ -127,6 +136,36 @@ public class BigImageActivity extends Activity
 
 
 
+        bt_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               if(Environment.getExternalStorageState()==Environment.MEDIA_MOUNTED)
+               {
+                   //保存到存储卡
+                   File dirPath=new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/shixian/");
+
+                   if(!dirPath.exists())
+                   {
+                       dirPath.mkdir();
+                   }
+                   String path=dirPath.getAbsolutePath()+key;
+                   saveBitmap(path,bitmap);
+
+
+               }else{
+                   //保存到存储卡
+                   File dirPath=new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/shixian/");
+                   if(!dirPath.exists())
+                   {
+                       dirPath.mkdir();
+                   }
+                   String path=dirPath.getAbsolutePath()+key;
+                   saveBitmap(path,bitmap);
+
+
+               }
+            }
+        });
 		
 	}
 	
@@ -302,7 +341,7 @@ public class BigImageActivity extends Activity
 			
 	   	imgDisplay.setImageMatrix(matrix);
 			
-			return true;
+			return false;
 		}
 
 		/**
@@ -332,9 +371,40 @@ public class BigImageActivity extends Activity
 		return FloatMath.sqrt(eX * eX + eY * eY);
 		
 	}
-	
-	
-	
-	
+
+
+    public void saveBitmap(final String path,final Bitmap bm) {
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File f = new File(path);
+                if (f.exists()) {
+                    f.delete();
+                }
+                try {
+                    FileOutputStream out = new FileOutputStream(f);
+                    bm.compress(Bitmap.CompressFormat.PNG, 90, out);
+                    out.flush();
+                    out.close();
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(BigImageActivity.this,"保存成功 "+path,Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } catch (Exception e)
+                {
+                    e.printStackTrace();;
+                }
+            }
+        }).start();
+
+
+
+    }
 	
 }
