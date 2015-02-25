@@ -359,12 +359,15 @@ public class UserIndexFragment extends BaseFeedFragment {
                     }
                 }
 
+                //TODO
                 if(user.has_followed)
                 {
-                    bt_follow.setBackgroundColor(Color.GRAY);
+                    bt_follow.setBackgroundResource(R.drawable.bt_unfollow_selector);
+                    bt_follow.setText("已关注");
 
                 }else{
-                    bt_follow.setBackgroundColor(Color.argb(1,32,168,192+15));
+                    bt_follow.setBackgroundResource(R.drawable.bt_follow_selector);
+                    bt_follow.setText("关注");
                 }
 
 
@@ -430,11 +433,8 @@ public class UserIndexFragment extends BaseFeedFragment {
                     holder.tv_name = (TextView) view.findViewById(R.id.tv_name);
                     holder.tv_proect = (TextView) view.findViewById(R.id.tv_project);
                     holder.tv_time = (TextView) view.findViewById(R.id.tv_time);
-                    ;
                     holder.tv_content = (TextView) view.findViewById(R.id.tv_content);
-                    ;
                     holder.iv_content = (ImageView) view.findViewById(R.id.iv_content);
-                    ;
                     holder.tv_response = (TextView) view.findViewById(R.id.tv_response);
                     holder.tv_type = (TextView) view.findViewById(R.id.tv_type);
                     holder.v_line = view.findViewById(R.id.v_line);
@@ -554,8 +554,8 @@ public class UserIndexFragment extends BaseFeedFragment {
                     //设置样式
 //                int textSize=DisplayUtil.sp2px(context,13);
                     holder.tv_name.setTextSize(13);
-                    holder.tv_time.setTextSize(13);
-                    holder.tv_content.setTextSize(13);
+                    holder.tv_time.setTextSize(11);
+                    holder.tv_content.setTextSize(15);
 
 
                     ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
