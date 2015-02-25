@@ -353,11 +353,8 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                     holder.tv_name = (TextView) view.findViewById(R.id.tv_name);
                     holder.tv_proect = (TextView) view.findViewById(R.id.tv_project);
                     holder.tv_time = (TextView) view.findViewById(R.id.tv_time);
-                    ;
                     holder.tv_content = (TextView) view.findViewById(R.id.tv_content);
-                    ;
                     holder.iv_content = (ImageView) view.findViewById(R.id.iv_content);
-                    ;
                     holder.tv_response = (TextView) view.findViewById(R.id.tv_response);
                     holder.tv_type = (TextView) view.findViewById(R.id.tv_type);
                     holder.v_line = view.findViewById(R.id.v_line);
@@ -447,6 +444,11 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                             type = context.getResources().getString(R.string.feed_attachment);
                             holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
                             break;
+                        case "Agreement":
+
+                            //TODO ??????????
+                            holder.tv_content.setVisibility(View.GONE);
+                            break;
                     }
 
                     //头像图片处理
@@ -495,6 +497,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                     holder.tv_time.setText(TimeUtil.getDistanceTime(comment.created_at));
                     holder.tv_proect.setVisibility(View.GONE);
                     holder.tv_type.setVisibility(View.GONE);
+                    holder.iv_content.setVisibility(View.GONE);
                     holder.tv_content.setVisibility(View.VISIBLE);
                     holder.tv_content.setText(Html.fromHtml(comment.content_html));
 
@@ -553,7 +556,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                 //项目
                 if(project!=null)
                 {
-                    if(!baseFeed.project_id.equals(ProjectFeedFragment.this.project))
+                    if(!baseFeed.project_id.equals(ProjectFeedFragment.this.project.id+""))
                         holder.tv_proect.setOnClickListener(controller);
                 }
 

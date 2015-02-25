@@ -496,6 +496,7 @@ public class IndexFragment extends BaseFeedFragment {
                 holder.tv_time.setText(TimeUtil.getDistanceTime(comment.created_at));
                 holder.tv_proect.setVisibility(View.GONE);
                 holder.tv_type.setVisibility(View.GONE);
+                holder.iv_content.setVisibility(View.GONE);
                 holder.tv_content.setVisibility(View.VISIBLE);
                 holder.tv_content.setText(Html.fromHtml(comment.content_html));
 
