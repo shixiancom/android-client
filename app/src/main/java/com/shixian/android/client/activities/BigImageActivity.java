@@ -148,19 +148,13 @@ public class BigImageActivity extends Activity
                    {
                        dirPath.mkdir();
                    }
-                   String path=dirPath.getAbsolutePath()+key;
+                   String path=dirPath.getAbsolutePath()+"/"+key;
                    saveBitmap(path,bitmap);
 
 
                }else{
                    //保存到存储卡
-                   File dirPath=new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/shixian/");
-                   if(!dirPath.exists())
-                   {
-                       dirPath.mkdir();
-                   }
-                   String path=dirPath.getAbsolutePath()+key;
-                   saveBitmap(path,bitmap);
+                   Toast.makeText(BigImageActivity.this,"没有合适的存储位置",Toast.LENGTH_SHORT).show();
 
 
                }
