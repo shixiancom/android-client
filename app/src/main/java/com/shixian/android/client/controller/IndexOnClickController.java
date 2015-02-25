@@ -52,8 +52,7 @@ public class IndexOnClickController implements View.OnClickListener {
 
                 //用户名
             case R.id.tv_name:
-                //跳转到个人主页
-                Toast.makeText(context, "iv_ivcon", Toast.LENGTH_SHORT).show();
+
                 //跳转到个人主页
                 String userid = "";
                 if (mFeed.feedable_type.equals(AppContants.FEADE_TYPE_COMMON)) {
@@ -107,15 +106,15 @@ public class IndexOnClickController implements View.OnClickListener {
 
             //内容
             case R.id.tv_content:
-                Toast.makeText(context, "tv_name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "tv_context", Toast.LENGTH_SHORT).show();
                 break;
             //图片内容 默认是隐藏的 当feedable_type为image时显示
             case R.id.iv_content:
-                Toast.makeText(context, "tv_name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "iv_content", Toast.LENGTH_SHORT).show();
                 break;
             //回复框 发表项目的时候是隐藏的
             case R.id.tv_response:
-                Toast.makeText(context, "tv_name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "tv_response", Toast.LENGTH_SHORT).show();
                 break;
 
         }
