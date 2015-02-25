@@ -39,6 +39,7 @@
         </activity>
         
         <activity android:name=".activities.DetailActivity"/>
+        <activity android:name=".activities.BigImageActivity"/>
 
         <!-- 必须注册在微博授权，分享微博时候用到 -->
         <activity android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
