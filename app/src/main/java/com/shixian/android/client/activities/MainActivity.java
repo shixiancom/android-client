@@ -387,7 +387,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-    //TODO  这里单纯的切换还不太好  由于对Toolbar不熟悉 所以先这么做了
+
     @Override
     public void onClick(View v) {
 
