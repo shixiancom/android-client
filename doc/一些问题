@@ -78,3 +78,5 @@ false,"project_id":1439,"updated_at":"2015-02-10T00:49:46+08:00","user_id":12554
  我的项目缓存
 
  //有空 把左侧抽屉抽取出来做成一个fragment
+
+ Idea 和 Comment 下面明显会多一片空白 是由于里面是 div的html格式  所以会这样

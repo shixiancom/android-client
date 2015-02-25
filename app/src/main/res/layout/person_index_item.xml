@@ -13,8 +13,8 @@
 
         <ImageView
             android:id="@+id/iv_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:src="@drawable/ic_launcher" />
@@ -38,13 +38,14 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/tv_name"
             android:layout_alignParentRight="true"
-            android:layout_alignTop="@id/iv_icon"
             android:layout_marginRight="10dp"
-            android:background="#20C8AF"
             android:text="关注"
-            android:textColor="#44000000" />
+            android:textSize="13sp"
+            android:background="@drawable/bt_follow_selector"
+            android:layout_alignParentTop="true" />
+        <!--  android:textColor="#44000000" -->
 
-
+<!--#20C8AF-->
 
         <TextView
             android:id="@+id/tv_witness"

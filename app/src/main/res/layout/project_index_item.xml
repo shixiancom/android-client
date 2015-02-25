@@ -46,7 +46,7 @@
         android:textSize="15sp"
         android:textColor="#666666"
         android:text="xxxxxxxx"
-        android:lineSpacingMultiplier="1.5"
+        android:lineSpacingMultiplier="1.3"
         />
 
     <View

@@ -113,14 +113,13 @@
         android:layout_height="wrap_content">
 
     <TextView
-        android:lineSpacingMultiplier="1.5"
+        android:lineSpacingMultiplier="1.3"
         android:id="@+id/tv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="15sp"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
-        android:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
         android:textColor="#666666"
         />
 
