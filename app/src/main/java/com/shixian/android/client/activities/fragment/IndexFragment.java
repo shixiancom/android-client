@@ -165,7 +165,7 @@ public class IndexFragment extends BaseFeedFragment {
 
                             feedList = JsonUtils.ParseFeeds(firstPageDate);
 
-                            //TODO 第一页的缓存
+
                             SharedPerenceUtil.putIndexFeed(context,firstPageDate);
 
 
@@ -205,7 +205,7 @@ public class IndexFragment extends BaseFeedFragment {
 
 //                Log.i("AAAA", new String(bytes));
 
-                //TODO 错误可能定义的不是太准确  最后一天调整
+
                 Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
                 pullToRefreshListView.onPullDownRefreshComplete();
                 context.dissProgress();
@@ -237,7 +237,6 @@ public class IndexFragment extends BaseFeedFragment {
 
                             feedList.addAll(JsonUtils.ParseFeeds(temp));
 
-                            //TODO 第一页的缓存
 
                             //保存数据到本地
 
@@ -398,7 +397,7 @@ public class IndexFragment extends BaseFeedFragment {
                 switch (feed.feedable_type) {
                     case "Idea":
                         type = context.getResources().getString(R.string.add_idea);
-                        holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
+                        holder.tv_content.setText(feed.data.content);
                         break;
                     case "Project":
                         type = context.getResources().getString(R.string.add_project);
@@ -428,8 +427,12 @@ public class IndexFragment extends BaseFeedFragment {
                     case "UserProjectRelation":
                         type = context.getResources().getString(R.string.join);
                         //隐藏回复框
-                        holder.tv_response.setVisibility(View.GONE);
-                        holder.tv_content.setVisibility(View.GONE);
+                        if(feed.hasChildren) {
+                            holder.tv_response.setVisibility(View.GONE);
+                            holder.tv_content.setVisibility(View.INVISIBLE);
+                        }else{
+                            holder.tv_content.setVisibility(View.GONE);
+                        }
                         break;
                     case "Homework":
                         type = context.getResources().getString(R.string.finish_homework);
@@ -449,6 +452,9 @@ public class IndexFragment extends BaseFeedFragment {
                         holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
                         break;
                 }
+
+                if(feed.hasChildren)
+                    holder.v_line.setVisibility(View.GONE);
 
 
                 //头像图片处理
@@ -498,13 +504,13 @@ public class IndexFragment extends BaseFeedFragment {
                 holder.tv_type.setVisibility(View.GONE);
                 holder.iv_content.setVisibility(View.GONE);
                 holder.tv_content.setVisibility(View.VISIBLE);
-                holder.tv_content.setText(Html.fromHtml(comment.content_html));
+                holder.tv_content.setText(comment.content);
 
 
 
                 holder.tv_name.setTextSize(13);
-                holder.tv_time.setTextSize(13);
-                holder.tv_content.setTextSize(13);
+                holder.tv_time.setTextSize(11);
+                holder.tv_content.setTextSize(14);
 
                 ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
                 int imageSize=DisplayUtil.dip2px(context,20);
