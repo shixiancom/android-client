@@ -2,6 +2,7 @@ package com.shixian.android.client.activities;
 
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -26,6 +27,8 @@ public class LoginActivity extends Activity
     private String TAG = "LoginActivity";
     private Oauth2AccessToken mAccessToken;
 
+    private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -39,13 +42,19 @@ public class LoginActivity extends Activity
     private void init() {
         setContentView(R.layout.activity_login);
 
+        progressDialog=new ProgressDialog(this);
+        progressDialog.setMessage("正在验证登陆信息");
+
 //        AccessTokenKeeper.clear(this);
           mAccessToken=AccessTokenKeeper.readAccessToken(LoginActivity.this);
       // Toast.makeText(this,mAccessToken.getToken(),Toast.LENGTH_LONG).show();
         //不为null 并且可用
         if(mAccessToken!=null&&mAccessToken.isSessionValid()){
+
             //这里还要验证token是否可用
-            LoginUtil.validationToken(LoginActivity.this,mAccessToken);
+            //在这里需要现实进度条给用户提示
+            progressDialog.show();
+            LoginUtil.validationToken(LoginActivity.this,mAccessToken,progressDialog);
         }else{
 
             Button main_login_btn= (Button) findViewById(R.id.main_login_btn);
@@ -87,7 +96,8 @@ public class LoginActivity extends Activity
                 AccessTokenKeeper.writeAccessToken(LoginActivity.this, mAccessToken);
                 CommonUtil.logDebug(TAG,mAccessToken.getToken());
                 //从服务器请求cookie？？
-                LoginUtil.validationToken(LoginActivity.this,mAccessToken);
+                progressDialog.show();
+                LoginUtil.validationToken(LoginActivity.this,mAccessToken,progressDialog);
 
             } else {
                 // 以下几种情况，您会收到 Code：

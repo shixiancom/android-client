@@ -38,6 +38,8 @@ import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.engine.CommonEngine;
+import com.shixian.android.client.model.Comment;
+import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.NewsSataus;
 import com.shixian.android.client.model.SimpleProject;
 import com.shixian.android.client.model.User;
@@ -68,6 +70,7 @@ import com.shixian.android.client.views.RedPointView;
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private String TAG = "MainActivity";
+
 
     /**
      * 如果是主页的话该值为true
@@ -124,6 +127,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
    private RedPointView titleImgPoint;
    private RedPointView layMsgPoint;
    private ImageView iv_msg;
+
+    private User user;
 
 
     @Override
@@ -260,6 +265,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 if (!AppContants.errorMsg.equals(userInfo)) {
                     Gson gson = new Gson();
                     User user = gson.fromJson(userInfo, User.class);
+                    MainActivity.this.user=user;
                     Global.USER_ID=user.id;
                     tv_uname.setText(user.username);
                     SharedPerenceUtil.putUserInfo(MainActivity.this, userInfo);
@@ -419,6 +425,32 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         titleImgPoint=new RedPointView(this,toolbar);
         layMsgPoint=new RedPointView(this,iv_msg);
        // showMsg(5);
+
+
+        //头像的点击事件 和用户名的点击事件
+        View.OnClickListener userOnClickListener=new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(user!=null) {
+                    Bundle bundle = new Bundle();
+
+                    bundle.putInt("type", IndexOnClickController.USER_FRAGMENT);
+
+                    bundle.putSerializable("user", user);
+                    Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                    intent.putExtras(bundle);
+
+                    MainActivity.this.startActivity(intent);
+                    drawerLayout.closeDrawers();
+                }
+
+            }
+        };
+
+        tv_uname.setOnClickListener(userOnClickListener);
+        iv_icon.setOnClickListener(userOnClickListener);
+
 
     }
 
@@ -615,8 +647,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         layMsgPoint.setColorContent(Color.WHITE);
         layMsgPoint.setColorBg(Color.RED);
         layMsgPoint.setPosition((int) (iv_msg.getX() + 10), (int) iv_msg.getY());
-
-
 
 
     }

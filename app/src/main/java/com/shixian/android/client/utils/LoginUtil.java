@@ -1,6 +1,7 @@
 package com.shixian.android.client.utils;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,8 +46,10 @@ public class LoginUtil {
      *
      * @param context      是当前页面 也就是登陆页面
      * @param mAccessToken 微博认证
+     * @param progressDialog
      */
-    public static void validationToken(final Activity context, Oauth2AccessToken mAccessToken) {
+
+    public static void validationToken(final Activity context, Oauth2AccessToken mAccessToken, final ProgressDialog progressDialog) {
         RequestParams params = new RequestParams();
         params.add("access_token", mAccessToken.getToken());
 
@@ -87,11 +90,14 @@ public class LoginUtil {
                     Toast.makeText(context, msg.getValue(), Toast.LENGTH_LONG);
                 }
 
+                progressDialog.dismiss();
+
             }
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
                 Toast.makeText(context,context.getResources().getString(R.string.check_net), Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
             }
         });
     }
