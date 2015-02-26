@@ -78,6 +78,7 @@ public class IndexOnClickController implements View.OnClickListener {
                 break;
             //项目
             case R.id.tv_project:
+            case R.id.tv_content:
 
 
                 //跳转到项目主页
@@ -104,10 +105,8 @@ public class IndexOnClickController implements View.OnClickListener {
 //                Toast.makeText(context,"tv_name",Toast.LENGTH_SHORT).show();
                 break;
 
-            //内容
-            case R.id.tv_content:
-                Toast.makeText(context, "tv_context", Toast.LENGTH_SHORT).show();
-                break;
+
+
             //图片内容 默认是隐藏的 当feedable_type为image时显示
             case R.id.iv_content:
                 Toast.makeText(context, "iv_content", Toast.LENGTH_SHORT).show();

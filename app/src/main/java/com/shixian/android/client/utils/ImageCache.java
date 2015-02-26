@@ -21,7 +21,7 @@ public class ImageCache {
 		return cache;
 	}
 
-	private LruCache<Object, Bitmap> lrucache;// 图片的缓存;设置的Value必须能够计算出所占有的内存的大小
+	private LruCache<Object, Bitmap> lrucache;// 图片的缓存;设置的ValueF必须能够计算出所占有的内存的大小
 	private DiskLruCache diskLruCache;// 将图片缓存在SDCard上
 
 	private ImageCache() {

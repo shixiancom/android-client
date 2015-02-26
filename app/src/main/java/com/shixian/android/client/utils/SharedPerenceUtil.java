@@ -10,6 +10,15 @@ import com.shixian.android.client.activities.MainActivity;
  */
 public class SharedPerenceUtil {
 
+
+
+
+    public  static void clearAllData(Context context)
+    {
+        context.getSharedPreferences("cachedate",context.MODE_PRIVATE).edit().clear();
+        context.getSharedPreferences("userinfo",context.MODE_PRIVATE).edit().clear();
+    }
+
     //用于一些本地缓存操作的存取
 
     /**
@@ -77,7 +86,7 @@ public class SharedPerenceUtil {
      * @param context
      * @return
      */
-    public static String getUserIndexFeed(MainActivity context,String userid) {
+    public static String getUserIndexFeed(Context context,String userid) {
         return    context.getSharedPreferences("cachedate",context.MODE_PRIVATE).getString("userindexdata"+userid,"");
     }
 

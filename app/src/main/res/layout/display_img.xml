@@ -34,21 +34,23 @@
 
         </RelativeLayout>
     
-        <LinearLayout   
+        <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:gravity="center"
             android:layout_gravity="center"
             android:id="@+id/llayout_img_display"
             >
             <ImageView
+                android:layout_gravity="center"
                 android:id="@+id/img_display"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:paddingTop="5dip"
                 android:paddingBottom="5dip"
                 android:scaleType="matrix"
+
                 />
         </LinearLayout >
    

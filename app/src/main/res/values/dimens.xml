@@ -7,4 +7,5 @@
     <dimen name="time_text_size">11sp</dimen>
     <dimen name="picture_pull_to_refresh_last_update_time_top_margin">5dp</dimen>
     <dimen name="picture_pull_to_refresh_last_update_time_text_size">10dp</dimen>
+
 </resources>

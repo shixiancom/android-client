@@ -1,5 +1,6 @@
 package com.shixian.android.client.activities.fragment;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.R;
+import com.shixian.android.client.activities.BaseActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.OnClickController;
@@ -328,7 +330,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                 if(project!=null)
                 {
                     TextView tv_name= (TextView) view.findViewById(R.id.tv_name);
-                    TextView tv_follow= (TextView) view.findViewById(R.id.tv_follow);
+                    final TextView tv_follow= (TextView) view.findViewById(R.id.tv_follow);
                     TextView tv_content= (TextView) view.findViewById(R.id.tv_content);
 
                     tv_name.setText(project.title);
@@ -339,7 +341,53 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                         tv_follow.setBackgroundColor(Color.BLACK);
                     }
 
+
+                    tv_follow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(project.has_followed)
+                            {
+                                //取消关注api
+                                //关注api
+//                           ApiUtils.post(String.format(AppContants.USER_UNFOLLOW_URL,user.id),null,new AsyncHttpResponseHandler() {
+//                               @Override
+//                               public void onSuccess(int i, Header[] headers, byte[] bytes) {
+//                                   Toast.makeText(context,"取消关注成功",Toast.LENGTH_SHORT).show();
+//                                   bt_follow.setBackgroundColor(Color.argb(0,32,168,192+15));//20a8cf
+//                                   user.has_followed=false;
+//                               }
+//
+//                               @Override
+//                               public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+//                                   Toast.makeText(context,"取消关注失败，稍后再试",Toast.LENGTH_SHORT).show();
+//                               }
+//                           });
+
+                                Toast.makeText(context,"赞不支持取消功能，我们正在飞速开发",Toast.LENGTH_SHORT).show();
+                            }else{
+                                //关注api
+                                ApiUtils.post(String.format(AppContants.PROJECT_FOLLOW_URL,project.id),null,new AsyncHttpResponseHandler() {
+                                    @Override
+                                    public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                                        Toast.makeText(context,"关注成功",Toast.LENGTH_SHORT).show();
+                                        tv_follow.setBackgroundColor(Color.GRAY);
+                                        project.has_followed=true;
+                                    }
+
+                                    @Override
+                                    public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                                        Toast.makeText(context,"关注失败，稍后再试",Toast.LENGTH_SHORT).show();
+
+                                    }
+                                });
+                            }
+                        }
+                    });
+
                 }
+
+                //设置关注按钮的点击事件
+
 
 
 
@@ -372,216 +420,174 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                 final BaseFeed baseFeed = feedList.get(position - 1);
                 baseFeed.position=position-1;
 
-                String type = "";
-                String project = "";
-                String content;
+//                String type = "";
+//                String project = "";
+//                String content;
+//
+//                holder.tv_response.setVisibility(View.VISIBLE);
+//                holder.v_line.setVisibility(View.VISIBLE);
+//                holder.iv_content.setVisibility(View.GONE);
+//
+//                if (!baseFeed.feedable_type.equals(AppContants.FEADE_TYPE_COMMON)) {
+//
+//
+//                    Feed2 feed = (Feed2) baseFeed;
+//
+//                    if (feed.data.project != null && !TextUtils.isEmpty(feed.data.project.title))
+//                        project = feed.data.project.title;
+//
+//                    holder.iv_content.setVisibility(View.GONE);
+//
+//
+//                    switch (feed.feedable_type) {
+//                        case "Idea":
+//                            type = context.getResources().getString(R.string.add_idea);
+//                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
+//                            break;
+//                        case "Project":
+//                            type = context.getResources().getString(R.string.add_project);
+//                            project = feed.data.title;
+//                            holder.tv_content.setText(Html.fromHtml(feed.data.description));
+//                            //隐藏回复框
+//                            holder.tv_response.setVisibility(View.GONE);
+//                            break;
+//                        case "Plan":
+//                            type = context.getResources().getString(R.string.add_plan);
+//
+//                            holder.tv_content.setText(feed.data.content + "   截至到: " + feed.data.finish_on);
+//                            break;
+//                        case "Image":
+//
+//                            type = context.getResources().getString(R.string.add_image);
+//                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
+//
+//                            String keys[]=feed.data.attachment.url.split("/");
+//                            String key=keys[keys.length-1];
+//
+//                            holder.iv_content.setTag(key);
+//                            holder.iv_content.setVisibility(View.VISIBLE);
+//                            ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.attachment.url);
+//
+//                            break;
+//                        case "UserProjectRelation":
+//                            type = context.getResources().getString(R.string.join);
+//                            //隐藏回复框
+//                            holder.tv_response.setVisibility(View.GONE);
+//                            holder.tv_content.setVisibility(View.GONE);
+//                            break;
+//                        case "Homework":
+//                            type = context.getResources().getString(R.string.finish_homework);
+//                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
+//                            break;
+//                        case "Task":
+//                            type = context.getResources().getString(R.string.finish_task);
+//                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
+//                            break;
+//                        case "Vote":
+//                            type = context.getResources().getString(R.string.finish_task);
+//
+//                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
+//                            break;
+//                        case "Attachment":
+//                            type = context.getResources().getString(R.string.feed_attachment);
+//                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
+//                            break;
+//                        case "Agreement":
+//
+//                            //TODO ??????????
+//                            holder.tv_content.setVisibility(View.GONE);
+//                            break;
+//                    }
+//
+//                    //头像图片处理
+//                    String keys[] = feed.data.user.avatar.small.url.split("/");
+//                    String key = keys[keys.length - 1];
+//
+////                ImageUtil.loadingImage(holder.iv_icon, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.user.avatar.small.url);
+//
+//                    Bitmap bm = ImageCache.getInstance().get(key);
+//
+//                    if (bm != null) {
+//                        holder.iv_icon.setImageBitmap(bm);
+//                    } else {
+//                        holder.iv_icon.setImageResource(R.drawable.ic_launcher);
+//                        holder.iv_icon.setTag(key);
+//                        if (callback != null) {
+//                            new ImageDownload(callback).execute(AppContants.DOMAIN + feed.data.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
+//                        }
+//                    }
+//
+//
+//                    holder.tv_type.setText(type);
+//                    holder.tv_proect.setText(project);
+//                    holder.tv_name.setText(feed.data.user.username);
+//
+//
+//                    //设置样式
+////                int textSize=DisplayUtil.sp2px(context,13);
+//                    holder.tv_name.setTextSize(13);
+//                    holder.tv_time.setTextSize(13);
+//                    holder.tv_content.setTextSize(13);
+//
+//                    ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
+//                    int imageSize = DisplayUtil.dip2px(context, 40);
+//                    params.height = imageSize;
+//                    params.width = imageSize;
+//                    holder.iv_icon.setLayoutParams(params);
+//
+//                    holder.tv_type.setVisibility(View.VISIBLE);
+//                    holder.tv_proect.setVisibility(View.VISIBLE);
+//
+//                } else {
+//                    Comment comment = (Comment) baseFeed;
+//                    //初始化一些common信息
+//                    holder.tv_name.setText(comment.user.username);
+//                    holder.tv_time.setText(TimeUtil.getDistanceTime(comment.created_at));
+//                    holder.tv_proect.setVisibility(View.GONE);
+//                    holder.tv_type.setVisibility(View.GONE);
+//                    holder.iv_content.setVisibility(View.GONE);
+//                    holder.tv_content.setVisibility(View.VISIBLE);
+//                    holder.tv_content.setText(Html.fromHtml(comment.content_html));
+//
+//
+//                    holder.tv_name.setTextSize(13);
+//                    holder.tv_time.setTextSize(13);
+//                    holder.tv_content.setTextSize(13);
+//
+//                    ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
+//                    int imageSize = DisplayUtil.dip2px(context, 20);
+//                    params.height = imageSize;
+//                    params.width = imageSize;
+//                    holder.iv_icon.setLayoutParams(params);
+//
+//
+//                    //头像图片处理
+//                    String keys[] = comment.user.avatar.small.url.split("/");
+//                    String key = keys[keys.length - 1];
+//
+//                    Bitmap bm = ImageCache.getInstance().get(key);
+//
+//                    if (bm != null) {
+//                        holder.iv_icon.setImageBitmap(bm);
+//                    } else {
+//                        holder.iv_icon.setImageResource(R.drawable.ic_launcher);
+//                        holder.iv_icon.setTag(position + key);
+//                        if (callback != null) {
+//                            new ImageDownload(callback).execute(AppContants.DOMAIN + comment.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
+//                        }
+//                    }
+//
+//
+//                    //隐藏回复框
+//                    if (!comment.isLast) {
+//                        holder.tv_response.setVisibility(View.GONE);
+//                        holder.v_line.setVisibility(View.GONE);
+//                    }
+//
+//                }
 
-                holder.tv_response.setVisibility(View.VISIBLE);
-                holder.v_line.setVisibility(View.VISIBLE);
-                holder.iv_content.setVisibility(View.GONE);
-
-                if (!baseFeed.feedable_type.equals(AppContants.FEADE_TYPE_COMMON)) {
-
-
-                    Feed2 feed = (Feed2) baseFeed;
-
-                    if (feed.data.project != null && !TextUtils.isEmpty(feed.data.project.title))
-                        project = feed.data.project.title;
-
-                    holder.iv_content.setVisibility(View.GONE);
-
-
-                    switch (feed.feedable_type) {
-                        case "Idea":
-                            type = context.getResources().getString(R.string.add_idea);
-                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-                            break;
-                        case "Project":
-                            type = context.getResources().getString(R.string.add_project);
-                            project = feed.data.title;
-                            holder.tv_content.setText(Html.fromHtml(feed.data.description));
-                            //隐藏回复框
-                            holder.tv_response.setVisibility(View.GONE);
-                            break;
-                        case "Plan":
-                            type = context.getResources().getString(R.string.add_plan);
-
-                            holder.tv_content.setText(feed.data.content + "   截至到: " + feed.data.finish_on);
-                            break;
-                        case "Image":
-
-                            type = context.getResources().getString(R.string.add_image);
-                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-
-                            String keys[]=feed.data.attachment.url.split("/");
-                            String key=keys[keys.length-1];
-
-                            holder.iv_content.setTag(key);
-                            holder.iv_content.setVisibility(View.VISIBLE);
-                            ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.attachment.url);
-
-                            break;
-                        case "UserProjectRelation":
-                            type = context.getResources().getString(R.string.join);
-                            //隐藏回复框
-                            holder.tv_response.setVisibility(View.GONE);
-                            holder.tv_content.setVisibility(View.GONE);
-                            break;
-                        case "Homework":
-                            type = context.getResources().getString(R.string.finish_homework);
-                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-                            break;
-                        case "Task":
-                            type = context.getResources().getString(R.string.finish_task);
-                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-                            break;
-                        case "Vote":
-                            type = context.getResources().getString(R.string.finish_task);
-
-                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-                            break;
-                        case "Attachment":
-                            type = context.getResources().getString(R.string.feed_attachment);
-                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-                            break;
-                        case "Agreement":
-
-                            //TODO ??????????
-                            holder.tv_content.setVisibility(View.GONE);
-                            break;
-                    }
-
-                    //头像图片处理
-                    String keys[] = feed.data.user.avatar.small.url.split("/");
-                    String key = keys[keys.length - 1];
-
-//                ImageUtil.loadingImage(holder.iv_icon, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.user.avatar.small.url);
-
-                    Bitmap bm = ImageCache.getInstance().get(key);
-
-                    if (bm != null) {
-                        holder.iv_icon.setImageBitmap(bm);
-                    } else {
-                        holder.iv_icon.setImageResource(R.drawable.ic_launcher);
-                        holder.iv_icon.setTag(key);
-                        if (callback != null) {
-                            new ImageDownload(callback).execute(AppContants.DOMAIN + feed.data.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
-                        }
-                    }
-
-
-                    holder.tv_type.setText(type);
-                    holder.tv_proect.setText(project);
-                    holder.tv_name.setText(feed.data.user.username);
-
-
-                    //设置样式
-//                int textSize=DisplayUtil.sp2px(context,13);
-                    holder.tv_name.setTextSize(13);
-                    holder.tv_time.setTextSize(13);
-                    holder.tv_content.setTextSize(13);
-
-                    ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
-                    int imageSize = DisplayUtil.dip2px(context, 40);
-                    params.height = imageSize;
-                    params.width = imageSize;
-                    holder.iv_icon.setLayoutParams(params);
-
-                    holder.tv_type.setVisibility(View.VISIBLE);
-                    holder.tv_proect.setVisibility(View.VISIBLE);
-
-                } else {
-                    Comment comment = (Comment) baseFeed;
-                    //初始化一些common信息
-                    holder.tv_name.setText(comment.user.username);
-                    holder.tv_time.setText(TimeUtil.getDistanceTime(comment.created_at));
-                    holder.tv_proect.setVisibility(View.GONE);
-                    holder.tv_type.setVisibility(View.GONE);
-                    holder.iv_content.setVisibility(View.GONE);
-                    holder.tv_content.setVisibility(View.VISIBLE);
-                    holder.tv_content.setText(Html.fromHtml(comment.content_html));
-
-
-                    holder.tv_name.setTextSize(13);
-                    holder.tv_time.setTextSize(13);
-                    holder.tv_content.setTextSize(13);
-
-                    ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
-                    int imageSize = DisplayUtil.dip2px(context, 20);
-                    params.height = imageSize;
-                    params.width = imageSize;
-                    holder.iv_icon.setLayoutParams(params);
-
-
-                    //头像图片处理
-                    String keys[] = comment.user.avatar.small.url.split("/");
-                    String key = keys[keys.length - 1];
-
-                    Bitmap bm = ImageCache.getInstance().get(key);
-
-                    if (bm != null) {
-                        holder.iv_icon.setImageBitmap(bm);
-                    } else {
-                        holder.iv_icon.setImageResource(R.drawable.ic_launcher);
-                        holder.iv_icon.setTag(position + key);
-                        if (callback != null) {
-                            new ImageDownload(callback).execute(AppContants.DOMAIN + comment.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
-                        }
-                    }
-
-
-                    //隐藏回复框
-                    if (!comment.isLast) {
-                        holder.tv_response.setVisibility(View.GONE);
-                        holder.v_line.setVisibility(View.GONE);
-                    }
-
-                }
-
-
-                //设置点击事件
-
-
-                OnClickController controller = new OnClickController(context, baseFeed);
-
-
-
-
-                //点击头像和名字的响应事件是一致的 如果展示的是我的主页 再次点击不会响应
-
-                    holder.iv_icon.setOnClickListener(controller);
-                    holder.tv_name.setOnClickListener(controller);
-
-
-                //项目
-                if(project!=null)
-                {
-                    if(!baseFeed.project_id.equals(ProjectFeedFragment.this.project.id+""))
-                        holder.tv_proect.setOnClickListener(controller);
-                }
-
-
-                if (holder.tv_content.getVisibility() == View.VISIBLE) {
-                    holder.tv_content.setOnClickListener(controller);
-                }
-
-
-                if (holder.iv_content.getVisibility() == View.VISIBLE) {
-                    holder.iv_content.setOnClickListener(controller);
-                }
-
-
-                if (holder.tv_response.getVisibility() == View.VISIBLE) {
-                    holder.tv_response.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            popComment(v,baseFeed,lv);
-                        }
-                    });
-                }
-
-
-
+                initFeedItemView(holder,baseFeed,position);
+                setFeedOnClickListener(context,holder,baseFeed);
 
 
             }
@@ -590,5 +596,56 @@ public class ProjectFeedFragment extends BaseFeedFragment {
         }
     }
 
+
+
+
+    protected void setFeedOnClickListener(BaseActivity context,FeedHolder holder,final BaseFeed baseFeed)
+    {
+
+        //设置点击事件
+
+
+        OnClickController controller = new OnClickController(context, baseFeed);
+
+
+
+
+        //点击头像和名字的响应事件是一致的 如果展示的是我的主页 再次点击不会响应
+
+        holder.iv_icon.setOnClickListener(controller);
+        holder.tv_name.setOnClickListener(controller);
+
+
+        //因为项目主页都是使用同一个项目内容 点击也会进入到同一个项目 所以就不需要了
+//                //项目
+//                if(project!=null)
+//                {
+//                    if(!baseFeed.project_id.equals(ProjectFeedFragment.this.project.id+""))
+//                        holder.tv_proect.setOnClickListener(controller);
+//                }
+
+
+//        if (holder.tv_content.getVisibility() == View.VISIBLE) {
+//            holder.tv_content.setOnClickListener(controller);
+//        }
+
+
+        if (holder.iv_content.getVisibility() == View.VISIBLE) {
+            holder.iv_content.setOnClickListener(controller);
+        }
+
+
+        if (holder.tv_response.getVisibility() == View.VISIBLE) {
+            holder.tv_response.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popComment(v,baseFeed,lv);
+                }
+            });
+        }
+
+
+
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.shixian.android.client.activities;
 
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -11,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,10 +36,12 @@ import com.shixian.android.client.activities.fragment.NewsFragment;
 import com.shixian.android.client.activities.fragment.ProjectFeedFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
+import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.engine.CommonEngine;
 import com.shixian.android.client.model.NewsSataus;
 import com.shixian.android.client.model.SimpleProject;
 import com.shixian.android.client.model.User;
+import com.shixian.android.client.sina.AccessTokenKeeper;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
 import com.shixian.android.client.utils.SharedPerenceUtil;
@@ -50,11 +54,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
+import android.util.TypedValue;
+import com.shixian.android.client.views.RedPointView;
 
 /**
  * Created by doom on 15/2/2.
@@ -62,6 +68,11 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private String TAG = "MainActivity";
+
+    /**
+     * 如果是主页的话该值为true
+     */
+    private boolean isIndex;
 
     private boolean onBackQuit=false;
 
@@ -107,8 +118,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     //用于记录 当前属于哪个
     private int current_menuid=R.id.ll_index;
 
-    //消息个数
-   private Button bt_msg_count;
+
+
+
+   private RedPointView titleImgPoint;
+   private RedPointView layMsgPoint;
+   private ImageView iv_msg;
 
 
     @Override
@@ -149,7 +164,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     public void run() {
                         //TODO 设置消息状态
                         if(status.total!=0)
-                            settingMsgCount(View.VISIBLE,status.total);
+                            settingMsgCount(status.total);
+                        else{
+                            //TODO
+                           // hideMsg();
+                        }
 
                     }
                 });
@@ -291,17 +310,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         drawable=toolbar.getNavigationIcon();
 
-        bt_msg_count= (Button) findViewById(R.id.bt_msg_count);
+       // bt_msg_count= (Button) findViewById(R.id.bt_msg_count);
+
 
 
         setSupportActionBar(toolbar);
-
+//TODO
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.action_news_search:
-                        Toast.makeText(MainActivity.this, "Search", Toast.LENGTH_LONG).show();
+//                    case R.id.action_news_search:
+//                        Toast.makeText(MainActivity.this, "Search", Toast.LENGTH_LONG).show();
+//                        break;
+                    case R.id.action_quit:
+                        logout();
                         break;
                 }
                 return true;
@@ -354,8 +377,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     Bundle bundle=new Bundle();
                     ProjectFeedFragment feedFragment=new ProjectFeedFragment();
                     bundle.putString("project_id",project.getId()+"");
-                    feedFragment.setArguments(bundle);
-                    MainActivity.this.switchFragment(feedFragment,null);
+
+                    bundle.putInt("type", IndexOnClickController.PROJECT_FRAGMENT);
+                    Intent intent=new Intent(MainActivity.this,DetailActivity.class);
+                    intent.putExtras(bundle);
+                    MainActivity.this.startActivity(intent);
+
                 }
 
             }
@@ -371,6 +398,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         ll_descory.setOnClickListener(this);
         ll_msg.setOnClickListener(this);
         ll_index.setOnClickListener(this);
+
+
+
+        //设置左侧抽屉的宽度等于屏幕宽度减去Toolbar的高度
+        LinearLayout ll_left= (LinearLayout) findViewById(R.id.ll_left);
+        int actionBarHeight=0;
+        TypedValue tv = new TypedValue();
+        if (this.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, this.getResources().getDisplayMetrics());
+        }
+        ll_left.getLayoutParams().width=Global.screenWidth-actionBarHeight;
+
+
+
+        //现实消息
+       // showMsg(5);
+        iv_msg= (ImageView) findViewById(R.id.iv_msg);
+        //TODO
+        titleImgPoint=new RedPointView(this,toolbar);
+        layMsgPoint=new RedPointView(this,iv_msg);
+       // showMsg(5);
+
     }
 
     protected void addFragment() {
@@ -396,23 +445,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         {
             case R.id.ll_descory:
                 switchFragment(new DiscoryProjectFragment(),null);
-                ll_descory.setBackgroundColor(Color.BLUE);
-                ll_index.setBackgroundColor(Color.WHITE);
-                ll_msg.setBackgroundColor(Color.WHITE);
+                isIndex=false;
                 break;
             case R.id.ll_index:
-
+                isIndex=true;
                 switchFragment(new IndexFragment(),null);
-                ll_index.setBackgroundColor(Color.BLUE);
-                ll_index.setBackgroundColor(Color.WHITE);
-                ll_msg.setBackgroundColor(Color.WHITE);
+
                 break;
             case R.id.ll_msg:
-                settingMsgCount(View.GONE,0);
+                hideMsg();
                 switchFragment(new NewsFragment(),null);
-                ll_index.setBackgroundColor(Color.WHITE);
-                ll_index.setBackgroundColor(Color.WHITE);
-                ll_msg.setBackgroundColor(Color.BLUE);
+                isIndex=false;
                 break;
         }
 
@@ -496,7 +539,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //        fragmentTransaction.
 
 //        NewsFragment newsFragment = new NewsFragment();
-        fragmentTransaction.replace(R.id.main_fragment_layout, fragment,"xxx"+ new Random().nextInt(1000));
+
+        fragmentTransaction.replace(R.id.main_fragment_layout, fragment);
         fragmentTransaction.addToBackStack(key);
         fragmentTransaction.commit();
         drawerLayout.closeDrawers();
@@ -509,28 +553,79 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-    public void settingMsgCount(int visibity,int count)
+    public void settingMsgCount(int count)
     {
-        bt_msg_count.setVisibility(visibity);
+
+
         if(count>99)
-            bt_msg_count.setText("99+");
-        else
-            bt_msg_count.setText(count+"");
+            count=99;
+
+        showMsg(count);
+
 
     }
 
     @Override
     public void onBackPressed() {
 
-        if(onBackQuit)
+        if(isIndex)
         {
+            if(onBackQuit)
+            {
 
+                super.onBackPressed();
+            }else {
+                onBackQuit=true;
+                Toast.makeText(this,"再次按返回键退出",Toast.LENGTH_SHORT).show();
+            }
+        }else{
             super.onBackPressed();
-        }else {
-            onBackQuit=true;
-            Toast.makeText(this,"再次按返回键退出",Toast.LENGTH_SHORT).show();
         }
 
+
+
+
+    }
+
+    //退出登陆操作  首先要清理数据 启动LoginActivity页面 然后finish
+    public void logout()
+    {
+        SharedPerenceUtil.clearAllData(this);
+        AccessTokenKeeper.clear(this);
+        Intent intent=new Intent(this,LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+/*****************************************************************/
+    /**
+     * 现实消息数量
+     */
+    public  void showMsg(int count)
+    {
+
+        titleImgPoint.setContent(count);
+        titleImgPoint.setSizeContent(16);
+        titleImgPoint.setColorContent(Color.WHITE);
+        titleImgPoint.setColorBg(Color.RED);
+        titleImgPoint.setPosition(Gravity.CENTER, Gravity.CENTER);
+
+        layMsgPoint.setContent(count);
+        layMsgPoint.setSizeContent(16);
+        layMsgPoint.setColorContent(Color.WHITE);
+        layMsgPoint.setColorBg(Color.RED);
+        layMsgPoint.setPosition((int) (iv_msg.getX() + 10), (int) iv_msg.getY());
+
+
+
+
+    }
+
+
+    public void hideMsg()
+    {
+        titleImgPoint.hide();
+        layMsgPoint.hide();
 
     }
 }

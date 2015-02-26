@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.shixian.android.client.R;
+import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.utils.ImageCache;
 
 import java.io.File;
@@ -121,7 +122,7 @@ public class BigImageActivity extends Activity
 
 
         final String key=getIntent().getStringExtra("key");
-        Bitmap bt= ImageCache.getInstance().get(key);
+        final Bitmap bt= ImageCache.getInstance().get(key);
 
 
         if(bt!=null) {
@@ -139,25 +140,19 @@ public class BigImageActivity extends Activity
         bt_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               if(Environment.getExternalStorageState()==Environment.MEDIA_MOUNTED)
-               {
-                   //保存到存储卡
-                   File dirPath=new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/shixian/");
-
-                   if(!dirPath.exists())
-                   {
-                       dirPath.mkdir();
-                   }
-                   String path=dirPath.getAbsolutePath()+"/"+key;
-                   saveBitmap(path,bitmap);
 
 
-               }else{
-                   //保存到存储卡
-                   Toast.makeText(BigImageActivity.this,"没有合适的存储位置",Toast.LENGTH_SHORT).show();
 
 
-               }
+                   File externalStorageDirectory = Environment
+                           .getExternalStorageDirectory();
+                   String path = externalStorageDirectory.getAbsolutePath()
+                           + "/SHIXIAN";
+
+                   saveBitmap(path,bt,key);
+
+
+
             }
         });
 		
@@ -367,18 +362,26 @@ public class BigImageActivity extends Activity
 	}
 
 
-    public void saveBitmap(final String path,final Bitmap bm) {
+    public void saveBitmap(final String path,final Bitmap bm, final String fileName) {
 
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 File f = new File(path);
-                if (f.exists()) {
-                    f.delete();
+
+                if(!f.exists())
+                {
+                    f.mkdirs();
+                }
+
+                File picture=new File(f,fileName);
+
+                if (picture.exists()) {
+                    picture.delete();
                 }
                 try {
-                    FileOutputStream out = new FileOutputStream(f);
+                    FileOutputStream out = new FileOutputStream(picture);
                     bm.compress(Bitmap.CompressFormat.PNG, 90, out);
                     out.flush();
                     out.close();
@@ -386,13 +389,13 @@ public class BigImageActivity extends Activity
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(BigImageActivity.this,"保存成功 "+path,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BigImageActivity.this,"保存成功 "+path+"/"+fileName,Toast.LENGTH_SHORT).show();
                         }
                     });
 
                 } catch (Exception e)
                 {
-                    e.printStackTrace();;
+                    e.printStackTrace();
                 }
             }
         }).start();

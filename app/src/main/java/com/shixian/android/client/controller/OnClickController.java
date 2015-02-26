@@ -44,6 +44,7 @@ public class OnClickController implements View.OnClickListener{
             case R.id.iv_icon:
 
 
+
             //用户名
             case R.id.tv_name:
                 //跳转到个人主页
@@ -71,6 +72,9 @@ public class OnClickController implements View.OnClickListener{
                 break;
             //项目
             case R.id.tv_project:
+            //内容
+            case R.id.tv_content:
+
                 //点击项目要进入项目界面 我先把项目数据拿到看一看　
                 ProjectFeedFragment feedFragment=new ProjectFeedFragment();
                 bundle.putString("project_id",mFeed.project_id);
@@ -79,10 +83,7 @@ public class OnClickController implements View.OnClickListener{
 
 //                Toast.makeText(context,"tv_name",Toast.LENGTH_SHORT).show();
                 break;
-            //内容
-            case R.id.tv_content:
-                Toast.makeText(context,"tv_name",Toast.LENGTH_SHORT).show();
-                break;
+
             //图片内容 默认是隐藏的 当feedable_type为image时显示
             case R.id.iv_content:
                 Toast.makeText(context,"tv_name",Toast.LENGTH_SHORT).show();

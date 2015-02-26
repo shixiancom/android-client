@@ -3,9 +3,15 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".MainActivity">
 
+    <!--<item-->
+        <!--android:id="@+id/action_news_search"-->
+        <!--android:title="搜索"-->
+        <!--app:actionViewClass="android.support.v7.widget.SearchView"-->
+        <!--app:showAsAction="ifRoom"/>-->
     <item
-        android:id="@+id/action_news_search"
-        android:title="搜索"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="ifRoom"/>
+        android:id="@+id/action_quit"
+        android:orderInCategory="100"
+        android:title="退出登陆"
+        />
+
 </menu>

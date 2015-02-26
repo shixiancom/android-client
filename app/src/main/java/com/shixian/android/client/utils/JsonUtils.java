@@ -70,6 +70,7 @@ public class JsonUtils {
 
                 String commArrayStr=jobj.getJSONObject("data").getString("comments");
                 if(!"[]".equals(commArrayStr)){
+                    feed.hasChildren=true;
                     JSONArray array=new JSONArray(commArrayStr);
 
                     for(int i=0;i<array.length();i++)
