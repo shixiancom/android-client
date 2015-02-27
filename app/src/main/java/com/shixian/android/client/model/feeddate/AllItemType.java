@@ -13,6 +13,8 @@ public class AllItemType extends  BaseFeedItem{
     public String title;
     public String finish_on;
     public Attachment attachment;
+    public String file_name;
+    public String comments_count;
 
 
     public static class Attachment {

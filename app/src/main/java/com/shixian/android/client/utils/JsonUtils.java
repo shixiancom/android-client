@@ -4,12 +4,15 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.shixian.android.client.activities.fragment.MsgDetialFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.News;
 import com.shixian.android.client.model.Project;
+import com.shixian.android.client.model.feeddate.AllItemType;
 import com.shixian.android.client.model.feeddate.BaseFeed;
+import com.sina.weibo.sdk.api.share.Base;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -150,4 +153,44 @@ public class JsonUtils {
     }
 
 
+    public static MsgDetialFragment.MsgFeedEntry ParseAllItemType(String firstPageDate, MsgDetialFragment.MsgType msgType) {
+
+
+        MsgDetialFragment.MsgFeedEntry entry=new MsgDetialFragment.MsgFeedEntry();
+
+        try {
+            JSONObject jsonObject=new JSONObject(firstPageDate);
+            String data=jsonObject.getString(msgType.commentable_type.toLowerCase()+"s");
+
+            AllItemType allItemType=new Gson().fromJson(data,AllItemType.class);
+
+            entry.firstEntry=allItemType;
+
+            JSONArray jsonArray=jsonObject.getJSONArray("comments");
+
+            List<BaseFeed> baseFeeds=new ArrayList<>();
+            if(jsonArray!=null)
+            {
+
+                for(int i=0;i<jsonArray.length();i++)
+                {
+                    String comment=jsonArray.getString(i);
+                    Comment cco=new Gson().fromJson(comment,Comment.class);
+                    baseFeeds.add(cco);
+
+                }
+
+
+            }
+            entry.baseFeeds=baseFeeds;
+
+
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+        }
+
+        return entry;
+    }
 }

@@ -285,7 +285,7 @@ public class NewsFragment extends BaseFragment
         public View getView(int position, View convertView, ViewGroup parent) {
 
             View view=null;
-            NewsHolder holder;
+            final NewsHolder holder;
             if(convertView==null)
             {
                 view=View.inflate(context,R.layout.news_item,null);
@@ -308,7 +308,7 @@ public class NewsFragment extends BaseFragment
 
             }
 
-            News news=newsList.get(position);
+            final News news=newsList.get(position);
 
             holder.bt_accept.setVisibility(View.GONE);
             holder.tv_content.setVisibility(View.VISIBLE);
@@ -596,9 +596,57 @@ public class NewsFragment extends BaseFragment
             }
 
 
+            View.OnClickListener onClickListener=new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    MsgDetialFragment fragment=new MsgDetialFragment();
+                    Bundle bundle=new Bundle();
+                    fragment.setArguments(bundle);
+                    bundle.putSerializable("news",news);
+                    context.switchFragment(fragment,null);
+                }
+            };
+
+
+
+            if(holder.tv_add.VISIBLE==View.VISIBLE)
+            {
+                holder.tv_add.setOnClickListener(onClickListener);
+            }
+            if(holder.tv_type.VISIBLE==View.VISIBLE)
+            {
+                holder.tv_type.setOnClickListener(onClickListener);
+            }
+
+            if(holder.tv_content.VISIBLE==View.VISIBLE)
+            {
+                holder.tv_content.setOnClickListener(onClickListener);
+            }
+
+            if(holder.tv_post_type.VISIBLE==View.VISIBLE)
+            {
+                holder.tv_post_type.setOnClickListener(onClickListener);
+            }
+
+
+
+
+
+
+
+
+
+
+
 
             return view;
         }
+
+
+
+
+
     }
 
     class NewsHolder{

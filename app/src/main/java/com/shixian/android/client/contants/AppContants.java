@@ -68,6 +68,10 @@ public interface AppContants {
     String MSG_STATUS_URL=DOMAIN+"/api/v1/notifications/status.json";
 
 
+    // 消息页面的点击事件  有很多相似指出  所以抽出来放在这里喽
+    String MSG_RESOPNSE_URL=DOMAIN+"/api/v1/%s/%s.json";
+
+
 
 
 

@@ -83,13 +83,13 @@ public abstract  class BaseFeedFragment extends BaseFragment {
             String type;
             String id;
             if (AppContants.FEADE_TYPE_COMMON.equals(baseFeed.feedable_type)) {
-                type = ((Comment) baseFeed).commentable_type;
+                type = ((Comment) baseFeed).commentable_type.toLowerCase();
                 id=((Comment) baseFeed).parent_id;
             } else {
                 if("UserProjectRelation".equals(baseFeed.feedable_type))
                     type = "user_project_relation";
                 else
-                    type = baseFeed.feedable_type;
+                    type = baseFeed.feedable_type.toLowerCase();
 
                 id=baseFeed.id;
             }
