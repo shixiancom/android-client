@@ -14,6 +14,7 @@ import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.feeddate.BaseFeed;
+import com.sina.weibo.sdk.api.share.Base;
 
 /**
  * Created by s0ng on 2015/2/12.
@@ -26,6 +27,7 @@ public class IndexOnClickController implements View.OnClickListener {
 
     public static final int USER_FRAGMENT = 0;
     public static final int PROJECT_FRAGMENT = 1;
+    public static final int TYPE_MSG_DETILA=2;
 
 
     private BaseFeed mFeed;

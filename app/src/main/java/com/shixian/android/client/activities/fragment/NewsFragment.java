@@ -1,5 +1,6 @@
 package com.shixian.android.client.activities.fragment;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Html;
@@ -17,8 +18,12 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.shixian.android.client.R;
+import com.shixian.android.client.activities.DetailActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
+import com.shixian.android.client.controller.IndexOnClickController;
+import com.shixian.android.client.model.Comment;
+import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.News;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.DisplayUtil;
@@ -600,18 +605,31 @@ public class NewsFragment extends BaseFragment
                 @Override
                 public void onClick(View v) {
 
-                    MsgDetialFragment fragment=new MsgDetialFragment();
+
                     Bundle bundle=new Bundle();
-                    fragment.setArguments(bundle);
+
                     bundle.putSerializable("news",news);
-                    context.switchFragment(fragment,null);
+
+                    //跳转到个人主页
+
+                   Intent intent=new Intent(context, DetailActivity.class);
+
+                    bundle.putInt("type", IndexOnClickController.TYPE_MSG_DETILA);
+
+                    intent.putExtras(bundle);
+
+                    context.startActivity(intent);
+
+
                 }
             };
 
 
 
+            //点击事件
             if(holder.tv_add.VISIBLE==View.VISIBLE)
             {
+
                 holder.tv_add.setOnClickListener(onClickListener);
             }
             if(holder.tv_type.VISIBLE==View.VISIBLE)

@@ -153,20 +153,50 @@ public class JsonUtils {
     }
 
 
-    public static MsgDetialFragment.MsgFeedEntry ParseAllItemType(String firstPageDate, MsgDetialFragment.MsgType msgType) {
+    public static MsgDetialFragment.MsgFeedEntry parseAllItemType(String firstPageDate, MsgDetialFragment.MsgType msgType) {
+
 
 
         MsgDetialFragment.MsgFeedEntry entry=new MsgDetialFragment.MsgFeedEntry();
 
         try {
             JSONObject jsonObject=new JSONObject(firstPageDate);
-            String data=jsonObject.getString(msgType.commentable_type.toLowerCase()+"s");
+
+            String data;
+
+            String type;
+
+            if(msgType.isComment){
+
+                type=msgType.commentable_type.toLowerCase()+"s";
+                if("UserProjectRelation".equals(msgType.commentable_type))
+                {
+                    type="user_project_relations";
+                }
+
+            }else{
+                type=msgType.notifiable_type.toLowerCase()+"s";
+                if("UserProjectRelation".equals(msgType.notifiable_type))
+                {
+                    type="user_project_relations";
+                }
+            }
+
+            data=jsonObject.getString(type);
+
+
+
+
 
             AllItemType allItemType=new Gson().fromJson(data,AllItemType.class);
+
+            allItemType.type=type;
+
 
             entry.firstEntry=allItemType;
 
             JSONArray jsonArray=jsonObject.getJSONArray("comments");
+
 
             List<BaseFeed> baseFeeds=new ArrayList<>();
             if(jsonArray!=null)
@@ -176,7 +206,14 @@ public class JsonUtils {
                 {
                     String comment=jsonArray.getString(i);
                     Comment cco=new Gson().fromJson(comment,Comment.class);
+                    if(cco.id.equals(msgType.notifiable_id))
+                    {
+                        msgType.position=i+1;
+                    }
                     baseFeeds.add(cco);
+                    cco.feedable_type= AppContants.FEADE_TYPE_COMMON;
+                    cco.project_id=allItemType.project.id;
+                    cco.parent_id=allItemType.id;
 
                 }
 
@@ -187,6 +224,7 @@ public class JsonUtils {
 
 
         } catch (JSONException e) {
+
 
             e.printStackTrace();
         }

@@ -12,6 +12,7 @@ import com.shixian.android.client.activities.fragment.UserIndexFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
+import com.shixian.android.client.model.feeddate.AllItemType;
 import com.shixian.android.client.model.feeddate.BaseFeed;
 
 /**
@@ -19,17 +20,17 @@ import com.shixian.android.client.model.feeddate.BaseFeed;
  * 这个类要怎么处理
  * 传过来一个feed？ 为了减少创建OnClickListener的个数 这是一个方法吧 但是每个条目还是必须创建一个监听对象的
  */
-public class OnClickController implements View.OnClickListener{
+public class OnAllItemTypeClickController implements View.OnClickListener{
 
-    private BaseFeed mFeed;
+    private AllItemType allItemType;
     private BaseActivity context;
 
 
 
     //穿过来的feed
-    public OnClickController(Activity context,BaseFeed mFeed)
+    public OnAllItemTypeClickController(Activity context, AllItemType allItemType)
     {
-        this.mFeed=mFeed;
+        this.allItemType=allItemType;
         this.context= (BaseActivity) context;
     }
 
@@ -55,16 +56,10 @@ public class OnClickController implements View.OnClickListener{
 
 
                 String userid="";
-                if(mFeed.feedable_type.equals(AppContants.FEADE_TYPE_COMMON))
-                {
-                    Comment comment= (Comment) mFeed;
-                    bundle.putSerializable("user",comment.user);
-                    userid=comment.user.id;
-                }else {
-                    Feed2 feed= (Feed2) mFeed;
-                    bundle.putSerializable("user",feed.data.user);
-                    userid=feed.data.user.id;
-                }
+
+                    bundle.putSerializable("user",allItemType.user);
+                    userid=allItemType.user.id;
+
 
                 uf.setArguments(bundle);
                 context.switchFragment(uf,null);
@@ -78,7 +73,7 @@ public class OnClickController implements View.OnClickListener{
 
                 //点击项目要进入项目界面 我先把项目数据拿到看一看　
                 ProjectFeedFragment feedFragment=new ProjectFeedFragment();
-                bundle.putString("project_id",mFeed.project_id);
+                bundle.putString("project_id",allItemType.project.id);
                 feedFragment.setArguments(bundle);
                 context.switchFragment(feedFragment,null);
 

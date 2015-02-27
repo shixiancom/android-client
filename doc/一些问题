@@ -98,4 +98,8 @@ false,"project_id":1439,"updated_at":"2015-02-10T00:49:46+08:00","user_id":12554
 
 如果是评论的话 要加载 data.commentable_id 的数据 type是commentable_type  滚动到该行
 
+哈哈 剩下两个小时做 回复 详细消息的页面
 
+
+明天要做的内容去掉  回复的div 还是用html格式化
+主页的点击回复事件可能还有偏差 点击回复的时候也是进行回复的 以前没意识到

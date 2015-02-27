@@ -24,7 +24,7 @@ public class News  implements Serializable {
 
 
 
-    public static  class  NewsData{
+    public static  class  NewsData implements Serializable{
         public  String content;
         public String content_html;
         public String commentable_id;

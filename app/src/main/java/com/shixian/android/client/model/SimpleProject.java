@@ -1,10 +1,12 @@
 package com.shixian.android.client.model;
 
+import java.io.Serializable;
+
 /**
  * Created by s0ng on 2015/2/9.
  * 简单的Project实体 之存放id和对应的标题
  */
-public class SimpleProject {
+public class SimpleProject implements Serializable{
 
 
     private int id;

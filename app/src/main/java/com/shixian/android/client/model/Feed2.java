@@ -8,7 +8,6 @@ import com.shixian.android.client.model.feeddate.BaseFeed;
  */
 public  class Feed2 extends BaseFeed{
     public String action_type;
-    public String feedable_id;
     public boolean is_archived;
 
     //所有类型的date字段都在这里面 省事

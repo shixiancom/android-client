@@ -14,6 +14,7 @@ public class BaseFeed implements Serializable{
     public String feedable_type;
     public String project_id;;
     public int position;
+    public String feedable_id;
 
 
 }

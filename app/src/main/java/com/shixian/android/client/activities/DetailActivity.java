@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.shixian.android.client.R;
+import com.shixian.android.client.activities.fragment.MsgDetialFragment;
 import com.shixian.android.client.activities.fragment.ProjectFeedFragment;
 import com.shixian.android.client.activities.fragment.UserIndexFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
@@ -78,6 +79,16 @@ public class DetailActivity extends BaseActivity {
                  feedFragment.setArguments(getIntent().getExtras());
                  fragmentTransaction.replace(R.id.main_fragment_layout,feedFragment);
                  fragmentTransaction.commit();
+                 break;
+
+             case IndexOnClickController.TYPE_MSG_DETILA:
+
+                 Bundle bundle=getIntent().getExtras();
+                 MsgDetialFragment fragment=new MsgDetialFragment();
+                 fragment.setArguments(bundle);
+                 fragmentTransaction.replace(R.id.main_fragment_layout,fragment);
+                 fragmentTransaction.commit();
+
                  break;
          }
 

@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.shixian.android.client.R;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.model.Comment;
+import com.shixian.android.client.model.feeddate.AllItemType;
 import com.shixian.android.client.model.feeddate.BaseFeed;
 
 import java.util.HashMap;
@@ -102,18 +103,32 @@ public class EnterLayout {
                 String key;
                 if (AppContants.FEADE_TYPE_COMMON.equals(baseFeed.feedable_type)) {
                     type = ((Comment) baseFeed).commentable_type;
-                    key = type + ((Comment) baseFeed).parent_id;
+                    key = type + ((Comment) baseFeed).id;
                 } else {
                     type = baseFeed.feedable_type;
                     key = type + baseFeed.id;
                 }
 
 
-                //TODO
-                Toast.makeText(mActivity, getContent(), Toast.LENGTH_LONG).show();
+
                 cacheMap.put(key, content.getText().toString() + "");
 
+            }else if(tag instanceof AllItemType)
+            {
+                AllItemType allItemType = (AllItemType) tag;
+
+                String type=allItemType.type;
+                String key=allItemType.id;
+
+
+
+                String text = cacheMap.get(key);
+                if (text != null)
+                    content.setText(text);
+
+                cacheMap.put(key, content.getText().toString() + "");
             }
+
 
         }
 
@@ -141,11 +156,25 @@ public class EnterLayout {
             String key;
             if (AppContants.FEADE_TYPE_COMMON.equals(baseFeed.feedable_type)) {
                 type = ((Comment) baseFeed).commentable_type;
-                key = type + ((Comment) baseFeed).parent_id;
+                key = type + ((Comment) baseFeed).id;
             } else {
                 type = baseFeed.feedable_type;
                 key = type + baseFeed.id;
             }
+
+            String text = cacheMap.get(key);
+            if (text != null)
+                content.setText(text);
+        }
+
+       else if(tag instanceof AllItemType)
+        {
+            AllItemType allItemType = (AllItemType) tag;
+
+            String type=allItemType.type;
+            String key=allItemType.id;
+
+
 
             String text = cacheMap.get(key);
             if (text != null)

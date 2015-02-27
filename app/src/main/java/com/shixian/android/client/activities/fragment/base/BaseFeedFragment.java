@@ -84,14 +84,15 @@ public abstract  class BaseFeedFragment extends BaseFragment {
             String id;
             if (AppContants.FEADE_TYPE_COMMON.equals(baseFeed.feedable_type)) {
                 type = ((Comment) baseFeed).commentable_type.toLowerCase();
-                id=((Comment) baseFeed).parent_id;
+
+                id=((Comment) baseFeed).commentable_id;
             } else {
                 if("UserProjectRelation".equals(baseFeed.feedable_type))
                     type = "user_project_relation";
                 else
                     type = baseFeed.feedable_type.toLowerCase();
 
-                id=baseFeed.id;
+                id=baseFeed.feedable_id;
             }
             String url=String.format(AppContants.COMMENT_URL,type+"s".toLowerCase(),id);
 
@@ -106,6 +107,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
                     BaseFeed baseFeed = (BaseFeed) mEnterLayout.getTag();
                     Gson gson = new Gson();
                     Comment comment = gson.fromJson(new String(bytes), Comment.class);
+                    comment.feedable_type=AppContants.FEADE_TYPE_COMMON;
                     if (baseFeed instanceof Comment) {
                         comment.parent_id = ((Comment) baseFeed).parent_id;
                         comment.project_id = ((Comment) baseFeed).project_id;
@@ -113,7 +115,10 @@ public abstract  class BaseFeedFragment extends BaseFragment {
                     } else {
                         comment.parent_id = baseFeed.id;
                         comment.project_id = ((Feed2) baseFeed).project_id;
+                        ((Feed2) baseFeed).hasChildren=true;
                     }
+
+                    comment.isLast=true;
                     feedList.add(baseFeed.position+1, comment);
 
                     adapter.notifyDataSetChanged();
@@ -153,6 +158,8 @@ public abstract  class BaseFeedFragment extends BaseFragment {
 
         // 滚动到底自动加载可用
         pullToRefreshListView.setScrollLoadEnabled(true);
+
+
 
         // 设置下拉刷新的listener
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
@@ -419,28 +426,27 @@ public abstract  class BaseFeedFragment extends BaseFragment {
                     break;
                 case "Homework":
                     type = context.getResources().getString(R.string.finish_homework);
-                    holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
+                    holder.tv_content.setText(feed.data.content);
                     break;
                 case "Task":
                     type = context.getResources().getString(R.string.finish_task);
-                    holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
+                    holder.tv_content.setText(feed.data.content);
                     break;
                 case "Vote":
                     type = context.getResources().getString(R.string.finish_task);
 
-                    holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
+                    holder.tv_content.setText(feed.data.content);
                     break;
                 case "Attachment":
                     type = context.getResources().getString(R.string.feed_attachment);
-                    holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
+                    holder.tv_content.setText(feed.data.content);
                     break;
             }
 
             if(feed.hasChildren) {
                 holder.v_line.setVisibility(View.GONE);
+                holder.tv_response.setVisibility(View.GONE);
 
-            }else{
-                holder.tv_response.setVisibility(View.VISIBLE);
             }
 
 
@@ -486,6 +492,8 @@ public abstract  class BaseFeedFragment extends BaseFragment {
             {
                 holder.tv_response.setVisibility(View.GONE);
             }
+
+
 
         }else{
             Comment comment= (Comment) baseFeed;

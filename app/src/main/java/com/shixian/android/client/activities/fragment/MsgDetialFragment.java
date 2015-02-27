@@ -6,62 +6,141 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.BaseActivity;
 import com.shixian.android.client.activities.BigImageActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
+import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
+import com.shixian.android.client.controller.OnAllItemTypeClickController;
+import com.shixian.android.client.controller.OnClickController;
 import com.shixian.android.client.engine.CommonEngine;
+import com.shixian.android.client.enter.EnterLayout;
+import com.shixian.android.client.model.Comment;
+import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.News;
 import com.shixian.android.client.model.feeddate.AllItemType;
 import com.shixian.android.client.model.feeddate.BaseFeed;
+import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
+import com.shixian.android.client.utils.DisplayUtil;
+import com.shixian.android.client.utils.ImageCache;
 import com.shixian.android.client.utils.ImageCallback;
+import com.shixian.android.client.utils.ImageDownload;
 import com.shixian.android.client.utils.ImageUtil;
 import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
+import com.shixian.android.client.utils.TimeUtil;
+import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshBase;
+import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView;
 
 import org.apache.http.Header;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.shixian.android.client.activities.fragment.base.BaseFeedFragment.FeedHolder;
 
 /**
  * Created by s0ng on 2015/2/10.
  */
-public class MsgDetialFragment extends BaseFeedFragment {
+public class MsgDetialFragment extends BaseFragment {
 
     private String TAG = "IndexFragment";
 
-    private int page = 1;
 
+
+    private PullToRefreshListView pullToRefreshListView;
 
     private String firstPageDate;
 
 
-
-
-
-
-    private final int TYPE_PLAN=0;
 
     private MsgType msgType;
 
 
     private MsgFeedEntry feedEntry;
 
+    private FeedAdapter adapter;
+
+    private ImageCallback callback;
+
+
+
 
     //private FeedAdapter adapter;
 
 
+    @Override
+    public View initView(LayoutInflater inflater) {
+
+        View view =inflater.inflate(R.layout.fragment_msgdetial,null,false);
+
+        pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.lv_index);
+
+        lv=pullToRefreshListView.getListView();
+        commonEnterRoot=context.findViewById(R.id.commonEnterRoot);
+
+        settingListView(pullToRefreshListView.getListView());
+
+        pullToRefreshListView.getListView().setDividerHeight(0);
+
+
+
+//        commonEnterRoot=context.findViewById(R.id.commonEnterRoot);
+//
+//        settingListView(lv);
+
+
+        // 滚动到底自动加载可用
+        pullToRefreshListView.setScrollLoadEnabled(true);
+
+        // 设置下拉刷新的listener
+        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+
+            //下拉舒心完成
+            @Override
+            public void onPullDownToRefresh(
+                    PullToRefreshBase<ListView> refreshView) {
+
+                //上啦刷新
+                Log.i("AAAA", "1111-------------------------------------------------------------------");
+                initFirst();
+            }
+
+            @Override
+            public void onPullUpToRefresh(
+                    PullToRefreshBase<ListView> refreshView) {
+                //getNewsList(moreUrl, false);
+                //下拉加载更多
+                Log.i("AAAA","-------------------------------------------------------------------");
+                pullToRefreshListView.onPullUpRefreshComplete();
+
+
+
+            }
+        });
+
+        return view;
+    }
 
 
 
@@ -116,7 +195,7 @@ public class MsgDetialFragment extends BaseFeedFragment {
     protected void initCacheData() {
 
         firstPageDate= SharedPerenceUtil.getIndexFeed(context);
-        feedList = JsonUtils.ParseFeeds(firstPageDate);
+        feedEntry = JsonUtils.parseAllItemType(firstPageDate, msgType);
         if (adapter == null) {
             adapter = new FeedAdapter();
             pullToRefreshListView.getListView().setAdapter(adapter);
@@ -127,10 +206,11 @@ public class MsgDetialFragment extends BaseFeedFragment {
 
     }
 
+
     @Override
     public void initDate(Bundle savedInstanceState) {
 
-        if(feedList!=null&&feedList.size()>0)
+        if(feedEntry!=null&&feedEntry.firstEntry!=null)
         {
             if (adapter == null) {
                 adapter = new FeedAdapter();
@@ -141,8 +221,6 @@ public class MsgDetialFragment extends BaseFeedFragment {
 
             }
 
-            if(currentFirstPos<=feedList.size())
-                pullToRefreshListView.getListView().setSelection(currentFirstPos);
 
 
         }else{
@@ -157,155 +235,96 @@ public class MsgDetialFragment extends BaseFeedFragment {
      */
     public void initFirstData()
     {
-        page=1;
+
         context.showProgress();
-        CommonEngine.getFeedData(msgType.url,page, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int i, Header[] headers, final byte[] bytes) {
-                final String temp = new String(bytes);
-                if (!AppContants.errorMsg.equals(temp)) {
-
-                    new Thread() {
-                        public void run() {
-                            //获取第一页数据
-                            firstPageDate = temp;
-                            //数据格式
-                            CommonUtil.logDebug(TAG, new String(bytes));
 
 
-                            MsgFeedEntry ms = JsonUtils.ParseAllItemType(firstPageDate,msgType);
 
-                            feedEntry.baseFeeds=feedList=ms.baseFeeds;
-                            feedEntry.firstEntry=ms.firstEntry;
-
-                            //TODO
-                          //  SharedPerenceUtil.putIndexFeed(context,firstPageDate);
-
-
-                            //保存数据到本地
-                            page = 1;
-
-                            context.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    if (adapter == null) {
-                                        adapter = new FeedAdapter();
+       ApiUtils.get(msgType.url, null, new AsyncHttpResponseHandler() {
+           @Override
+           public void onSuccess(int i, Header[] headers, final byte[] bytes) {
+               final String temp = new String(bytes);
+               if (!AppContants.errorMsg.equals(temp)) {
 
 
-                                        pullToRefreshListView.getRefreshableView().setAdapter(adapter);
-                                    } else {
-                                        adapter.notifyDataSetChanged();
-                                    }
-
-                                    pullToRefreshListView.onPullDownRefreshComplete();
-                                    context.dissProgress();
-
-                                }
-                            });
+                   new Thread() {
+                       public void run() {
+                           //获取第一页数据
+                           firstPageDate = temp;
+                           //数据格式
+                           CommonUtil.logDebug(TAG, new String(bytes));
 
 
-                        }
-                    }.start();
+                           MsgFeedEntry ms = JsonUtils.parseAllItemType(firstPageDate, msgType);
+
+                           feedEntry.baseFeeds = ms.baseFeeds;
+                           feedEntry.firstEntry = ms.firstEntry;
+
+                           //TODO
+                           //  SharedPerenceUtil.putIndexFeed(context,firstPageDate);
 
 
-                }
-            }
+                           //保存数据到本地
+
+                           context.runOnUiThread(new Runnable() {
+                               @Override
+                               public void run() {
+
+                                   if (adapter == null) {
+                                       adapter = new FeedAdapter();
 
 
-            @Override
-            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                                       pullToRefreshListView.getRefreshableView().setAdapter(adapter);
+                                   } else {
+                                       adapter.notifyDataSetChanged();
+                                   }
+
+                                   pullToRefreshListView.onPullDownRefreshComplete();
+                                   context.dissProgress();
+                                   pullToRefreshListView.getListView().setSelection(msgType.position);
+
+                               }
+                           });
+
+
+                       }
+                   }.start();
+
+
+               }
+           }
+
+
+           @Override
+           public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
 //                Log.i("AAAA", new String(bytes));
 
 
-                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
-                pullToRefreshListView.onPullDownRefreshComplete();
-                context.dissProgress();
-            }
-        });
+               Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
+               pullToRefreshListView.onPullDownRefreshComplete();
+               context.dissProgress();
+           }
+       });
     }
 
 
 
 
 
-    /**
-     * 获取其他页数据
-     */
-    public void getNextData()
-    {
-        page+=1;
-        CommonEngine.getFeedData(AppContants.INDEX_URL,page, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int i, Header[] headers, final byte[] bytes) {
-
-                final String temp = new String(bytes);
-                if (!AppContants.errorMsg.equals(temp)) {
-
-                    new Thread() {
-                        public void run() {
-                            //获取第一页数据
-
-                            //数据格式
-                            CommonUtil.logDebug(TAG, new String(temp));
 
 
-                            feedList.addAll(JsonUtils.ParseFeeds(temp));
 
-
-                            //保存数据到本地
-
-                            context.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (adapter == null) {
-                                        adapter = new FeedAdapter();
-
-                                        pullToRefreshListView.getRefreshableView().setAdapter(adapter);
-                                    } else {
-                                        adapter.notifyDataSetChanged();
-                                    }
-
-                                    pullToRefreshListView.onPullUpRefreshComplete();
-
-
-                                }
-                            });
-
-
-                        }
-
-                    }.start();
-
-
-                }
-            }
-
-
-            @Override
-            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-
-//                Log.i("AAAA", new String(bytes));
-
-                //TODO 错误可能定义的不是太准确  最后一天调整
-                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
-                pullToRefreshListView.onPullUpRefreshComplete();
-                page -= 1;
-            }
-        });
-    }
-
-    @Override
     protected void initFirst() {
 
         feedEntry=new MsgFeedEntry();
-        feedEntry.baseFeeds=feedList;
 
         //TODO
        // initCacheData();
 
         initNews();
+
+        initLable();
         initImageCallBack();
 
         initFirstData();
@@ -323,9 +342,9 @@ public class MsgDetialFragment extends BaseFeedFragment {
     }
 
     /******************************************************************************************/
-    @Override
+
     protected void initLable() {
-        context.setLable("首页");
+        context.setLable(msgType.notifiable_type);
     }
 
     /**
@@ -360,7 +379,10 @@ public class MsgDetialFragment extends BaseFeedFragment {
 
         @Override
         public int getCount() {
-            return 1+feedList.size();
+
+            if(feedEntry.baseFeeds==null)
+                return 1;
+            return 1+feedEntry.baseFeeds.size();
         }
 
         @Override
@@ -369,7 +391,7 @@ public class MsgDetialFragment extends BaseFeedFragment {
             {
                 return feedEntry.firstEntry;
             }
-            return feedList.get(position-1);
+            return feedEntry.baseFeeds.get(position-1);
         }
 
         @Override
@@ -382,12 +404,12 @@ public class MsgDetialFragment extends BaseFeedFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
            View view=null;
-           final FeedHolder holder;
+           final BaseFeedFragment.FeedHolder holder;
 
             if(convertView==null)
             {
                 view=View.inflate(context,R.layout.feed_common_item,null);
-                holder=new FeedHolder();
+                holder=new BaseFeedFragment.FeedHolder();
                 holder.iv_icon= (ImageView) view.findViewById(R.id.iv_icon);
                 holder.tv_name= (TextView) view.findViewById(R.id.tv_name);
                 holder.tv_proect= (TextView) view.findViewById(R.id.tv_project);
@@ -408,18 +430,56 @@ public class MsgDetialFragment extends BaseFeedFragment {
 
                 AllItemType allItemType=feedEntry.firstEntry;
 
+
+
+
+
+
+
                 if(allItemType!=null)
                 {
+
+                    //头像图片处理
+                    String keys[]=feedEntry.firstEntry.user.avatar.small.url.split("/");
+                    String key=keys[keys.length-1];
+
+//                ImageUtil.loadingImage(holder.iv_icon, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.user.avatar.small.url);
+
+                    Bitmap bm = ImageCache.getInstance().get(key);
+
+                    if (bm != null) {
+                        holder.iv_icon.setImageBitmap(bm);
+                    } else {
+                        holder.iv_icon.setImageResource(R.drawable.ic_launcher);
+                        holder.iv_icon.setTag(key);
+                        if (callback != null) {
+                            new ImageDownload(callback).execute(AppContants.DOMAIN+feedEntry.firstEntry.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
+                        }
+                    }
+
+
                     String type="";
-                    String project="";
-                    switch (msgType.notifiable_type) {
+                    String project=project = allItemType.project.title;
+
+
+                    String switchOpt;
+
+                    if(msgType.isComment)
+                    {
+                        switchOpt=msgType.commentable_type;
+
+                    }else{
+                        switchOpt=msgType.notifiable_type;
+                    }
+
+                    switch (switchOpt) {
                         case "Idea":
                             type = context.getResources().getString(R.string.add_idea);
                             holder.tv_content.setText(allItemType.content);
                             break;
                         case "Project":
                             type = context.getResources().getString(R.string.add_project);
-                            project = allItemType.title;
+                            project = allItemType.project.title;
                             holder.tv_content.setText(Html.fromHtml(allItemType.description));
                             //隐藏回复框
                             holder.tv_response.setVisibility(View.GONE);
@@ -434,12 +494,12 @@ public class MsgDetialFragment extends BaseFeedFragment {
                             type = context.getResources().getString(R.string.add_image);
                             holder.tv_content.setText(Html.fromHtml(allItemType.content_html));
 
-                            String keys[] = allItemType.attachment.url.split("/");
-                            String key = keys[keys.length - 1];
+                            String keys2[] = allItemType.attachment.url.split("/");
+                            String key2 = keys2[keys2.length - 1];
 
-                            holder.iv_content.setTag(key);
+                            holder.iv_content.setTag(key2);
                             holder.iv_content.setVisibility(View.VISIBLE);
-                            ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher), callback, key, AppContants.DOMAIN + allItemType.attachment.url);
+                            ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher), callback, key2, AppContants.DOMAIN + allItemType.attachment.url);
 
                             break;
                         case "UserProjectRelation":
@@ -470,17 +530,104 @@ public class MsgDetialFragment extends BaseFeedFragment {
                             holder.tv_content.setText(Html.fromHtml(allItemType.content_html));
                             break;
                     }
+
+                    holder.tv_type.setText(type);
+                    holder.tv_proect.setText(project);
+                    holder.tv_name.setText(feedEntry.firstEntry.user.username);
+
+
+                    //设置样式
+//                int textSize=DisplayUtil.sp2px(context,13);
+                    holder.tv_name.setTextSize(13);
+                    holder.tv_time.setTextSize(11);
+                    holder.tv_content.setTextSize(15);
+
+                    ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
+                    int imageSize= DisplayUtil.dip2px(context, 40);
+                    params.height=imageSize;
+                    params.width =imageSize;
+                    holder.iv_icon.setLayoutParams(params);
+
+                    holder.tv_type.setVisibility(View.VISIBLE);
+                    holder.tv_proect.setVisibility(View.VISIBLE);
+                    holder.tv_response.setVisibility(View.GONE);
+
+                    setAllItemCommonClickListener(context,holder,allItemType);
+
+
+
+
                 }
 
 
             }else{
 
+
+                Comment comment= (Comment) feedEntry.baseFeeds.get(position-1);
+                comment.position=position-1;
+                //初始化一些common信息
+                holder.tv_name.setText(comment.user.username);
+                holder.tv_time.setText(TimeUtil.getDistanceTime(comment.created_at));
+                holder.tv_proect.setVisibility(View.GONE);
+                holder.tv_type.setVisibility(View.GONE);
+                holder.iv_content.setVisibility(View.GONE);
+                holder.tv_content.setVisibility(View.VISIBLE);
+                holder.tv_content.setText(comment.content);
+
+
+
+                holder.tv_name.setTextSize(13);
+                holder.tv_time.setTextSize(11);
+                holder.tv_content.setTextSize(14);
+
+                ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
+                int imageSize=DisplayUtil.dip2px(context,20);
+                params.height=imageSize;
+                params.width =imageSize;
+                holder.iv_icon.setLayoutParams(params);
+
+
+                //头像图片处理
+                String keys[]=comment.user.avatar.small.url.split("/");
+                String key=keys[keys.length-1];
+
+                Bitmap bm = ImageCache.getInstance().get(key);
+
+                if (bm != null) {
+                    holder.iv_icon.setImageBitmap(bm);
+                } else {
+                    holder.iv_icon.setImageResource(R.drawable.ic_launcher);
+                    holder.iv_icon.setTag(position+key);
+                    if (callback != null) {
+                        new ImageDownload(callback).execute(AppContants.DOMAIN+comment.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
+                    }
+                }
+
+                //隐藏回复框
+                holder.tv_response.setVisibility(View.GONE);
+
+                if(!comment.isLast) {
+
+                    holder.v_line.setVisibility(View.GONE);
+                }
+
+                if(msgType.isComment)
+                {
+                    if(comment.id.equals(msgType.notifiable_id))
+                    {
+                        view.setBackgroundResource(R.color.select_comment_color);
+
+                    }
+                }
+
+
+                //设置点击事件
+                setFeedOnClickListener(context,holder,comment);
+
             }
 
 
 
-            //设置点击事件
-           // setFeedOnClickListener(context,holder,baseFeed);
 
 
             return view;
@@ -671,19 +818,15 @@ public class MsgDetialFragment extends BaseFeedFragment {
 //    }
 
 
-    @Override
+
     protected void setFeedOnClickListener(final BaseActivity context, final FeedHolder holder,final BaseFeed baseFeed) {
 
-        IndexOnClickController controller=new IndexOnClickController(context,baseFeed);
+        OnClickController controller=new OnClickController(context,baseFeed);
         holder.iv_icon.setOnClickListener(controller);
         holder.tv_name.setOnClickListener(controller);
         //项目
         holder.tv_proect.setOnClickListener(controller);
 
-        if(holder.tv_content.getVisibility()==View.VISIBLE)
-        {
-            holder.tv_content.setOnClickListener(controller);
-        }
 
 
         if(holder.iv_content.getVisibility()==View.VISIBLE)
@@ -699,17 +842,274 @@ public class MsgDetialFragment extends BaseFeedFragment {
         }
 
 
-        if(holder.tv_response.getVisibility()==View.VISIBLE)
+        if(holder.tv_content.getVisibility()==View.VISIBLE)
         {
-            holder.tv_response.setOnClickListener(new View.OnClickListener() {
+            holder.tv_content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    popComment(v,baseFeed,lv);
+                    popComment(v,baseFeed,pullToRefreshListView.getListView());
                 }
             });
 
         }
     }
+
+
+    protected void setAllItemCommonClickListener(final BaseActivity context, final FeedHolder holder,final AllItemType allItemType) {
+
+        OnAllItemTypeClickController controller=new OnAllItemTypeClickController(context,allItemType);
+        holder.iv_icon.setOnClickListener(controller);
+        holder.tv_name.setOnClickListener(controller);
+        //项目
+        holder.tv_proect.setOnClickListener(controller);
+
+
+
+        if(holder.iv_content.getVisibility()==View.VISIBLE)
+        {
+            holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(context, BigImageActivity.class);
+                    intent.putExtra("key",(String)holder.iv_content.getTag());
+                    context.startActivity(intent);
+                }
+            });
+        }
+
+
+        if(holder.tv_content.getVisibility()==View.VISIBLE)
+        {
+            holder.tv_content.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popComment(v,allItemType,pullToRefreshListView.getListView());
+                }
+            });
+
+        }
+    }
+
+
+
+    /**************************************** 回复框相关***************************/
+    /*************************************用于管理回复框 一级软键盘弹出 到这listView 变小  要滚动listView 这里网上资料很少 研究了差不多一天多***
+     * 并且考虑到集成回复表情，但是考虑到论坛的性质 将回复表情功能砍掉*******************************************************************/
+    protected ListView lv;
+    protected int oldListHigh = 0;
+    protected int needScrollY = 0;
+    protected int cal1 = 0;
+    protected View commonEnterRoot;
+    protected EnterLayout mEnterLayout;
+
+    //发送回复的监听发送事件
+    //发送回复的监听发送事件
+    protected  View.OnClickListener onClickSendText = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            String input = mEnterLayout.getContent();
+            if (input.isEmpty()) {
+                return;
+            }
+
+            //发送
+            final Object obj= mEnterLayout.getTag();
+            String type;
+            String id;
+            if (obj instanceof Comment) {
+                type = ((Comment) obj).commentable_type.toLowerCase();
+
+                id=((Comment) obj).commentable_id;
+            } else {
+
+                AllItemType allItemType= (AllItemType) obj;
+
+                String notifyType;
+                if(msgType.isComment)
+                {
+                    notifyType=msgType.commentable_type;
+                    id=msgType.commentable_id;
+
+
+                }else{
+                    notifyType=msgType.notifiable_type;
+                    id=msgType.notifiable_id;
+                }
+
+
+                if("UserProjectRelation".equals(notifyType))
+                    type = "user_project_relation";
+                else
+                    type = notifyType.toLowerCase();
+
+
+            }
+            String url=String.format(AppContants.COMMENT_URL,type+"s".toLowerCase(),id);
+
+            RequestParams params=new RequestParams();
+            params.put("comment[content]",input);
+
+            ApiUtils.post(url, params, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                    Log.d("AAAA", new String(bytes));
+
+                    Object  object =  mEnterLayout.getTag();
+                    Gson gson = new Gson();
+                    Comment comment = gson.fromJson(new String(bytes), Comment.class);
+                    comment.feedable_type=AppContants.FEADE_TYPE_COMMON;
+                    if (object instanceof Comment) {
+                        comment.parent_id = ((Comment) object).parent_id;
+                        comment.project_id = ((Comment) object).project_id;
+                        ((Comment)object).isLast=false;
+
+                    } else {
+                        comment.parent_id = feedEntry.firstEntry.id;
+                        comment.project_id = feedEntry.firstEntry.project.id;
+
+                    }
+                    feedEntry.baseFeeds.add(feedEntry.baseFeeds.size(), comment);
+                    comment.isLast=true;
+
+
+                    adapter.notifyDataSetChanged();
+                    mEnterLayout.clearContent();
+                    hideSoftkeyboard();
+                }
+
+                @Override
+                public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+
+                    hideSoftkeyboard();
+                    Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+    };
+
+
+    /**
+     * 隐藏软键盘和输入框
+     */
+    protected void hideSoftkeyboard() {
+//        mEnterLayout.restoreSaveStop();
+        mEnterLayout.hide();
+        mEnterLayout.clearContent();
+        mEnterLayout.hideKeyboard();
+
+    }
+
+    protected void settingListView(ListView listView)
+    {
+        listView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+
+                if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE) {
+                    hideSoftkeyboard();
+                }
+
+                return false;
+            }
+        });
+        mEnterLayout = new EnterLayout(context,onClickSendText);
+//        mEnterLayout.content.addTextChangedListener(new TextWatcherAt(this, this, 101));
+        mEnterLayout.hide();
+
+
+
+        ViewTreeObserver vto = listView.getViewTreeObserver();
+
+        /*
+        由于 中文数据法会使软键盘高度增高 这真是一件恶心人的事情
+        另外无法监听软键盘隐藏事件 无法使输入框和软键盘一起消失
+        这也是意见非常恶心人的事情  尝试了有一千次
+
+         */
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+
+                int listHeight = lv.getHeight();
+
+
+
+                if (oldListHigh > listHeight) {
+                    if (cal1 == 0) {
+                        cal1 = 1;
+                        needScrollY = needScrollY + oldListHigh - listHeight;
+
+                    } else if (cal1 == 1) {
+                        int scrollResult = needScrollY + oldListHigh - listHeight;
+                        lv.smoothScrollBy(scrollResult, 1);
+                        needScrollY = 0;
+
+                    }
+
+                    oldListHigh = listHeight;
+                }else if(oldListHigh<listHeight){
+                    //变化大于100 说明软键盘隐藏了 如此这般可否
+                    if(cal1==1&&listHeight-oldListHigh>100)
+                    {
+                        hideSoftkeyboard();
+
+                    }
+                }
+            }
+        });
+
+
+    }
+
+
+
+    protected  void popComment(View v,Object tag,ListView lv) {
+        EditText comment = mEnterLayout.content;
+
+        String data = (String) v.getTag();
+        String response;
+//        showEnterLayout(tag);
+
+        if(tag instanceof Comment)
+        {
+
+            Log.i("AAAA","isComment-------------------------------");
+            if(TextUtils.isEmpty(comment.getText()))
+            {
+                comment.setText("@"+ ((Comment)tag).user.username);
+            }
+        }
+
+        mEnterLayout.show(tag);
+        comment.setSelection(comment.getText().length());
+
+
+
+
+
+//            mEnterLayout.restoreLoad(commentObject);
+
+        int itemLocation[] = new int[2];
+        v.getLocationOnScreen(itemLocation);
+        int itemHeight = v.getHeight();
+
+        int listLocation[] = new int[2];
+        lv.getLocationOnScreen(listLocation);
+        int listHeight = lv.getHeight();
+
+        oldListHigh = listHeight;
+        needScrollY = (itemLocation[1] + commonEnterRoot.getHeight()-itemHeight-4) - (listLocation[1] + listHeight);
+
+
+        cal1 = 0;
+
+        comment.requestFocus();
+        Global.popSoftkeyboard(context, comment, true);
+    }
+
 
 
     public class MsgType{
@@ -719,6 +1119,9 @@ public class MsgDetialFragment extends BaseFeedFragment {
         public String commentable_type;
         public String notifiable_type;
         public String notifiable_id;
+
+
+        public int position =0;
 
         public String url;
 
@@ -734,14 +1137,24 @@ public class MsgDetialFragment extends BaseFeedFragment {
 
 
 
+
             url=String.format(AppContants.MSG_RESOPNSE_URL,notifiable_type.toLowerCase()+"s",notifiable_id);
+            if("UserProjectRelation".equals(notifiable_type))
+            {
+                url=String.format(AppContants.MSG_RESOPNSE_URL,"user_project_relations",notifiable_id);
+            }
             if("Comment".equals(news.notifiable_type))
             {
                 isComment=true;
                 commentable_id=news.data.commentable_id;
                 commentable_type=news.data.commentable_type;
                 url=String.format(AppContants.MSG_RESOPNSE_URL,commentable_type.toLowerCase()+"s",commentable_id);
+                if("UserProjectRelation".equals(commentable_type))
+                {
+                    url=String.format(AppContants.MSG_RESOPNSE_URL,"user_project_relations",commentable_id);
+                }
             }
+
 
 
 
