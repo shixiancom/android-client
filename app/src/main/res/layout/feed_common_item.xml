@@ -110,14 +110,16 @@
     <!-- android:scaleType="centerInside"-->
 
     <TextView
+        android:gravity="center_vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="34dp"
         android:id="@+id/tv_response"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="@drawable/edit_bk"
+        android:background="@drawable/xxx"
         android:layout_marginTop="10dp"
         android:hint="回复："
+
         />
     <View
         android:id="@+id/v_line"

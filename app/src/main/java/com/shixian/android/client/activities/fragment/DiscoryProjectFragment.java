@@ -302,9 +302,12 @@ public class DiscoryProjectFragment extends BaseFragment {
             {
                 //TODO
                // holder.tv_fllowen.setBackgroundColor(Color.GRAY);
+                holder.tv_fllowen.setBackgroundResource(R.drawable.unfollow);
+
 
             }else{
               //  holder.tv_fllowen.setBackgroundColor(Color.argb(1,32,168,192+15));
+                holder.tv_fllowen.setBackgroundResource(R.drawable.follow);
             }
 
 
@@ -340,7 +343,7 @@ public class DiscoryProjectFragment extends BaseFragment {
                             @Override
                             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                                 Toast.makeText(context,"关注成功",Toast.LENGTH_SHORT).show();
-                                //holder.tv_fllowen.setBackgroundColor(Color.GRAY);
+                                holder.tv_fllowen.setBackgroundResource(R.drawable.unfollow);
                                 project.has_followed=true;
                             }
 

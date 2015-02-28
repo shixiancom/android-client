@@ -197,6 +197,8 @@ public class IndexFragment extends BaseFeedFragment {
                     }.start();
 
 
+                }else{
+                    pullToRefreshListView.onPullDownRefreshComplete();
                 }
             }
 
@@ -267,6 +269,8 @@ public class IndexFragment extends BaseFeedFragment {
                     }.start();
 
 
+                }else{
+                    pullToRefreshListView.onPullUpRefreshComplete();
                 }
             }
 

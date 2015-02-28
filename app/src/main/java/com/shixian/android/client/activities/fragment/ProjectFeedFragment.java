@@ -134,6 +134,8 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                     }.start();
 
 
+                }else{
+                    pullToRefreshListView.onPullDownRefreshComplete();
                 }
             }
 
@@ -237,6 +239,8 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                         }
                     }.start();
 
+                }else{
+                    pullToRefreshListView.onPullDownRefreshComplete();
                 }
                 //adapter
             }
@@ -341,7 +345,9 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                         tv_content.setText(Html.fromHtml(project.description));
                     if(project.has_followed)
                     {
-                        tv_follow.setBackgroundColor(Color.GRAY);
+                        tv_follow.setBackgroundResource(R.drawable.unfollow);
+                    }else{
+                        tv_follow.setBackgroundResource(R.drawable.follow);
                     }
 
 

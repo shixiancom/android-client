@@ -105,6 +105,7 @@ public class MsgDetialFragment extends BaseFragment {
 
 
 
+
 //        commonEnterRoot=context.findViewById(R.id.commonEnterRoot);
 //
 //        settingListView(lv);
@@ -112,6 +113,9 @@ public class MsgDetialFragment extends BaseFragment {
 
         // 滚动到底自动加载可用
         pullToRefreshListView.setScrollLoadEnabled(true);
+
+
+
 
         // 设置下拉刷新的listener
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
@@ -199,6 +203,7 @@ public class MsgDetialFragment extends BaseFragment {
         if (adapter == null) {
             adapter = new FeedAdapter();
             pullToRefreshListView.getListView().setAdapter(adapter);
+            pullToRefreshListView.onPullUpRefreshComplete();
 
         } else {
             adapter.notifyDataSetChanged();
@@ -280,6 +285,7 @@ public class MsgDetialFragment extends BaseFragment {
                                    }
 
                                    pullToRefreshListView.onPullDownRefreshComplete();
+                                   pullToRefreshListView.onPullUpRefreshComplete();
                                    context.dissProgress();
                                    pullToRefreshListView.getListView().setSelection(msgType.position);
 
@@ -291,6 +297,9 @@ public class MsgDetialFragment extends BaseFragment {
                    }.start();
 
 
+               }else{
+                   pullToRefreshListView.onPullDownRefreshComplete();
+                   pullToRefreshListView.onPullUpRefreshComplete();
                }
            }
 

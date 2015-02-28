@@ -142,6 +142,8 @@ public class UserIndexFragment extends BaseFeedFragment {
                         }
                     }.start();
                     pullToRefreshListView.onPullUpRefreshComplete();
+                }else {
+                    pullToRefreshListView.onPullDownRefreshComplete();
                 }
             }
 
@@ -240,6 +242,8 @@ public class UserIndexFragment extends BaseFeedFragment {
                         }
                     }.start();
 
+                }else{
+                    pullToRefreshListView.onPullDownRefreshComplete();
                 }
                 //adapter
             }
@@ -366,12 +370,12 @@ public class UserIndexFragment extends BaseFeedFragment {
                 //TODO
                 if(user.has_followed)
                 {
-                    bt_follow.setBackgroundResource(R.drawable.bt_unfollow_selector);
-                    bt_follow.setText("已关注");
+                    bt_follow.setBackgroundResource(R.drawable.unfollow);
 
                 }else{
 //                    bt_follow.setBackgroundResource(R.drawable.bt_follow_selector);
 //                    bt_follow.setText("关注");
+                    bt_follow.setBackgroundResource(R.drawable.follow);
                 }
 
 
@@ -412,7 +416,7 @@ public class UserIndexFragment extends BaseFeedFragment {
                                @Override
                                public void onSuccess(int i, Header[] headers, byte[] bytes) {
                                    Toast.makeText(context,"关注成功",Toast.LENGTH_SHORT).show();
-                                   bt_follow.setBackgroundColor(Color.GRAY);
+                                   bt_follow.setBackgroundResource(R.drawable.unfollow);
                                    user.has_followed=true;
                                }
 
