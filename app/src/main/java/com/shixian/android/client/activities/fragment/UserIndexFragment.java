@@ -337,7 +337,7 @@ public class UserIndexFragment extends BaseFeedFragment {
                 //头像
                 ImageView iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
                 //关注按钮
-                final Button bt_follow = (Button) view.findViewById(R.id.bt_follow);
+                final TextView bt_follow = (TextView) view.findViewById(R.id.bt_follow);
                 //签名
                 TextView tv_winess = (TextView) view.findViewById(R.id.tv_witness);
 
@@ -370,8 +370,8 @@ public class UserIndexFragment extends BaseFeedFragment {
                     bt_follow.setText("已关注");
 
                 }else{
-                    bt_follow.setBackgroundResource(R.drawable.bt_follow_selector);
-                    bt_follow.setText("关注");
+//                    bt_follow.setBackgroundResource(R.drawable.bt_follow_selector);
+//                    bt_follow.setText("关注");
                 }
 
 
@@ -608,7 +608,7 @@ public class UserIndexFragment extends BaseFeedFragment {
 
 
         if (holder.iv_content.getVisibility() == View.VISIBLE) {
-            if(baseFeed instanceof Feed2 ||"Attachment".equals(((Feed2)baseFeed).data.file_name))
+            if(baseFeed instanceof Feed2 && "Attachment".equals(((Feed2)baseFeed).feedable_type))
             {
                 Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
             }else{

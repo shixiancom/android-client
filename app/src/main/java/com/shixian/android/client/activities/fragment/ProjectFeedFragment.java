@@ -341,7 +341,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                         tv_content.setText(Html.fromHtml(project.description));
                     if(project.has_followed)
                     {
-                        tv_follow.setBackgroundColor(Color.BLACK);
+                        tv_follow.setBackgroundColor(Color.GRAY);
                     }
 
 
@@ -634,7 +634,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
 
         if (holder.iv_content.getVisibility() == View.VISIBLE) {
-            if(baseFeed instanceof Feed2 ||"Attachment".equals(((Feed2)baseFeed).data.file_name))
+            if(baseFeed instanceof Feed2 && "Attachment".equals(((Feed2)baseFeed).feedable_type))
             {
                 Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
             }else{

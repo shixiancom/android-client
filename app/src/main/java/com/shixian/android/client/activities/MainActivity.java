@@ -340,13 +340,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name) {
             @Override
             public void onDrawerOpened(View drawerView) {
-                Toast.makeText(MainActivity.this, "打开", Toast.LENGTH_LONG).show();
+  //              Toast.makeText(MainActivity.this, "打开", Toast.LENGTH_LONG).show();
                 super.onDrawerOpened(drawerView);
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                Toast.makeText(MainActivity.this, "关闭", Toast.LENGTH_LONG).show();
+            //    Toast.makeText(MainActivity.this, "关闭", Toast.LENGTH_LONG).show();
                 super.onDrawerClosed(drawerView);
             }
         };
