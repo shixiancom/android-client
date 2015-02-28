@@ -83,6 +83,7 @@ public class MsgDetialFragment extends BaseFragment {
 
     private ImageCallback callback;
 
+    private String lable;
 
 
 
@@ -91,6 +92,10 @@ public class MsgDetialFragment extends BaseFragment {
 
     @Override
     public View initView(LayoutInflater inflater) {
+
+        if(!TextUtils.isEmpty(lable)){
+            initLable();
+        }
 
         View view =inflater.inflate(R.layout.fragment_msgdetial,null,false);
 
@@ -115,6 +120,7 @@ public class MsgDetialFragment extends BaseFragment {
         pullToRefreshListView.setScrollLoadEnabled(true);
 
 
+        pullToRefreshListView.getFooterLoadingLayout().show(false);
 
 
         // 设置下拉刷新的listener
@@ -214,6 +220,8 @@ public class MsgDetialFragment extends BaseFragment {
 
     @Override
     public void initDate(Bundle savedInstanceState) {
+
+
 
         if(feedEntry!=null&&feedEntry.firstEntry!=null)
         {
@@ -353,7 +361,13 @@ public class MsgDetialFragment extends BaseFragment {
     /******************************************************************************************/
 
     protected void initLable() {
-        context.setLable(msgType.notifiable_type);
+        if(TextUtils.isEmpty(lable)){
+            context.setLable(msgType.notifiable_type);
+            lable=msgType.notifiable_type;
+        }else{
+            context.setLable(lable);
+        }
+
     }
 
     /**
@@ -545,7 +559,11 @@ public class MsgDetialFragment extends BaseFragment {
                     }
 
                     holder.tv_type.setText(type);
-                    holder.tv_proect.setText(project);
+
+
+                        holder.tv_proect.setText(project);
+
+
                     holder.tv_name.setText(feedEntry.firstEntry.user.username);
 
 

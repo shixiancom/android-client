@@ -25,6 +25,7 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".activities.LoginActivity"
+            android:screenOrientation="portrait"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,14 +34,17 @@
         </activity>
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".activities.MainActivity"
             android:label="@string/activity_index_label"
             android:configChanges="keyboardHidden|orientation"
             >
         </activity>
         
-        <activity android:name=".activities.DetailActivity"/>
-        <activity android:name=".activities.BigImageActivity"/>
+        <activity android:name=".activities.DetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.BigImageActivity"
+            android:screenOrientation="portrait"/>
 
         <!-- 必须注册在微博授权，分享微博时候用到 -->
         <activity android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
