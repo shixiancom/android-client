@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 >
                 <ImageView
-                    android:src="@android:drawable/ic_menu_upload"
+                    android:src="@drawable/ic_home_grey600_24dp"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     />
@@ -102,24 +102,23 @@
                 </LinearLayout>
 
             <LinearLayout
+
                 android:id="@+id/ll_msg"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 >
-                <FrameLayout
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content">
+
                 <ImageView
+                    android:layout_width="40dp"
                     android:id="@+id/iv_msg"
-                    android:src="@android:drawable/ic_lock_silent_mode_off"
-                    android:layout_width="wrap_content"
+                    android:src="@drawable/ic_volume_up_grey600_24dp"
                     android:layout_height="wrap_content"
                     />
 
 
-                </FrameLayout>
+
                 <TextView
                     android:layout_marginLeft="60dp"
                     android:layout_width="wrap_content"
@@ -137,7 +136,7 @@
                 android:layout_marginBottom="5dp"
                 >
                 <ImageView
-                    android:src="@android:drawable/btn_star_big_off"
+                    android:src="@drawable/ic_star_outline_grey600_24dp"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     />

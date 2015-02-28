@@ -22,6 +22,8 @@ import com.shixian.android.client.activities.DetailActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
+import com.shixian.android.client.controller.NewsOnClickController;
+import com.shixian.android.client.controller.OnClickController;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.News;
@@ -649,21 +651,22 @@ public class NewsFragment extends BaseFragment
 
 
 
+            NewsOnClickController newsOnClickController=new NewsOnClickController(context,news);
 
 
+           holder.tv_name.setOnClickListener(newsOnClickController);
 
 
+           holder.iv_icon.setOnClickListener(newsOnClickController);
 
 
-
-
+            if(holder.tv_project.VISIBLE==View.VISIBLE)
+            {
+                holder.tv_project.setOnClickListener(newsOnClickController);
+            }
 
             return view;
         }
-
-
-
-
 
     }
 

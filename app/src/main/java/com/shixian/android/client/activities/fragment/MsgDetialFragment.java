@@ -526,8 +526,12 @@ public class MsgDetialFragment extends BaseFragment {
                             holder.tv_content.setText(Html.fromHtml(allItemType.content_html));
                             break;
                         case "Attachment":
+
+
                             type = context.getResources().getString(R.string.feed_attachment);
-                            holder.tv_content.setText(Html.fromHtml(allItemType.content_html));
+                            holder.tv_content.setText(allItemType.content+"\n"+"  "+allItemType.file_name);
+                            holder.iv_content.setVisibility(View.VISIBLE);
+                            holder.iv_content.setImageResource(R.drawable.file);
                             break;
                     }
 
@@ -831,14 +835,21 @@ public class MsgDetialFragment extends BaseFragment {
 
         if(holder.iv_content.getVisibility()==View.VISIBLE)
         {
-            holder.iv_content.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent=new Intent(context, BigImageActivity.class);
-                    intent.putExtra("key",(String)holder.iv_content.getTag());
-                    context.startActivity(intent);
-                }
-            });
+            if(baseFeed instanceof Feed2 ||"Attachment".equals(((Feed2)baseFeed).data.file_name))
+            {
+                Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
+            }else{
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(context, BigImageActivity.class);
+                        intent.putExtra("key",(String)holder.iv_content.getTag());
+                        context.startActivity(intent);
+                    }
+                });
+
+
+            }
         }
 
 

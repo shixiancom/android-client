@@ -29,7 +29,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="测试xxxxxx"
             android:textColor="#005580"
             android:textSize="@dimen/actor_text_size" />
 
@@ -46,8 +45,6 @@
             android:textColor="#9B9B9B"
             android:layout_marginRight="10dp"
             android:layout_gravity="center_vertical"
-            android:text="19小时以前"
-
             />
 
 
@@ -80,8 +77,6 @@
             android:textColor="#888888"
             android:layout_marginRight="10dp"
             android:layout_gravity="center_vertical"
-            android:text="19小时以前"
-            
             />
         
     </RelativeLayout>
@@ -120,7 +115,7 @@
         android:id="@+id/tv_response"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="@android:drawable/edit_text"
+        android:background="@drawable/edit_bk"
         android:layout_marginTop="10dp"
         android:hint="回复："
         />

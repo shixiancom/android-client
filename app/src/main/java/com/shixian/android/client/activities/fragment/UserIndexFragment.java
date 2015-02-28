@@ -1,5 +1,6 @@
 package com.shixian.android.client.activities.fragment;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -18,6 +19,7 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.BaseActivity;
+import com.shixian.android.client.activities.BigImageActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.OnClickController;
@@ -577,7 +579,7 @@ public class UserIndexFragment extends BaseFeedFragment {
 
 
     @Override
-    protected void setFeedOnClickListener(BaseActivity context, FeedHolder holder, final BaseFeed baseFeed) {
+    protected void setFeedOnClickListener(final BaseActivity context, final FeedHolder holder, final BaseFeed baseFeed) {
 
 
         OnClickController controller = new OnClickController(context, baseFeed);
@@ -606,7 +608,21 @@ public class UserIndexFragment extends BaseFeedFragment {
 
 
         if (holder.iv_content.getVisibility() == View.VISIBLE) {
-            holder.iv_content.setOnClickListener(controller);
+            if(baseFeed instanceof Feed2 ||"Attachment".equals(((Feed2)baseFeed).data.file_name))
+            {
+                Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
+            }else{
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(context, BigImageActivity.class);
+                        intent.putExtra("key",(String)holder.iv_content.getTag());
+                        context.startActivity(intent);
+                    }
+                });
+
+
+            }
         }
 
 
