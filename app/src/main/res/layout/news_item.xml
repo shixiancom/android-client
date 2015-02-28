@@ -10,21 +10,23 @@
         android:gravity="center_vertical"
         >
 
-        <ImageView
-            android:layout_marginLeft="5dp"
+        <com.shixian.android.client.views.RoundCornerImageView
+            android:scaleType="centerCrop"
+            android:layout_marginLeft="@dimen/global_left"
             android:layout_marginTop="10dp"
             android:src="@drawable/ic_launcher"
             android:id="@+id/iv_icon"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"/>
 
         <TextView
+            android:layout_marginLeft="@dimen/iv_icon_right"
             android:maxLength="13"
             android:id="@+id/tv_name"
             android:textColor="#005580"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="xxxxxx"
             android:layout_alignTop="@id/iv_icon"
             android:layout_toRightOf="@id/iv_icon"
             android:textSize="13sp"
@@ -55,6 +57,7 @@
             />
 
         <TextView
+            android:layout_marginLeft="@dimen/iv_icon_right"
             android:maxLength="13"
             android:textColor="#005580"
             android:layout_below="@id/tv_name"
@@ -116,8 +119,10 @@
         android:layout_height="wrap_content"
         android:textSize="15sp"
         android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="@dimen/global_left"
         android:textColor="#666666"
+        android:layout_marginTop="@dimen/content_top"
+        android:layout_marginBottom="10dp"
         />
 
         <Button
@@ -133,4 +138,15 @@
 
 
     </RelativeLayout>
+
+    <View
+        android:id="@+id/v_line"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:background="#888888"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="@dimen/main_content_top"
+        />
 </LinearLayout>

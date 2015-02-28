@@ -14,7 +14,7 @@
     <string name="finish_task">添加了任务在</string>
     <string name="vote">添加了投票在</string>
     <string name="finish_homework">提交了任务在</string>
-    <string name="feed_attachment">添加了新文件</string>
+    <string name="feed_attachment">添加了文件</string>
     <string name="activity_index_label">首页</string>
     <string name="pull_to_refresh_header_hint_normal">下拉刷新</string>
     <string name="pull_to_refresh_header_hint_ready">释放刷新</string>
@@ -23,7 +23,7 @@
     <string name="please_fllow">邀请您关注</string>
     <string name="join_accept">通过了您加入</string>
     <string name="join_reject">拒绝了您加入</string>
-    <string name="addcomment">您的想法添加了新的</string>
+    <string name="addcomment">您的想法添加了</string>
     <string name="project_join_accept"><font color='red'>{project_title}</font></string>
     <string name="attachment">您参加的项目</string>
     <string name="project_attachment">{project_title}</string>
@@ -39,7 +39,7 @@
     <string name="new_mention_idea"><font color='blue'> 想法 </font> 中提到你</string>
     <string name="new_mention_image"><font color='blue'> 图片 </font> 中提到你</string>
     <string name="new_mention_task"><font color='blue'> 任务 </font> 中提到你</string>
-    <string name="new_reply">在你的想法添加新的 </string>
+    <string name="new_reply">在你的想法添加 </string>
     <string name="new_task">给你分配一个<font color='blue'> 任务 </font> 在 </string>
     <string name="project_new_task"><font color='blue'>{project_title}</font> 中</string>
 

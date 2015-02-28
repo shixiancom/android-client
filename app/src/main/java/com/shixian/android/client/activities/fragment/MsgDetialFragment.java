@@ -48,6 +48,7 @@ import com.shixian.android.client.utils.ImageDownload;
 import com.shixian.android.client.utils.ImageUtil;
 import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
+import com.shixian.android.client.utils.StringUtils;
 import com.shixian.android.client.utils.TimeUtil;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshBase;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView;
@@ -603,7 +604,7 @@ public class MsgDetialFragment extends BaseFragment {
                 holder.tv_type.setVisibility(View.GONE);
                 holder.iv_content.setVisibility(View.GONE);
                 holder.tv_content.setVisibility(View.VISIBLE);
-                holder.tv_content.setText(comment.content);
+                holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(comment.content)));
 
 
 
@@ -867,7 +868,7 @@ public class MsgDetialFragment extends BaseFragment {
                 holder.iv_content.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "暂且不支持下载文件", Toast.LENGTH_SHORT).show();
                     }
                 });
             }else{
@@ -914,7 +915,7 @@ public class MsgDetialFragment extends BaseFragment {
                 holder.iv_content.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "暂且不支持下载文件", Toast.LENGTH_SHORT).show();
                     }
                 });
 

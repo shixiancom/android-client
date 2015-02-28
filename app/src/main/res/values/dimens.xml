@@ -7,5 +7,15 @@
     <dimen name="time_text_size">11sp</dimen>
     <dimen name="picture_pull_to_refresh_last_update_time_top_margin">5dp</dimen>
     <dimen name="picture_pull_to_refresh_last_update_time_text_size">10dp</dimen>
+    <dimen name="menu_ic_margin_left">24dp</dimen>
+    <dimen name="menu_item_height">48dp</dimen>
+    <dimen name="menu_tv_margin_left">32dp</dimen>
+    <dimen name="menu_margin_top">8dp</dimen>
+    <dimen name="menu_tv_sp">14dp</dimen>
+    <dimen name="global_left">8dp</dimen>
+    <dimen name="iv_icon_right">8dp</dimen>
+    <dimen name="content_top">14dp</dimen>
+    <dimen name="main_content_top">5dp</dimen>
+
 
 </resources>

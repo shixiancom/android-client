@@ -4,15 +4,29 @@
     android:layout_height="match_parent"
     >
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:src="@drawable/ic_lens_grey_18dp"
+            />
     <TextView
         android:singleLine="true"
         android:gravity="center_vertical"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="@dimen/menu_tv_margin_left"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:textSize="15sp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/menu_tv_sp"
         android:id="@+id/tv_title"
         />
+
+    </LinearLayout>
 
 </LinearLayout>
 

@@ -17,7 +17,7 @@
            android:layout_height="wrap_content"
            android:textSize="17sp"
            android:layout_marginTop="10dp"
-           android:layout_marginLeft="10dp"
+           android:layout_marginLeft="@dimen/global_left"
            android:singleLine="true"
            android:id="@+id/tv_name"
            android:textColor="#000000"
@@ -38,8 +38,8 @@
 
     <TextView
         android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="@dimen/global_left"
+        android:layout_marginTop="@dimen/content_top"
         android:id="@+id/tv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

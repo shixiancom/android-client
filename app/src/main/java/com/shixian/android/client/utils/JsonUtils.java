@@ -68,7 +68,9 @@ public class JsonUtils {
             for (int j = 0; j < jsonArrayrray.length(); j++) {
                 JSONObject jobj = jsonArrayrray.getJSONObject(j);
                 Feed2 feed = gson.fromJson(jobj.toString(), Feed2.class);
-                feeds.add(feed);
+
+                if(!"Agreement".equals(feed.feedable_type))
+                    feeds.add(feed);
 
 
                 try{

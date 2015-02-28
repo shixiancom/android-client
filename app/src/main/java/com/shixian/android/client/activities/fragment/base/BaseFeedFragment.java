@@ -35,6 +35,7 @@ import com.shixian.android.client.utils.ImageCache;
 import com.shixian.android.client.utils.ImageCallback;
 import com.shixian.android.client.utils.ImageDownload;
 import com.shixian.android.client.utils.ImageUtil;
+import com.shixian.android.client.utils.StringUtils;
 import com.shixian.android.client.utils.TimeUtil;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshBase;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView;
@@ -102,7 +103,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
             ApiUtils.post(url, params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int i, Header[] headers, byte[] bytes) {
-                    Log.d("AAAA", new String(bytes));
+
 
                     BaseFeed baseFeed = (BaseFeed) mEnterLayout.getTag();
                     Gson gson = new Gson();
@@ -511,7 +512,8 @@ public abstract  class BaseFeedFragment extends BaseFragment {
             holder.tv_type.setVisibility(View.GONE);
             holder.iv_content.setVisibility(View.GONE);
             holder.tv_content.setVisibility(View.VISIBLE);
-            holder.tv_content.setText(comment.content);
+            holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(comment.content_html)));
+
 
 
 
@@ -524,6 +526,9 @@ public abstract  class BaseFeedFragment extends BaseFragment {
             params.height=imageSize;
             params.width =imageSize;
             holder.iv_icon.setLayoutParams(params);
+
+
+
 
 
             //头像图片处理
@@ -548,6 +553,8 @@ public abstract  class BaseFeedFragment extends BaseFragment {
                 holder.tv_response.setVisibility(View.GONE);
                 holder.v_line.setVisibility(View.GONE);
             }
+
+
 
         }
 

@@ -12,10 +12,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         >
-        <ImageView
+        <com.shixian.android.client.views.RoundCornerImageView
+            android:scaleType="centerCrop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="@dimen/global_left"
             android:layout_marginTop="5dp"
             android:src="@drawable/ic_launcher"
             android:id="@+id/iv_icon"
@@ -89,8 +90,8 @@
         android:layout_height="wrap_content"
         android:textColor="#666666"
         android:textSize="@dimen/content_text_size"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="@dimen/global_left"
+        android:layout_marginTop="@dimen/content_top"
         android:lineSpacingMultiplier="1.3"
         android:layout_marginBottom="10dp"
         />
@@ -114,7 +115,7 @@
         android:layout_width="match_parent"
         android:layout_height="34dp"
         android:id="@+id/tv_response"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="@dimen/global_left"
         android:layout_marginRight="10dp"
         android:background="@drawable/xxx"
         android:layout_marginTop="10dp"
@@ -129,7 +130,7 @@
         android:layout_marginRight="3dp"
         android:background="#888888"
         android:layout_marginBottom="18dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/main_content_top"
         />
 
 </LinearLayout>

@@ -373,6 +373,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         lv_menu = (ListView) findViewById(R.id.lv_menu);
 
+
+
         lv_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
