@@ -83,6 +83,7 @@ public class MsgDetialFragment extends BaseFragment {
 
     private ImageCallback callback;
 
+    private String lable;
 
 
 
@@ -91,6 +92,10 @@ public class MsgDetialFragment extends BaseFragment {
 
     @Override
     public View initView(LayoutInflater inflater) {
+
+        if(!TextUtils.isEmpty(lable)){
+            initLable();
+        }
 
         View view =inflater.inflate(R.layout.fragment_msgdetial,null,false);
 
@@ -105,6 +110,7 @@ public class MsgDetialFragment extends BaseFragment {
 
 
 
+
 //        commonEnterRoot=context.findViewById(R.id.commonEnterRoot);
 //
 //        settingListView(lv);
@@ -112,6 +118,10 @@ public class MsgDetialFragment extends BaseFragment {
 
         // 滚动到底自动加载可用
         pullToRefreshListView.setScrollLoadEnabled(true);
+
+
+        pullToRefreshListView.getFooterLoadingLayout().show(false);
+
 
         // 设置下拉刷新的listener
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
@@ -199,6 +209,7 @@ public class MsgDetialFragment extends BaseFragment {
         if (adapter == null) {
             adapter = new FeedAdapter();
             pullToRefreshListView.getListView().setAdapter(adapter);
+            pullToRefreshListView.onPullUpRefreshComplete();
 
         } else {
             adapter.notifyDataSetChanged();
@@ -209,6 +220,8 @@ public class MsgDetialFragment extends BaseFragment {
 
     @Override
     public void initDate(Bundle savedInstanceState) {
+
+
 
         if(feedEntry!=null&&feedEntry.firstEntry!=null)
         {
@@ -280,6 +293,7 @@ public class MsgDetialFragment extends BaseFragment {
                                    }
 
                                    pullToRefreshListView.onPullDownRefreshComplete();
+                                   pullToRefreshListView.onPullUpRefreshComplete();
                                    context.dissProgress();
                                    pullToRefreshListView.getListView().setSelection(msgType.position);
 
@@ -291,6 +305,9 @@ public class MsgDetialFragment extends BaseFragment {
                    }.start();
 
 
+               }else{
+                   pullToRefreshListView.onPullDownRefreshComplete();
+                   pullToRefreshListView.onPullUpRefreshComplete();
                }
            }
 
@@ -344,7 +361,13 @@ public class MsgDetialFragment extends BaseFragment {
     /******************************************************************************************/
 
     protected void initLable() {
-        context.setLable(msgType.notifiable_type);
+        if(TextUtils.isEmpty(lable)){
+            context.setLable(msgType.notifiable_type);
+            lable=msgType.notifiable_type;
+        }else{
+            context.setLable(lable);
+        }
+
     }
 
     /**
@@ -526,13 +549,21 @@ public class MsgDetialFragment extends BaseFragment {
                             holder.tv_content.setText(Html.fromHtml(allItemType.content_html));
                             break;
                         case "Attachment":
+
+
                             type = context.getResources().getString(R.string.feed_attachment);
-                            holder.tv_content.setText(Html.fromHtml(allItemType.content_html));
+                            holder.tv_content.setText(allItemType.content+"\n"+"  "+allItemType.file_name);
+                            holder.iv_content.setVisibility(View.VISIBLE);
+                            holder.iv_content.setImageResource(R.drawable.file);
                             break;
                     }
 
                     holder.tv_type.setText(type);
-                    holder.tv_proect.setText(project);
+
+
+                        holder.tv_proect.setText(project);
+
+
                     holder.tv_name.setText(feedEntry.firstEntry.user.username);
 
 
@@ -831,14 +862,26 @@ public class MsgDetialFragment extends BaseFragment {
 
         if(holder.iv_content.getVisibility()==View.VISIBLE)
         {
-            holder.iv_content.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent=new Intent(context, BigImageActivity.class);
-                    intent.putExtra("key",(String)holder.iv_content.getTag());
-                    context.startActivity(intent);
-                }
-            });
+            if(baseFeed instanceof Feed2 && ("Attachment".equals(((Feed2)baseFeed).feedable_type)))
+            {
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }else{
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(context, BigImageActivity.class);
+                        intent.putExtra("key",(String)holder.iv_content.getTag());
+                        context.startActivity(intent);
+                    }
+                });
+
+
+            }
         }
 
 
@@ -867,14 +910,25 @@ public class MsgDetialFragment extends BaseFragment {
 
         if(holder.iv_content.getVisibility()==View.VISIBLE)
         {
-            holder.iv_content.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent=new Intent(context, BigImageActivity.class);
-                    intent.putExtra("key",(String)holder.iv_content.getTag());
-                    context.startActivity(intent);
-                }
-            });
+            if( "Attachment".equals(msgType.notifiable_type)||"Attachment".equals(msgType.commentable_type)){
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }else{
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(context, BigImageActivity.class);
+                        intent.putExtra("key",(String)holder.iv_content.getTag());
+                        context.startActivity(intent);
+                    }
+                });
+            }
+
         }
 
 

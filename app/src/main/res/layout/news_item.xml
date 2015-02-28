@@ -11,6 +11,7 @@
         >
 
         <ImageView
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
             android:src="@drawable/ic_launcher"
             android:id="@+id/iv_icon"
@@ -18,6 +19,7 @@
             android:layout_height="wrap_content" />
 
         <TextView
+            android:maxLength="13"
             android:id="@+id/tv_name"
             android:textColor="#005580"
             android:layout_width="wrap_content"
@@ -35,7 +37,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#9B9B9B"
-            android:text="xxxxxx"
             android:layout_alignTop="@id/iv_icon"
             android:layout_toRightOf="@id/tv_name"
             android:layout_marginLeft="5dp"
@@ -47,7 +48,6 @@
             android:id="@+id/tv_post_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="xxxxxx"
             android:layout_alignTop="@id/iv_icon"
             android:layout_toRightOf="@id/tv_type"
             android:layout_marginLeft="5dp"
@@ -55,13 +55,13 @@
             />
 
         <TextView
+            android:maxLength="13"
             android:textColor="#005580"
             android:layout_below="@id/tv_name"
             android:layout_alignLeft="@id/tv_name"
             android:id="@+id/tv_project"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="xxxxxxxxxxxx"
             android:layout_toRightOf="@id/iv_icon"
             android:layout_marginBottom="5dp"
             />
@@ -73,7 +73,6 @@
             android:id="@+id/tv_addpri"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="xxxxxxxxxxxx"
             android:layout_toRightOf="@id/tv_project"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="3dp"/>
@@ -85,7 +84,6 @@
             android:id="@+id/tv_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="xxxxxxxxxxxx"
             android:layout_toRightOf="@id/tv_addpri"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="3dp"
@@ -97,7 +95,6 @@
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="xxxxxxxxxxxx"
             android:layout_alignParentRight="true"
             android:layout_marginRight="5dp"
             android:textColor="#888888"
