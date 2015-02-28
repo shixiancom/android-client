@@ -88,7 +88,7 @@ public class FooterLoadingLayout extends LoadingLayout {
     @Override
     protected void onReset() {
     	show(false);
-       mHintView.setText(" 正在加载--");
+        mHintView.setText("123");
     }
 
     @Override

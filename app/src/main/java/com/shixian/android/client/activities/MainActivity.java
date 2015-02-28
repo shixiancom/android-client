@@ -124,8 +124,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
 
-    //TODO
-   //private RedPointView titleImgPoint;
+   private RedPointView titleImgPoint;
    private RedPointView layMsgPoint;
    private ImageView iv_msg;
 
@@ -173,7 +172,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                             settingMsgCount(status.total);
                         else{
                             //TODO
-                           hideMsg();
+                           // hideMsg();
                         }
 
                     }
@@ -340,13 +339,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name) {
             @Override
             public void onDrawerOpened(View drawerView) {
-  //              Toast.makeText(MainActivity.this, "打开", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "打开", Toast.LENGTH_LONG).show();
                 super.onDrawerOpened(drawerView);
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-            //    Toast.makeText(MainActivity.this, "关闭", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "关闭", Toast.LENGTH_LONG).show();
                 super.onDrawerClosed(drawerView);
             }
         };
@@ -423,7 +422,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
        // showMsg(5);
         iv_msg= (ImageView) findViewById(R.id.iv_msg);
         //TODO
-      //  titleImgPoint=new RedPointView(this,toolbar);
+        titleImgPoint=new RedPointView(this,toolbar);
         layMsgPoint=new RedPointView(this,iv_msg);
        // showMsg(5);
 
@@ -637,11 +636,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public  void showMsg(int count)
     {
 
-//        titleImgPoint.setContent(count);
-//        titleImgPoint.setSizeContent(16);
-//        titleImgPoint.setColorContent(Color.WHITE);
-//        titleImgPoint.setColorBg(Color.RED);
-//        titleImgPoint.setPosition(Gravity.CENTER, Gravity.CENTER);
+        titleImgPoint.setContent(count);
+        titleImgPoint.setSizeContent(16);
+        titleImgPoint.setColorContent(Color.WHITE);
+        titleImgPoint.setColorBg(Color.RED);
+        titleImgPoint.setPosition(Gravity.CENTER, Gravity.CENTER);
 
         layMsgPoint.setContent(count);
         layMsgPoint.setSizeContent(16);
@@ -655,15 +654,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     public void hideMsg()
     {
-      //  titleImgPoint.hide();
+        titleImgPoint.hide();
         layMsgPoint.hide();
 
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        drawerLayout.closeDrawers();
     }
 }

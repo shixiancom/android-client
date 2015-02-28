@@ -71,34 +71,27 @@ public class JsonUtils {
                 feeds.add(feed);
 
 
-                try{
-                    String commArrayStr=jobj.getJSONObject("data").getString("comments");
-                    if(!"[]".equals(commArrayStr)){
-                        feed.hasChildren=true;
-                        JSONArray array=new JSONArray(commArrayStr);
+                String commArrayStr=jobj.getJSONObject("data").getString("comments");
+                if(!"[]".equals(commArrayStr)){
+                    feed.hasChildren=true;
+                    JSONArray array=new JSONArray(commArrayStr);
 
-                        for(int i=0;i<array.length();i++)
+                    for(int i=0;i<array.length();i++)
+                    {
+                        Comment comment=gson.fromJson(array.getString(i), Comment.class);
+                        comment.feedable_type= AppContants.FEADE_TYPE_COMMON;
+                        if(i==array.length()-1)
                         {
-                            Comment comment=gson.fromJson(array.getString(i), Comment.class);
-                            comment.feedable_type= AppContants.FEADE_TYPE_COMMON;
-                            if(i==array.length()-1)
-                            {
-                                comment.isLast=true;
-                            }
-
-                            comment.project_id=feed.project_id;
-                            comment.parent_id=feed.id;
-
-                            feeds.add(comment);
-
+                            comment.isLast=true;
                         }
+
+                        comment.project_id=feed.project_id;
+                        comment.parent_id=feed.id;
+
+                        feeds.add(comment);
+
                     }
-                }catch (Exception e)
-                {
-                    continue;
                 }
-
-
 
 
 

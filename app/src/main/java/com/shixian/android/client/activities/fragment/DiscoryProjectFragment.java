@@ -59,9 +59,6 @@ public class DiscoryProjectFragment extends BaseFragment {
         // 滚动到底自动加载可用
         pullToRefreshListView.setScrollLoadEnabled(true);
 
-        //去掉分割线
-        pullToRefreshListView.getListView().setDividerHeight(0);
-
         // 设置下拉刷新的listener
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
 
@@ -300,14 +297,10 @@ public class DiscoryProjectFragment extends BaseFragment {
 
             if(project.has_followed)
             {
-                //TODO
-               // holder.tv_fllowen.setBackgroundColor(Color.GRAY);
-                holder.tv_fllowen.setBackgroundResource(R.drawable.unfollow);
-
+                holder.tv_fllowen.setBackgroundColor(Color.GRAY);
 
             }else{
-              //  holder.tv_fllowen.setBackgroundColor(Color.argb(1,32,168,192+15));
-                holder.tv_fllowen.setBackgroundResource(R.drawable.follow);
+                holder.tv_fllowen.setBackgroundColor(Color.argb(1,32,168,192+15));
             }
 
 
@@ -343,7 +336,7 @@ public class DiscoryProjectFragment extends BaseFragment {
                             @Override
                             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                                 Toast.makeText(context,"关注成功",Toast.LENGTH_SHORT).show();
-                                holder.tv_fllowen.setBackgroundResource(R.drawable.unfollow);
+                                holder.tv_fllowen.setBackgroundColor(Color.GRAY);
                                 project.has_followed=true;
                             }
 

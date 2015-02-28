@@ -29,6 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
+            android:text="测试xxxxxx"
             android:textColor="#005580"
             android:textSize="@dimen/actor_text_size" />
 
@@ -45,6 +46,8 @@
             android:textColor="#9B9B9B"
             android:layout_marginRight="10dp"
             android:layout_gravity="center_vertical"
+            android:text="19小时以前"
+
             />
 
 
@@ -77,6 +80,8 @@
             android:textColor="#888888"
             android:layout_marginRight="10dp"
             android:layout_gravity="center_vertical"
+            android:text="19小时以前"
+            
             />
         
     </RelativeLayout>
@@ -84,7 +89,7 @@
 
     
     <TextView
-        android:id="@+id/tv_content"
+        android:id="@+id/tv_content" 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#666666"
@@ -110,16 +115,14 @@
     <!-- android:scaleType="centerInside"-->
 
     <TextView
-        android:gravity="center_vertical"
         android:layout_width="match_parent"
-        android:layout_height="34dp"
+        android:layout_height="wrap_content"
         android:id="@+id/tv_response"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="@drawable/xxx"
+        android:background="@android:drawable/edit_text"
         android:layout_marginTop="10dp"
         android:hint="回复："
-
         />
     <View
         android:id="@+id/v_line"

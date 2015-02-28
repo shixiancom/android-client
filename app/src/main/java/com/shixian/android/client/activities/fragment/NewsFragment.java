@@ -22,8 +22,6 @@ import com.shixian.android.client.activities.DetailActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
-import com.shixian.android.client.controller.NewsOnClickController;
-import com.shixian.android.client.controller.OnClickController;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.News;
@@ -358,13 +356,6 @@ public class NewsFragment extends BaseFragment
                 {
                     case "invit_follow":
                         holder.tv_content.setVisibility(View.GONE);
-
-                        if(news.project.getTitle().length()>10)
-                        {
-                            holder.tv_project.setText(news.project.getTitle().substring(0,8)+"...");
-                        }else{
-                            holder.tv_project.setText(news.project.getTitle());
-                        }
                         holder.tv_project.setText(news.project.getTitle());
                         holder.tv_name.setText(news.user.username);
                         holder.tv_type.setText(R.string.please_fllow);
@@ -372,15 +363,7 @@ public class NewsFragment extends BaseFragment
                         break;
                     case "join_accept":
                         holder.tv_content.setVisibility(View.GONE);
-
-                        String project;
-                        if(news.project.getTitle().length()>10)
-                        {
-                            project=news.project.getTitle().substring(0,8)+"...";
-                        }else{
-                            project=news.project.getTitle();
-                        }
-                        holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_join_accept).replace("{project_title}", project)));
+                        holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_join_accept).replace("{project_title}", news.project.getTitle())));
                         holder.tv_name.setText(news.user.username);
                         holder.tv_type.setText(R.string.join_accept);
                         holder.tv_add.setText("请求");
@@ -388,15 +371,7 @@ public class NewsFragment extends BaseFragment
                         holder.tv_add_pri.setText("的");
                         break;
                     case "join_reject":
-
                         holder.tv_content.setVisibility(View.GONE);
-
-                        if(news.project.getTitle().length()>10)
-                        {
-                            project=news.project.getTitle().substring(0,8)+"...";
-                        }else{
-                            project=news.project.getTitle();
-                        }
                         holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_join_accept).replace("{project_title}", news.project.getTitle())));
                         holder.tv_name.setText(news.user.username);
                         holder.tv_type.setText(R.string.join_reject);
@@ -406,14 +381,7 @@ public class NewsFragment extends BaseFragment
                         break;
                     case "new_comment":
                         holder.tv_content.setVisibility(View.VISIBLE);
-
-                        if(news.project.getTitle().length()>10)
-                        {
-                            project=news.project.getTitle().substring(0,8)+"...";
-                        }else{
-                            project=news.project.getTitle();
-                        }
-                        holder.tv_project.setText(project);
+                        holder.tv_project.setText(news.project.getTitle());
                         holder.tv_name.setText(news.user.username);
                         holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.addcomment)));
                         holder.tv_content.setText(Html.fromHtml(news.data.content_html));
@@ -422,19 +390,11 @@ public class NewsFragment extends BaseFragment
                         holder.tv_add.setVisibility(View.GONE);
                         break;
                     case "new_entity":
-                        if(news.project.getTitle().length()>10)
-                        {
-                            project=news.project.getTitle().substring(0,8)+"...";
-                        }else{
-                            project=news.project.getTitle();
-                        }
                         switch (news.notifiable_type)
                         {
-
                             case "Attachment":
                                 holder.tv_content.setVisibility(View.VISIBLE);
-
-                                holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_attachment).replace("{project_title}",project)));
+                                holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_attachment).replace("{project_title}",news.project.getTitle())));
                                 holder.tv_name.setText(news.user.username);
                                 holder.tv_type.setText(R.string.attachment);
                                 holder.tv_content.setText(Html.fromHtml(news.data.content_html));
@@ -445,7 +405,7 @@ public class NewsFragment extends BaseFragment
                                 break;
                             case "Homework":
                                 holder.tv_content.setVisibility(View.VISIBLE);
-                                holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_task).replace("{project_title}",project)));
+                                holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_task).replace("{project_title}",news.project.getTitle())));
                                 holder.tv_name.setText(news.user.username);
                                 holder.tv_type.setText(R.string.attachment);
                                 holder.tv_content.setText(Html.fromHtml(news.data.content_html));
@@ -456,7 +416,7 @@ public class NewsFragment extends BaseFragment
                                 break;
                             case "Idea":
                                 holder.tv_content.setVisibility(View.VISIBLE);
-                                holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_idea).replace("{project_title}",project)));
+                                holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_idea).replace("{project_title}",news.project.getTitle())));
                                 holder.tv_name.setText(news.user.username);
                                 holder.tv_type.setText(R.string.attachment);
                                 holder.tv_add.setText("想法");
@@ -469,7 +429,7 @@ public class NewsFragment extends BaseFragment
                             case "Image":
                                 holder.tv_content.setVisibility(View.VISIBLE);
                                 holder.tv_project.setVisibility(View.VISIBLE);
-                                holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_image).replace("{project_title}",project)));
+                                holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_image).replace("{project_title}",news.project.getTitle())));
                                 holder.tv_name.setText(news.user.username);
                                 holder.tv_type.setText(R.string.attachment);
                                 holder.tv_content.setText(Html.fromHtml(news.data.content_html));
@@ -480,7 +440,7 @@ public class NewsFragment extends BaseFragment
                             case "Plan":
                                 holder.tv_content.setVisibility(View.VISIBLE);
                                 holder.tv_project.setVisibility(View.VISIBLE);
-                                holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_plan).replace("{project_title}",project)));
+                                holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_plan).replace("{project_title}",news.project.getTitle())));
                                 holder.tv_name.setText(news.user.username);
                                 holder.tv_type.setText(R.string.attachment);
                                 holder.tv_add.setText("计划");
@@ -491,7 +451,7 @@ public class NewsFragment extends BaseFragment
                                 break;
                             case "Vote":
                                 holder.tv_content.setVisibility(View.VISIBLE);
-                                holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_vote).replace("{project_title}",project)));
+                                holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_vote).replace("{project_title}",news.project.getTitle())));
                                 holder.tv_name.setText(news.user.username);
                                 holder.tv_type.setText(R.string.attachment);
                                 holder.tv_content.setText(Html.fromHtml(news.data.content_html));
@@ -525,14 +485,8 @@ public class NewsFragment extends BaseFragment
                         break;
 
                     case "new_homework":
-                        if(news.project.getTitle().length()>10)
-                        {
-                            project=news.project.getTitle().substring(0,8)+"...";
-                        }else{
-                            project=news.project.getTitle();
-                        }
                         holder.tv_content.setVisibility(View.VISIBLE);
-                        holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_homework).replace("{project_title}",project)));
+                        holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_homework).replace("{project_title}",news.project.getTitle())));
                         holder.tv_name.setText(news.user.username);
                         holder.tv_type.setText(R.string.attachment);
                         holder.tv_content.setText(Html.fromHtml(news.data.content_html));
@@ -604,13 +558,7 @@ public class NewsFragment extends BaseFragment
                         break;
 
                     case "new_reply":
-                        if(news.project.getTitle().length()>10)
-                        {
-                            project=news.project.getTitle().substring(0,8)+"...";
-                        }else{
-                            project=news.project.getTitle();
-                        }
-                        holder.tv_project.setText(project);
+                        holder.tv_project.setText(news.project.getTitle());
                         holder.tv_content.setVisibility(View.VISIBLE);
                         holder.tv_name.setText(news.user.username);
                         holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_reply)));
@@ -631,13 +579,7 @@ public class NewsFragment extends BaseFragment
                         holder.tv_type.setText(Html.fromHtml("在"));
 
                         holder.tv_content.setText(Html.fromHtml(news.data.content_html));
-                        if(news.project.getTitle().length()>10)
-                        {
-                            project=news.project.getTitle().substring(0,8)+"...";
-                        }else{
-                            project=news.project.getTitle();
-                        }
-                        holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_new_task).replace("{project_title}",project)));
+                        holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_new_task).replace("{project_title}",news.project.getTitle())));
                         holder.tv_add.setText("任务");
                         holder.tv_add_pri.setVisibility(View.VISIBLE);
                         holder.tv_add_pri.setText("给你分配了");
@@ -653,8 +595,6 @@ public class NewsFragment extends BaseFragment
                 holder.tv_name.setText(news.user.username);
                 holder.tv_type.setText("请求加入项目 ");
                 holder.tv_content.setText(Html.fromHtml(news.data.content_html));
-
-
                 holder.tv_project.setText(news.project.getTitle());
                 holder.tv_add.setVisibility(View.GONE);
 
@@ -709,22 +649,21 @@ public class NewsFragment extends BaseFragment
 
 
 
-            NewsOnClickController newsOnClickController=new NewsOnClickController(context,news);
 
 
-           holder.tv_name.setOnClickListener(newsOnClickController);
 
 
-           holder.iv_icon.setOnClickListener(newsOnClickController);
 
 
-            if(holder.tv_project.VISIBLE==View.VISIBLE)
-            {
-                holder.tv_project.setOnClickListener(newsOnClickController);
-            }
+
+
 
             return view;
         }
+
+
+
+
 
     }
 
