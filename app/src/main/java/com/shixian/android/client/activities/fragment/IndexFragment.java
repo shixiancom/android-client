@@ -590,7 +590,7 @@ public class IndexFragment extends BaseFeedFragment {
 
             if(baseFeed instanceof Feed2 && "Attachment".equals(((Feed2)baseFeed).feedable_type))
             {
-                Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
+                holder.iv_content.setOnClickListener(controller);
             }else{
                 holder.iv_content.setOnClickListener(new View.OnClickListener() {
                     @Override

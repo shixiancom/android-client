@@ -835,9 +835,14 @@ public class MsgDetialFragment extends BaseFragment {
 
         if(holder.iv_content.getVisibility()==View.VISIBLE)
         {
-            if(baseFeed instanceof Feed2 && "Attachment".equals(((Feed2)baseFeed).feedable_type))
+            if(baseFeed instanceof Feed2 && ("Attachment".equals(((Feed2)baseFeed).feedable_type)))
             {
-                Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
+                    }
+                });
             }else{
                 holder.iv_content.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -878,8 +883,13 @@ public class MsgDetialFragment extends BaseFragment {
 
         if(holder.iv_content.getVisibility()==View.VISIBLE)
         {
-            if( "Attachment".equals(allItemType.file_name)){
-                Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
+            if( "Attachment".equals(msgType.notifiable_type)||"Attachment".equals(msgType.commentable_type)){
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
+                    }
+                });
 
             }else{
                 holder.iv_content.setOnClickListener(new View.OnClickListener() {

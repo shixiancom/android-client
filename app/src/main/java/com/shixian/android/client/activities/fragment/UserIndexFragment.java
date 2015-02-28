@@ -610,7 +610,12 @@ public class UserIndexFragment extends BaseFeedFragment {
         if (holder.iv_content.getVisibility() == View.VISIBLE) {
             if(baseFeed instanceof Feed2 && "Attachment".equals(((Feed2)baseFeed).feedable_type))
             {
-                Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
+                    }
+                });
             }else{
                 holder.iv_content.setOnClickListener(new View.OnClickListener() {
                     @Override
