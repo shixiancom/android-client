@@ -58,15 +58,17 @@
                 android:layout_height="100dp"
                 android:background="#0079B5">
 
-                <ImageView
+                <com.shixian.android.client.views.RoundCornerImageView
+                    android:scaleType="centerCrop"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentBottom="true"
-                    android:background="#FFF"
+                    android:background="@android:color/transparent"
                     android:layout_marginLeft="5dp"
                     android:id="@+id/iv_icon"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginBottom="10dp"
+
                     />
 
                 <TextView
@@ -82,46 +84,48 @@
 
 
             <LinearLayout
+                android:layout_marginTop="@dimen/menu_margin_top"
                 android:id="@+id/ll_index"
                 android:gravity="center_vertical"
-                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/menu_item_height"
                 >
                 <ImageView
-                    android:src="@android:drawable/ic_menu_upload"
-                    android:layout_width="40dp"
+                    android:layout_marginLeft="@dimen/menu_ic_margin_left"
+                    android:src="@drawable/ic_home_grey600_24dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
 
                <TextView
-                   android:layout_marginLeft="60dp"
+                   android:textSize="14sp"
+                   android:layout_marginLeft="@dimen/menu_tv_margin_left"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:text="首页"/>
                 </LinearLayout>
 
             <LinearLayout
+                android:layout_height="@dimen/menu_item_height"
                 android:id="@+id/ll_msg"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 >
-                <FrameLayout
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content">
+
                 <ImageView
-                    android:id="@+id/iv_msg"
-                    android:src="@android:drawable/ic_lock_silent_mode_off"
+                    android:layout_marginLeft="@dimen/menu_ic_margin_left"
                     android:layout_width="wrap_content"
+                    android:id="@+id/iv_msg"
+                    android:src="@drawable/ic_notifications_grey600_24dp"
                     android:layout_height="wrap_content"
                     />
 
 
-                </FrameLayout>
+
                 <TextView
-                    android:layout_marginLeft="60dp"
+                    android:textSize="@dimen/menu_tv_sp"
+                    android:layout_marginLeft="@dimen/menu_tv_margin_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="消息"
@@ -133,17 +137,18 @@
                 android:id="@+id/ll_descory"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
+                android:layout_height="@dimen/menu_item_height"
                 >
                 <ImageView
-                    android:src="@android:drawable/btn_star_big_off"
-                    android:layout_width="40dp"
+                    android:src="@drawable/ic_star_grey600_24dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/menu_ic_margin_left"
                     />
 
                 <TextView
-                    android:layout_marginLeft="60dp"
+                    android:textSize="@dimen/menu_tv_sp"
+                    android:layout_marginLeft="@dimen/menu_tv_margin_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="发现"
@@ -152,13 +157,31 @@
             </LinearLayout>
 
             <View
+                android:layout_marginTop="@dimen/menu_margin_top"
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="#888888"
                 />
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="48dp">
+                <TextView
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:text="我的项目"
+                    android:layout_marginLeft="16dp"
+                    />
+                </LinearLayout>
+
+
+
 
 
             <ListView
+                android:divider="@null"
                 android:id="@+id/lv_menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

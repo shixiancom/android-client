@@ -68,30 +68,48 @@ public class JsonUtils {
             for (int j = 0; j < jsonArrayrray.length(); j++) {
                 JSONObject jobj = jsonArrayrray.getJSONObject(j);
                 Feed2 feed = gson.fromJson(jobj.toString(), Feed2.class);
-                feeds.add(feed);
+
+                if(!"Agreement".equals(feed.feedable_type))
+                    feeds.add(feed);
 
 
-                String commArrayStr=jobj.getJSONObject("data").getString("comments");
-                if(!"[]".equals(commArrayStr)){
-                    feed.hasChildren=true;
-                    JSONArray array=new JSONArray(commArrayStr);
+                try{
+                    String commArrayStr=jobj.getJSONObject("data").getString("comments");
+                    if(!"[]".equals(commArrayStr)){
+                        feed.hasChildren=true;
+                        JSONArray array=new JSONArray(commArrayStr);
 
-                    for(int i=0;i<array.length();i++)
-                    {
-                        Comment comment=gson.fromJson(array.getString(i), Comment.class);
-                        comment.feedable_type= AppContants.FEADE_TYPE_COMMON;
-                        if(i==array.length()-1)
+                        for(int i=0;i<array.length();i++)
                         {
-                            comment.isLast=true;
+                            Comment comment=gson.fromJson(array.getString(i), Comment.class);
+                            comment.feedable_type= AppContants.FEADE_TYPE_COMMON;
+                            comment.parent=feed;
+                            if(i==0)
+                            {
+                                comment.isFirst=true;
+                            }
+
+                            if(i==array.length()-1)
+                            {
+                                comment.isLast=true;
+                            }
+
+                            comment.project_id=feed.project_id;
+                            comment.parent_id=feed.id;
+
+                            feeds.add(comment);
+
+
                         }
-
-                        comment.project_id=feed.project_id;
-                        comment.parent_id=feed.id;
-
-                        feeds.add(comment);
-
                     }
+                    feed.lastChildPosition=feeds.size()-1;
+                }catch (Exception e)
+                {
+                    feed.lastChildPosition=feeds.size()-1;
+                    continue;
                 }
+
+
 
 
 

@@ -1,6 +1,7 @@
 package com.shixian.android.client.activities.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -18,6 +19,7 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.BaseActivity;
+import com.shixian.android.client.activities.BigImageActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.OnClickController;
@@ -46,7 +48,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
     private Project project=new Project();
 
-    private ProjectFeedAdapter adapter;
+
 
     private String project_info;
 
@@ -132,6 +134,8 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                     }.start();
 
 
+                }else{
+                    pullToRefreshListView.onPullDownRefreshComplete();
                 }
             }
 
@@ -210,7 +214,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
                             firstPageDate = temp;
                             feedList = JsonUtils.ParseFeeds(firstPageDate);
-                            pullToRefreshListView.onPullDownRefreshComplete();
+
 
 
                              SharedPerenceUtil.putProjectIndexFeed(context, temp, project.id);
@@ -226,6 +230,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                                     }
 
                                     pullToRefreshListView.onPullDownRefreshComplete();
+
                                     context.dissProgress();
                                 }
                             });
@@ -234,6 +239,8 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                         }
                     }.start();
 
+                }else{
+                    pullToRefreshListView.onPullDownRefreshComplete();
                 }
                 //adapter
             }
@@ -338,7 +345,9 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                         tv_content.setText(Html.fromHtml(project.description));
                     if(project.has_followed)
                     {
-                        tv_follow.setBackgroundColor(Color.BLACK);
+                        tv_follow.setBackgroundResource(R.drawable.unfollow);
+                    }else{
+                        tv_follow.setBackgroundResource(R.drawable.follow);
                     }
 
 
@@ -580,7 +589,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
 
 
-    protected void setFeedOnClickListener(BaseActivity context,FeedHolder holder,final BaseFeed baseFeed)
+    protected void setFeedOnClickListener(final BaseActivity context, final FeedHolder holder,final BaseFeed baseFeed)
     {
 
         //设置点击事件
@@ -627,7 +636,26 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
 
         if (holder.iv_content.getVisibility() == View.VISIBLE) {
-            holder.iv_content.setOnClickListener(controller);
+            if(baseFeed instanceof Feed2 && "Attachment".equals(((Feed2)baseFeed).feedable_type))
+            {
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }else{
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(context, BigImageActivity.class);
+                        intent.putExtra("key",(String)holder.iv_content.getTag());
+                        context.startActivity(intent);
+                    }
+                });
+
+
+            }
         }
 
 

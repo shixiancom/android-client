@@ -197,6 +197,8 @@ public class IndexFragment extends BaseFeedFragment {
                     }.start();
 
 
+                }else{
+                    pullToRefreshListView.onPullDownRefreshComplete();
                 }
             }
 
@@ -267,6 +269,8 @@ public class IndexFragment extends BaseFeedFragment {
                     }.start();
 
 
+                }else{
+                    pullToRefreshListView.onPullUpRefreshComplete();
                 }
             }
 
@@ -585,14 +589,23 @@ public class IndexFragment extends BaseFeedFragment {
 
         if(holder.iv_content.getVisibility()==View.VISIBLE)
         {
-            holder.iv_content.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent=new Intent(context, BigImageActivity.class);
-                    intent.putExtra("key",(String)holder.iv_content.getTag());
-                    context.startActivity(intent);
-                }
-            });
+
+            if(baseFeed instanceof Feed2 && "Attachment".equals(((Feed2)baseFeed).feedable_type))
+            {
+                holder.iv_content.setOnClickListener(controller);
+            }else{
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(context, BigImageActivity.class);
+                        intent.putExtra("key",(String)holder.iv_content.getTag());
+                        context.startActivity(intent);
+                    }
+                });
+
+
+            }
+
         }
 
 
