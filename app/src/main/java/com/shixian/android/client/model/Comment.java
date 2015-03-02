@@ -14,6 +14,8 @@ public class Comment extends BaseFeed{
     public User user;
     public boolean isLast;
     public String parent_id;
+    public boolean isFirst;
+    public Feed2 parent;
 
 
 
