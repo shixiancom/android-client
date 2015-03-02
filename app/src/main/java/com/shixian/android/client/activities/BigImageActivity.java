@@ -128,6 +128,8 @@ public class BigImageActivity extends Activity
         if(bt!=null) {
 
             imgDisplay.setImageBitmap(bt);
+        }else{
+            bitmap=BitmapFactory.decodeResource(getResources(),R.drawable.login_icon);
         }
 
 

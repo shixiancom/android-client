@@ -83,6 +83,12 @@ public class JsonUtils {
                         {
                             Comment comment=gson.fromJson(array.getString(i), Comment.class);
                             comment.feedable_type= AppContants.FEADE_TYPE_COMMON;
+                            comment.parent=feed;
+                            if(i==0)
+                            {
+                                comment.isFirst=true;
+                            }
+
                             if(i==array.length()-1)
                             {
                                 comment.isLast=true;
@@ -93,10 +99,13 @@ public class JsonUtils {
 
                             feeds.add(comment);
 
+
                         }
                     }
+                    feed.lastChildPosition=feeds.size()-1;
                 }catch (Exception e)
                 {
+                    feed.lastChildPosition=feeds.size()-1;
                     continue;
                 }
 

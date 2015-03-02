@@ -15,6 +15,7 @@ import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -443,6 +444,8 @@ public class MsgDetialFragment extends BaseFragment {
                 holder.tv_response= (TextView) view.findViewById(R.id.tv_response);
                 holder.tv_type= (TextView) view.findViewById( R.id.tv_type);
                 holder.v_line=view.findViewById(R.id.v_line);
+                holder.ll_body= (LinearLayout) view.findViewById(R.id.ll_body);
+
                 view.setTag(holder);
 
             }else{
@@ -580,6 +583,11 @@ public class MsgDetialFragment extends BaseFragment {
                     params.width =imageSize;
                     holder.iv_icon.setLayoutParams(params);
 
+                    LinearLayout.LayoutParams lp= (LinearLayout.LayoutParams) holder.ll_body.getLayoutParams();
+
+                    //设置内容与顶部拒领14dp 内容与底部之间12dp
+                    lp.setMargins(0,DisplayUtil.dip2px(context, 14),0,DisplayUtil.dip2px(context, 12));
+
                     holder.tv_type.setVisibility(View.VISIBLE);
                     holder.tv_proect.setVisibility(View.VISIBLE);
                     holder.tv_response.setVisibility(View.GONE);
@@ -617,6 +625,8 @@ public class MsgDetialFragment extends BaseFragment {
                 params.height=imageSize;
                 params.width =imageSize;
                 holder.iv_icon.setLayoutParams(params);
+                LinearLayout.LayoutParams lp= (LinearLayout.LayoutParams) holder.ll_body.getLayoutParams();
+                lp.setMargins(0, DisplayUtil.dip2px(context, 5), 0, DisplayUtil.dip2px(context, 10));
 
 
                 //头像图片处理
@@ -960,8 +970,20 @@ public class MsgDetialFragment extends BaseFragment {
     //发送回复的监听发送事件
     //发送回复的监听发送事件
     protected  View.OnClickListener onClickSendText = new View.OnClickListener() {
+
+
+        boolean sendAble=true;
         @Override
         public void onClick(View v) {
+
+
+            if(sendAble)
+            {
+                sendAble=false;
+            }else{
+                Toast.makeText(context,"不要重复点击发送",Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             String input = mEnterLayout.getContent();
             if (input.isEmpty()) {

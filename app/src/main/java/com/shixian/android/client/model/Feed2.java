@@ -15,6 +15,8 @@ public  class Feed2 extends BaseFeed{
 
     public boolean hasChildren;
 
+    public int lastChildPosition;
+
 
 
 }
