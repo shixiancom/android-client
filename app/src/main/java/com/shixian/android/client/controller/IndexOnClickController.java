@@ -111,7 +111,7 @@ public class IndexOnClickController implements View.OnClickListener {
 
             //图片内容 默认是隐藏的 当feedable_type为image时显示
             case R.id.iv_content:
-                Toast.makeText(context, "iv_content", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "暂不支持下载文件", Toast.LENGTH_SHORT).show();
                 break;
             //回复框 发表项目的时候是隐藏的
             case R.id.tv_response:

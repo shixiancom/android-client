@@ -1,5 +1,6 @@
 package com.shixian.android.client.activities.fragment;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -18,6 +19,7 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.BaseActivity;
+import com.shixian.android.client.activities.BigImageActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.OnClickController;
@@ -140,6 +142,8 @@ public class UserIndexFragment extends BaseFeedFragment {
                         }
                     }.start();
                     pullToRefreshListView.onPullUpRefreshComplete();
+                }else {
+                    pullToRefreshListView.onPullDownRefreshComplete();
                 }
             }
 
@@ -238,6 +242,8 @@ public class UserIndexFragment extends BaseFeedFragment {
                         }
                     }.start();
 
+                }else{
+                    pullToRefreshListView.onPullDownRefreshComplete();
                 }
                 //adapter
             }
@@ -335,7 +341,7 @@ public class UserIndexFragment extends BaseFeedFragment {
                 //头像
                 ImageView iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
                 //关注按钮
-                final Button bt_follow = (Button) view.findViewById(R.id.bt_follow);
+                final TextView bt_follow = (TextView) view.findViewById(R.id.bt_follow);
                 //签名
                 TextView tv_winess = (TextView) view.findViewById(R.id.tv_witness);
 
@@ -364,21 +370,20 @@ public class UserIndexFragment extends BaseFeedFragment {
                 //TODO
                 if(user.has_followed)
                 {
-                    bt_follow.setBackgroundResource(R.drawable.bt_unfollow_selector);
-                    bt_follow.setText("已关注");
+                    bt_follow.setBackgroundResource(R.drawable.unfollow);
 
                 }else{
-                    bt_follow.setBackgroundResource(R.drawable.bt_follow_selector);
-                    bt_follow.setText("关注");
+//                    bt_follow.setBackgroundResource(R.drawable.bt_follow_selector);
+//                    bt_follow.setText("关注");
+                    bt_follow.setBackgroundResource(R.drawable.follow);
                 }
 
 
-                if(user.status!=null) {
-                    tv_activitys.setText(user.status.feeds_count + "");
-                    tv_project.setText(user.status.followed_projects_count + "");
-                    tv_fllowen.setText(user.status.followers_count + "");
-                    tv_fllowing.setText(user.status.followings_count + "");
-                }
+                tv_activitys.setText(user.status.feeds_count + "");
+                tv_project.setText(user.status.followed_projects_count + "");
+                tv_fllowen.setText(user.status.followers_count + "");
+                tv_fllowing.setText(user.status.followings_count + "");
+
                 tv_winess.setText(user.description);
                 tv_name.setText(user.username);
 
@@ -411,7 +416,7 @@ public class UserIndexFragment extends BaseFeedFragment {
                                @Override
                                public void onSuccess(int i, Header[] headers, byte[] bytes) {
                                    Toast.makeText(context,"关注成功",Toast.LENGTH_SHORT).show();
-                                   bt_follow.setBackgroundColor(Color.GRAY);
+                                   bt_follow.setBackgroundResource(R.drawable.unfollow);
                                    user.has_followed=true;
                                }
 
@@ -429,8 +434,28 @@ public class UserIndexFragment extends BaseFeedFragment {
 
 
             } else {
-               view=initHolderAndItemView(convertView);
-                holder= (FeedHolder) view.getTag();
+                if (convertView == null || (convertView instanceof PersonItemLinearLayout)) {
+                    view = View.inflate(context, R.layout.feed_common_item, null);
+                    holder = new FeedHolder();
+                    holder.iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
+                    holder.tv_name = (TextView) view.findViewById(R.id.tv_name);
+                    holder.tv_proect = (TextView) view.findViewById(R.id.tv_project);
+                    holder.tv_time = (TextView) view.findViewById(R.id.tv_time);
+                    holder.tv_content = (TextView) view.findViewById(R.id.tv_content);
+                    holder.iv_content = (ImageView) view.findViewById(R.id.iv_content);
+                    holder.tv_response = (TextView) view.findViewById(R.id.tv_response);
+                    holder.tv_type = (TextView) view.findViewById(R.id.tv_type);
+                    holder.v_line = view.findViewById(R.id.v_line);
+                    view.setTag(holder);
+
+
+                } else {
+
+                    view = convertView;
+                    holder = (FeedHolder) view.getTag();
+
+
+                }
 
                 final BaseFeed baseFeed = feedList.get(position - 1);
                 baseFeed.position=position-1;
@@ -558,7 +583,7 @@ public class UserIndexFragment extends BaseFeedFragment {
 
 
     @Override
-    protected void setFeedOnClickListener(BaseActivity context, FeedHolder holder, final BaseFeed baseFeed) {
+    protected void setFeedOnClickListener(final BaseActivity context, final FeedHolder holder, final BaseFeed baseFeed) {
 
 
         OnClickController controller = new OnClickController(context, baseFeed);
@@ -581,54 +606,42 @@ public class UserIndexFragment extends BaseFeedFragment {
         //项目
         holder.tv_proect.setOnClickListener(controller);
 
-
-
-        if(holder.tv_content.getVisibility()==View.VISIBLE)
-        {
-            if(baseFeed instanceof Comment)
-            {
-                //点击跳出回复框 带@的
-                holder.tv_content.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        popComment(v,baseFeed,lv);
-                    }
-                });
-            }else{
-                holder.tv_content.setOnClickListener(controller);
-            }
-
+        if (holder.tv_content.getVisibility() == View.VISIBLE) {
+            holder.tv_content.setOnClickListener(controller);
         }
 
 
         if (holder.iv_content.getVisibility() == View.VISIBLE) {
-            holder.iv_content.setOnClickListener(controller);
+            if(baseFeed instanceof Feed2 && "Attachment".equals(((Feed2)baseFeed).feedable_type))
+            {
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }else{
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(context, BigImageActivity.class);
+                        intent.putExtra("key",(String)holder.iv_content.getTag());
+                        context.startActivity(intent);
+                    }
+                });
+
+
+            }
         }
 
 
-        if(holder.tv_response.getVisibility()==View.VISIBLE)
-        {
+        if (holder.tv_response.getVisibility() == View.VISIBLE) {
             holder.tv_response.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    //这里我需要得到最后一条评论的位置  该如何是好呢 ？
-                    //是否要在feed中增加一条纪录该feed所有的评论数  还是有其他更好的方法  增加评论数到不难
-                    //但是这肯定不是优雅的做法  由于一开始没有好好的构思 现在可能考虑投机取巧的方法去解决
-                    if(baseFeed instanceof  Comment)
-                    {
-                        popComment(v,((Comment)baseFeed).parent,lv);
-                    }else{
-
-                        popComment(v,baseFeed,lv);
-                    }
-                    //也只能这么做了
-
+                    popComment(v,baseFeed,lv);
                 }
-
-
             });
-
         }
     }
 

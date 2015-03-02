@@ -15,6 +15,7 @@ import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ import com.shixian.android.client.utils.ImageDownload;
 import com.shixian.android.client.utils.ImageUtil;
 import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
+import com.shixian.android.client.utils.StringUtils;
 import com.shixian.android.client.utils.TimeUtil;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshBase;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView;
@@ -83,6 +85,7 @@ public class MsgDetialFragment extends BaseFragment {
 
     private ImageCallback callback;
 
+    private String lable;
 
 
 
@@ -91,6 +94,10 @@ public class MsgDetialFragment extends BaseFragment {
 
     @Override
     public View initView(LayoutInflater inflater) {
+
+        if(!TextUtils.isEmpty(lable)){
+            initLable();
+        }
 
         View view =inflater.inflate(R.layout.fragment_msgdetial,null,false);
 
@@ -105,6 +112,7 @@ public class MsgDetialFragment extends BaseFragment {
 
 
 
+
 //        commonEnterRoot=context.findViewById(R.id.commonEnterRoot);
 //
 //        settingListView(lv);
@@ -112,6 +120,10 @@ public class MsgDetialFragment extends BaseFragment {
 
         // 滚动到底自动加载可用
         pullToRefreshListView.setScrollLoadEnabled(true);
+
+
+        pullToRefreshListView.getFooterLoadingLayout().show(false);
+
 
         // 设置下拉刷新的listener
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
@@ -199,6 +211,7 @@ public class MsgDetialFragment extends BaseFragment {
         if (adapter == null) {
             adapter = new FeedAdapter();
             pullToRefreshListView.getListView().setAdapter(adapter);
+            pullToRefreshListView.onPullUpRefreshComplete();
 
         } else {
             adapter.notifyDataSetChanged();
@@ -209,6 +222,8 @@ public class MsgDetialFragment extends BaseFragment {
 
     @Override
     public void initDate(Bundle savedInstanceState) {
+
+
 
         if(feedEntry!=null&&feedEntry.firstEntry!=null)
         {
@@ -280,6 +295,7 @@ public class MsgDetialFragment extends BaseFragment {
                                    }
 
                                    pullToRefreshListView.onPullDownRefreshComplete();
+                                   pullToRefreshListView.onPullUpRefreshComplete();
                                    context.dissProgress();
                                    pullToRefreshListView.getListView().setSelection(msgType.position);
 
@@ -291,6 +307,9 @@ public class MsgDetialFragment extends BaseFragment {
                    }.start();
 
 
+               }else{
+                   pullToRefreshListView.onPullDownRefreshComplete();
+                   pullToRefreshListView.onPullUpRefreshComplete();
                }
            }
 
@@ -344,7 +363,13 @@ public class MsgDetialFragment extends BaseFragment {
     /******************************************************************************************/
 
     protected void initLable() {
-        context.setLable(msgType.notifiable_type);
+        if(TextUtils.isEmpty(lable)){
+            context.setLable(msgType.notifiable_type);
+            lable=msgType.notifiable_type;
+        }else{
+            context.setLable(lable);
+        }
+
     }
 
     /**
@@ -419,6 +444,8 @@ public class MsgDetialFragment extends BaseFragment {
                 holder.tv_response= (TextView) view.findViewById(R.id.tv_response);
                 holder.tv_type= (TextView) view.findViewById( R.id.tv_type);
                 holder.v_line=view.findViewById(R.id.v_line);
+                holder.ll_body= (LinearLayout) view.findViewById(R.id.ll_body);
+
                 view.setTag(holder);
 
             }else{
@@ -526,13 +553,21 @@ public class MsgDetialFragment extends BaseFragment {
                             holder.tv_content.setText(Html.fromHtml(allItemType.content_html));
                             break;
                         case "Attachment":
+
+
                             type = context.getResources().getString(R.string.feed_attachment);
-                            holder.tv_content.setText(Html.fromHtml(allItemType.content_html));
+                            holder.tv_content.setText(allItemType.content+"\n"+"  "+allItemType.file_name);
+                            holder.iv_content.setVisibility(View.VISIBLE);
+                            holder.iv_content.setImageResource(R.drawable.file);
                             break;
                     }
 
                     holder.tv_type.setText(type);
-                    holder.tv_proect.setText(project);
+
+
+                        holder.tv_proect.setText(project);
+
+
                     holder.tv_name.setText(feedEntry.firstEntry.user.username);
 
 
@@ -547,6 +582,11 @@ public class MsgDetialFragment extends BaseFragment {
                     params.height=imageSize;
                     params.width =imageSize;
                     holder.iv_icon.setLayoutParams(params);
+
+                    LinearLayout.LayoutParams lp= (LinearLayout.LayoutParams) holder.ll_body.getLayoutParams();
+
+                    //设置内容与顶部拒领14dp 内容与底部之间12dp
+                    lp.setMargins(0,DisplayUtil.dip2px(context, 14),0,DisplayUtil.dip2px(context, 12));
 
                     holder.tv_type.setVisibility(View.VISIBLE);
                     holder.tv_proect.setVisibility(View.VISIBLE);
@@ -572,7 +612,7 @@ public class MsgDetialFragment extends BaseFragment {
                 holder.tv_type.setVisibility(View.GONE);
                 holder.iv_content.setVisibility(View.GONE);
                 holder.tv_content.setVisibility(View.VISIBLE);
-                holder.tv_content.setText(comment.content);
+                holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(comment.content)));
 
 
 
@@ -585,6 +625,8 @@ public class MsgDetialFragment extends BaseFragment {
                 params.height=imageSize;
                 params.width =imageSize;
                 holder.iv_icon.setLayoutParams(params);
+                LinearLayout.LayoutParams lp= (LinearLayout.LayoutParams) holder.ll_body.getLayoutParams();
+                lp.setMargins(0, DisplayUtil.dip2px(context, 5), 0, DisplayUtil.dip2px(context, 10));
 
 
                 //头像图片处理
@@ -831,14 +873,26 @@ public class MsgDetialFragment extends BaseFragment {
 
         if(holder.iv_content.getVisibility()==View.VISIBLE)
         {
-            holder.iv_content.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent=new Intent(context, BigImageActivity.class);
-                    intent.putExtra("key",(String)holder.iv_content.getTag());
-                    context.startActivity(intent);
-                }
-            });
+            if(baseFeed instanceof Feed2 && ("Attachment".equals(((Feed2)baseFeed).feedable_type)))
+            {
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context, "暂且不支持下载文件", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }else{
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(context, BigImageActivity.class);
+                        intent.putExtra("key",(String)holder.iv_content.getTag());
+                        context.startActivity(intent);
+                    }
+                });
+
+
+            }
         }
 
 
@@ -867,14 +921,25 @@ public class MsgDetialFragment extends BaseFragment {
 
         if(holder.iv_content.getVisibility()==View.VISIBLE)
         {
-            holder.iv_content.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent=new Intent(context, BigImageActivity.class);
-                    intent.putExtra("key",(String)holder.iv_content.getTag());
-                    context.startActivity(intent);
-                }
-            });
+            if( "Attachment".equals(msgType.notifiable_type)||"Attachment".equals(msgType.commentable_type)){
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context, "暂且不支持下载文件", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }else{
+                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(context, BigImageActivity.class);
+                        intent.putExtra("key",(String)holder.iv_content.getTag());
+                        context.startActivity(intent);
+                    }
+                });
+            }
+
         }
 
 
@@ -905,8 +970,20 @@ public class MsgDetialFragment extends BaseFragment {
     //发送回复的监听发送事件
     //发送回复的监听发送事件
     protected  View.OnClickListener onClickSendText = new View.OnClickListener() {
+
+
+        boolean sendAble=true;
         @Override
         public void onClick(View v) {
+
+
+            if(sendAble)
+            {
+                sendAble=false;
+            }else{
+                Toast.makeText(context,"不要重复点击发送",Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             String input = mEnterLayout.getContent();
             if (input.isEmpty()) {

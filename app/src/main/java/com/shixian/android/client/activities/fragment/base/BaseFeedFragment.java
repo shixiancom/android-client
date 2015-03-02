@@ -433,7 +433,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
             holder.tv_response= (TextView) view.findViewById(R.id.tv_response);
             holder.tv_type= (TextView) view.findViewById( R.id.tv_type);
             holder.v_line=view.findViewById(R.id.v_line);
-            holder.ll_body= (LinearLayout) view.findViewById(R.id.ll_body);
+           // holder.ll_body= (LinearLayout) view.findViewById(R.id.ll_body);
 
             view.setTag(holder);
 
@@ -578,10 +578,10 @@ public abstract  class BaseFeedFragment extends BaseFragment {
             params.width =imageSize;
             holder.iv_icon.setLayoutParams(params);
 
-            LinearLayout.LayoutParams lp= (LinearLayout.LayoutParams) holder.ll_body.getLayoutParams();
+      //     LinearLayout.LayoutParams lp= (LinearLayout.LayoutParams) holder.ll_body.getLayoutParams();
 
             //设置内容与顶部拒领14dp 内容与底部之间12dp
-            lp.setMargins(0,DisplayUtil.dip2px(context, 14),0,DisplayUtil.dip2px(context, 12));
+      //      lp.setMargins(0,DisplayUtil.dip2px(context, 14),0,DisplayUtil.dip2px(context, 12));
 
             //设置8dp 为头像留白
         //    ( (RelativeLayout.LayoutParams)holder.ll_name_type.getLayoutParams()).setMargins(0,0,0,0);

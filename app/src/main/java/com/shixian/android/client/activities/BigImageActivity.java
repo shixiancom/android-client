@@ -133,7 +133,6 @@ public class BigImageActivity extends Activity
         }
 
 
-
         //目前双击事件设置为不响应
        imgDisplay.setOnClickListener(new DoubleOnClickListener());
 
