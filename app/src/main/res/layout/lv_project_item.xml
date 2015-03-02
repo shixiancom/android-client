@@ -13,8 +13,8 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="28dp"
-            android:src="@android:drawable/radiobutton_off_background"
+            android:layout_marginLeft="24dp"
+            android:src="@drawable/ic_lens_grey_18dp"
             />
     <TextView
         android:singleLine="true"

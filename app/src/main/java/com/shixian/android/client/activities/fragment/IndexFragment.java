@@ -353,18 +353,34 @@ public class IndexFragment extends BaseFeedFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
            View view=null;
-           FeedHolder holder=null;
+           final FeedHolder holder;
 
-           view=initHolderAndItemView(convertView);
+            if(convertView==null)
+            {
+                view=View.inflate(context,R.layout.feed_common_item,null);
+                holder=new FeedHolder();
+                holder.iv_icon= (ImageView) view.findViewById(R.id.iv_icon);
+                holder.tv_name= (TextView) view.findViewById(R.id.tv_name);
+                holder.tv_proect= (TextView) view.findViewById(R.id.tv_project);
+                holder.tv_time= (TextView) view.findViewById(R.id.tv_time);;
+                holder.tv_content= (TextView) view.findViewById(R.id.tv_content);;
+                holder.iv_content=(ImageView) view.findViewById(R.id.iv_content);;
+                holder.tv_response= (TextView) view.findViewById(R.id.tv_response);
+                holder.tv_type= (TextView) view.findViewById( R.id.tv_type);
+                holder.v_line=view.findViewById(R.id.v_line);
+                view.setTag(holder);
+
+            }else{
+                view=convertView;
+                holder= (FeedHolder) view.getTag();
+            }
 
 
-            holder= (FeedHolder) view.getTag();
 
             final BaseFeed baseFeed=feedList.get(position);
             baseFeed.position=position;
 
             initFeedItemView(holder,baseFeed,position);
-
 
             //设置点击事件
             setFeedOnClickListener(context,holder,baseFeed);
@@ -374,8 +390,6 @@ public class IndexFragment extends BaseFeedFragment {
 
         }
     }
-
-
 
 //   protected void initFeedItemView(FeedHolder holder,BaseFeed baseFeed,int position) {
 //
@@ -571,19 +585,7 @@ public class IndexFragment extends BaseFeedFragment {
 
         if(holder.tv_content.getVisibility()==View.VISIBLE)
         {
-            if(baseFeed instanceof Comment)
-            {
-              //点击跳出回复框 带@的
-               holder.tv_content.setOnClickListener(new View.OnClickListener() {
-                   @Override
-                   public void onClick(View v) {
-                       popComment(v,baseFeed,lv);
-                   }
-               });
-            }else{
-                holder.tv_content.setOnClickListener(controller);
-            }
-
+            holder.tv_content.setOnClickListener(controller);
         }
 
 
@@ -614,22 +616,8 @@ public class IndexFragment extends BaseFeedFragment {
             holder.tv_response.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    //这里我需要得到最后一条评论的位置  该如何是好呢 ？
-                    //是否要在feed中增加一条纪录该feed所有的评论数  还是有其他更好的方法  增加评论数到不难
-                    //但是这肯定不是优雅的做法  由于一开始没有好好的构思 现在可能考虑投机取巧的方法去解决
-                    if(baseFeed instanceof  Comment)
-                    {
-                        popComment(v,((Comment)baseFeed).parent,lv);
-                    }else{
-
-                        popComment(v,baseFeed,lv);
-                    }
-                    //也只能这么做了
-
-               }
-
-
+                    popComment(v,baseFeed,lv);
+                }
             });
 
         }
