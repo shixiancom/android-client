@@ -529,15 +529,8 @@ public abstract  class BaseFeedFragment extends BaseFragment {
                     break;
                 case "Attachment":
                     type = context.getResources().getString(R.string.feed_attachment);
-                    holder.tv_content.setText(feed.data.content+"\n"+"  "+feed.data.file_name);
-                    holder.iv_content.setVisibility(View.VISIBLE);
-                    holder.iv_content.setImageResource(R.drawable.file);
+                    holder.tv_content.setText(feed.data.content);
                     break;
-
-                case "Agreement":
-                    type="加入项目";
-                    holder.tv_content.setVisibility(View.GONE);
-
             }
 
             if(feed.hasChildren) {
@@ -605,7 +598,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
             holder.tv_type.setVisibility(View.VISIBLE);
             holder.tv_proect.setVisibility(View.VISIBLE);
 
-            if("Homework".equals(baseFeed.feedable_type)||"Project".equals(baseFeed.feedable_type)||"Agreement".equals(baseFeed.feedable_type))
+            if("Homework".equals(baseFeed.feedable_type)||"Project".equals(baseFeed.feedable_type))
             {
                 holder.tv_response.setVisibility(View.GONE);
             }

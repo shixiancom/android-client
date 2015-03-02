@@ -20,18 +20,18 @@
            android:layout_marginLeft="@dimen/global_left"
            android:singleLine="true"
            android:id="@+id/tv_name"
-           android:textColor="#000000"
+           android:textColor="#005580"
            />
 
        <TextView
-           android:layout_width="40dp"
-           android:layout_height="25dp"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
            android:textSize="15sp"
-           android:background="@drawable/follow"
+           android:text="关注"
+           android:background="#20C8AF"
            android:layout_alignParentRight="true"
            android:layout_alignTop="@id/tv_name"
            android:id="@+id/tv_follow"
-           android:layout_marginRight="5dp"
            />
 
        </RelativeLayout>
@@ -45,6 +45,7 @@
         android:layout_height="wrap_content"
         android:textSize="15sp"
         android:textColor="#666666"
+        android:text="xxxxxxxx"
         android:lineSpacingMultiplier="1.3"
         />
 

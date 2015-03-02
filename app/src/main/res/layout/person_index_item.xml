@@ -28,20 +28,21 @@
             android:layout_alignTop="@id/iv_icon"
             android:layout_marginLeft="@dimen/iv_icon_right"
             android:layout_toRightOf="@id/iv_icon"
+            android:text="测试"
             android:textColor="#005580"
             android:textSize="13sp" />
 
 
-        <TextView
-            android:layout_marginTop="10dp"
-            android:layout_alignTop="@id/tv_name"
+        <Button
             android:id="@+id/bt_follow"
-            android:layout_width="40dp"
-            android:layout_height="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignBottom="@id/tv_name"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
-            android:background="@drawable/follow"
+            android:text="关注"
+            android:textSize="13sp"
+            android:background="@drawable/bt_follow_selector"
             android:layout_alignParentTop="true" />
         <!--  android:textColor="#44000000" -->
 
@@ -54,6 +55,7 @@
             android:layout_alignLeft="@id/tv_name"
             android:layout_below="@id/tv_name"
             android:layout_marginTop="0dp"
+            android:text="夜的第七章夜的第七章xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
             android:textColor="#888888"
             android:textSize="13sp"/>
     </RelativeLayout>

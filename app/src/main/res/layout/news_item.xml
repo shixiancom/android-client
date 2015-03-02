@@ -10,23 +10,19 @@
         android:gravity="center_vertical"
         >
 
-        <com.shixian.android.client.views.RoundCornerImageView
-            android:scaleType="centerCrop"
-            android:layout_marginLeft="@dimen/global_left"
+        <ImageView
             android:layout_marginTop="10dp"
             android:src="@drawable/ic_launcher"
             android:id="@+id/iv_icon"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"/>
+            android:layout_height="wrap_content" />
 
         <TextView
-            android:layout_marginLeft="@dimen/iv_icon_right"
-            android:maxLength="13"
             android:id="@+id/tv_name"
             android:textColor="#005580"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="xxxxxx"
             android:layout_alignTop="@id/iv_icon"
             android:layout_toRightOf="@id/iv_icon"
             android:textSize="13sp"
@@ -39,6 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#9B9B9B"
+            android:text="xxxxxx"
             android:layout_alignTop="@id/iv_icon"
             android:layout_toRightOf="@id/tv_name"
             android:layout_marginLeft="5dp"
@@ -50,6 +47,7 @@
             android:id="@+id/tv_post_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="xxxxxx"
             android:layout_alignTop="@id/iv_icon"
             android:layout_toRightOf="@id/tv_type"
             android:layout_marginLeft="5dp"
@@ -57,14 +55,13 @@
             />
 
         <TextView
-            android:layout_marginLeft="@dimen/iv_icon_right"
-            android:maxLength="13"
             android:textColor="#005580"
             android:layout_below="@id/tv_name"
             android:layout_alignLeft="@id/tv_name"
             android:id="@+id/tv_project"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="xxxxxxxxxxxx"
             android:layout_toRightOf="@id/iv_icon"
             android:layout_marginBottom="5dp"
             />
@@ -76,6 +73,7 @@
             android:id="@+id/tv_addpri"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="xxxxxxxxxxxx"
             android:layout_toRightOf="@id/tv_project"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="3dp"/>
@@ -87,6 +85,7 @@
             android:id="@+id/tv_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="xxxxxxxxxxxx"
             android:layout_toRightOf="@id/tv_addpri"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="3dp"
@@ -98,6 +97,7 @@
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="xxxxxxxxxxxx"
             android:layout_alignParentRight="true"
             android:layout_marginRight="5dp"
             android:textColor="#888888"
@@ -119,10 +119,8 @@
         android:layout_height="wrap_content"
         android:textSize="15sp"
         android:layout_marginRight="10dp"
-        android:layout_marginLeft="@dimen/global_left"
+        android:layout_marginLeft="10dp"
         android:textColor="#666666"
-        android:layout_marginTop="@dimen/content_top"
-        android:layout_marginBottom="10dp"
         />
 
         <Button
@@ -138,15 +136,4 @@
 
 
     </RelativeLayout>
-
-    <View
-        android:id="@+id/v_line"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
-        android:background="#888888"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="@dimen/main_content_top"
-        />
 </LinearLayout>
