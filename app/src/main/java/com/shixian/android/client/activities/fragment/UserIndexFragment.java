@@ -244,6 +244,7 @@ public class UserIndexFragment extends BaseFeedFragment {
 
                 }else{
                     pullToRefreshListView.onPullDownRefreshComplete();
+                    pullToRefreshListView.onPullUpRefreshComplete();
                 }
                 //adapter
             }
@@ -341,7 +342,7 @@ public class UserIndexFragment extends BaseFeedFragment {
                 //头像
                 ImageView iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
                 //关注按钮
-                final TextView bt_follow = (TextView) view.findViewById(R.id.bt_follow);
+                final Button bt_follow = (Button) view.findViewById(R.id.bt_follow);
                 //签名
                 TextView tv_winess = (TextView) view.findViewById(R.id.tv_witness);
 
@@ -370,12 +371,15 @@ public class UserIndexFragment extends BaseFeedFragment {
                 //TODO
                 if(user.has_followed)
                 {
-                    bt_follow.setBackgroundResource(R.drawable.unfollow);
+                    bt_follow.setBackgroundResource(R.drawable.shape_unfollow);
+                    bt_follow.setText("已关注 ");
 
                 }else{
 //                    bt_follow.setBackgroundResource(R.drawable.bt_follow_selector);
 //                    bt_follow.setText("关注");
-                    bt_follow.setBackgroundResource(R.drawable.follow);
+                    bt_follow.setBackgroundResource(R.drawable.shape_follow);
+                    bt_follow.setText("关注 ");
+
                 }
 
 
@@ -417,7 +421,8 @@ public class UserIndexFragment extends BaseFeedFragment {
                                @Override
                                public void onSuccess(int i, Header[] headers, byte[] bytes) {
                                    Toast.makeText(context,"关注成功",Toast.LENGTH_SHORT).show();
-                                   bt_follow.setBackgroundResource(R.drawable.unfollow);
+                                   bt_follow.setBackgroundResource(R.drawable.shape_unfollow);
+                                   bt_follow.setText("已关注 ");
                                    user.has_followed=true;
                                }
 

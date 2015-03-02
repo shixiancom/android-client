@@ -12,10 +12,10 @@
        android:layout_height="wrap_content"
        >
 
-       <TextView
+        <com.shixian.android.client.views.FontTextView
            android:layout_width="250dp"
            android:layout_height="wrap_content"
-           android:textSize="17sp"
+           android:textSize="18sp"
            android:layout_marginTop="10dp"
            android:layout_marginLeft="@dimen/global_left"
            android:singleLine="true"
@@ -23,20 +23,26 @@
            android:textColor="#000000"
            />
 
-       <TextView
-           android:layout_width="40dp"
-           android:layout_height="25dp"
-           android:textSize="15sp"
-           android:background="@drawable/follow"
+       <Button
+           android:minWidth="88dp"
+           android:layout_marginTop="10dp"
+           android:layout_width="wrap_content"
+           android:layout_height="36dp"
+           android:singleLine="true"
+           android:id="@+id/bt_follow"
            android:layout_alignParentRight="true"
-           android:layout_alignTop="@id/tv_name"
-           android:id="@+id/tv_follow"
-           android:layout_marginRight="5dp"
+           android:layout_marginRight="10dp"
+           android:layout_centerVertical="true"
+           android:text="关注"
+           android:textColor="@color/white"
+           android:background="@drawable/shape_follow"
+           android:padding="3dp"
+           style="?android:attr/borderlessButtonStyle"
+           android:paddingBottom="0dp"
            />
-
        </RelativeLayout>
 
-    <TextView
+    <com.shixian.android.client.views.FontTextView
         android:layout_marginRight="5dp"
         android:layout_marginLeft="@dimen/global_left"
         android:layout_marginTop="@dimen/content_top"
@@ -51,7 +57,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="#666666"
+        android:background="#E5E5E5"
         />
 
 

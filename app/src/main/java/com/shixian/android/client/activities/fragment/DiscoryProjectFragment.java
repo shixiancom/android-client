@@ -1,6 +1,5 @@
 package com.shixian.android.client.activities.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -8,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -285,7 +285,7 @@ public class DiscoryProjectFragment extends BaseFragment {
                 view = View.inflate(context, R.layout.discoryproject_item, null);
                 holder = new Holder();
                 holder.tv_content = (TextView) view.findViewById(R.id.tv_content);
-                holder.tv_fllowen = (TextView) view.findViewById(R.id.tv_fllowen);
+                holder.bt_fllowen = (Button) view.findViewById(R.id.bt_fllowen);
                 holder.tv_title = (TextView) view.findViewById(R.id.tv_title);
                 view.setTag(holder);
             } else {
@@ -301,13 +301,15 @@ public class DiscoryProjectFragment extends BaseFragment {
             if(project.has_followed)
             {
                 //TODO
-               // holder.tv_fllowen.setBackgroundColor(Color.GRAY);
-                holder.tv_fllowen.setBackgroundResource(R.drawable.unfollow);
+               holder.bt_fllowen.setBackgroundResource(R.drawable.shape_unfollow);
+                holder.bt_fllowen.setText("已关注");
+               // holder.tv_fllowen.setBackgroundResource(R.drawable.unfollow);
 
 
             }else{
-              //  holder.tv_fllowen.setBackgroundColor(Color.argb(1,32,168,192+15));
-                holder.tv_fllowen.setBackgroundResource(R.drawable.follow);
+                holder.bt_fllowen.setBackgroundResource(R.drawable.shape_follow);
+                holder.bt_fllowen.setText("关注");
+              //  holder.tv_fllowen.setBackgroundResource(R.drawable.follow);
             }
 
 
@@ -315,7 +317,7 @@ public class DiscoryProjectFragment extends BaseFragment {
             DiscoryOnClickColler onClickColler=new DiscoryOnClickColler(context,project);
             holder.tv_content .setOnClickListener(onClickColler);
             holder.tv_title.setOnClickListener(onClickColler);
-            holder.tv_fllowen.setOnClickListener(new View.OnClickListener() {
+            holder.bt_fllowen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(project.has_followed)
@@ -343,7 +345,8 @@ public class DiscoryProjectFragment extends BaseFragment {
                             @Override
                             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                                 Toast.makeText(context,"关注成功",Toast.LENGTH_SHORT).show();
-                                holder.tv_fllowen.setBackgroundResource(R.drawable.unfollow);
+                                holder.bt_fllowen.setBackgroundResource(R.drawable.shape_unfollow);
+                                holder.bt_fllowen.setText("已关注");
                                 project.has_followed=true;
                             }
 
@@ -366,7 +369,7 @@ public class DiscoryProjectFragment extends BaseFragment {
 
     class Holder {
         TextView tv_title;
-        TextView tv_fllowen;
+        Button bt_fllowen;
         TextView tv_content;
     }
 }

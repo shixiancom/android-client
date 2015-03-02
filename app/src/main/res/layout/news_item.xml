@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"/>
 
-        <TextView
+        <com.shixian.android.client.views.FontTextView
             android:layout_marginLeft="@dimen/iv_icon_right"
             android:maxLength="13"
             android:id="@+id/tv_name"
@@ -34,7 +34,7 @@
             />
 
 
-        <TextView
+        <com.shixian.android.client.views.FontTextView
             android:id="@+id/tv_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             android:textSize="13sp"
             />
 
-        <TextView
+        <com.shixian.android.client.views.FontTextView
             android:textColor="#005580"
             android:id="@+id/tv_post_type"
             android:layout_width="wrap_content"
@@ -56,8 +56,7 @@
             android:textSize="13sp"
             />
 
-        <TextView
-            android:layout_marginLeft="@dimen/iv_icon_right"
+        <com.shixian.android.client.views.FontTextView
             android:maxLength="13"
             android:textColor="#005580"
             android:layout_below="@id/tv_name"
@@ -69,7 +68,7 @@
             android:layout_marginBottom="5dp"
             />
 
-        <TextView
+        <com.shixian.android.client.views.FontTextView
             android:textColor="#9B9B9B"
             android:layout_below="@id/tv_name"
             android:layout_alignTop="@id/tv_project"
@@ -80,7 +79,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="3dp"/>
 
-        <TextView
+        <com.shixian.android.client.views.FontTextView
             android:textColor="#005580"
             android:layout_below="@id/tv_name"
             android:layout_alignTop="@id/tv_project"
@@ -112,7 +111,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <TextView
+        <com.shixian.android.client.views.FontTextView
         android:lineSpacingMultiplier="1.3"
         android:id="@+id/tv_content"
         android:layout_width="match_parent"
@@ -145,7 +144,7 @@
         android:layout_height="1px"
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
-        android:background="#888888"
+        android:background="#E5E5E5"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="@dimen/main_content_top"
         />

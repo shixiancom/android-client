@@ -11,12 +11,13 @@
 
 
         <ImageView
+            android:id="@+id/iv_sit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="28dp"
-            android:src="@android:drawable/radiobutton_off_background"
+            android:src="@drawable/ic_brightness_1_black_24dp"
             />
-    <TextView
+        <com.shixian.android.client.views.FontTextView
         android:singleLine="true"
         android:gravity="center_vertical"
         android:layout_marginLeft="@dimen/menu_tv_margin_left"

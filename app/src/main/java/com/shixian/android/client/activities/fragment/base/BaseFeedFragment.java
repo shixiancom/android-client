@@ -478,7 +478,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
             switch (feed.feedable_type) {
                 case "Idea":
                     type = context.getResources().getString(R.string.add_idea);
-                    holder.tv_content.setText(feed.data.content);
+                    holder.tv_content.setText(feed.data.content.trim());
                     break;
                 case "Project":
                     type = context.getResources().getString(R.string.add_project);

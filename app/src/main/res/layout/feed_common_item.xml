@@ -26,7 +26,7 @@
 
 
 
-        <TextView
+        <com.shixian.android.client.views.FontTextView
             android:singleLine="true"
             android:id="@+id/tv_name"
             android:layout_alignTop="@id/iv_icon"
@@ -37,7 +37,7 @@
             android:textColor="#005580"
             android:textSize="@dimen/actor_text_size" />
 
-        <TextView
+        <com.shixian.android.client.views.FontTextView
             android:layout_marginLeft="3dp"
             android:layout_toRightOf="@id/tv_name"
             android:id="@+id/tv_type"
@@ -54,7 +54,7 @@
 
 
 
-        <TextView
+        <com.shixian.android.client.views.FontTextView
             android:singleLine="true"
             android:id="@+id/tv_project"
             android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
 
 
 
-        <TextView
+        <com.shixian.android.client.views.FontTextView
             android:id="@+id/tv_time"
             android:layout_alignTop="@id/tv_name"
             android:layout_alignParentRight="true"
@@ -96,7 +96,7 @@
         android:orientation="vertical"
         >
     
-    <TextView
+    <com.shixian.android.client.views.FontTextView
         android:id="@+id/tv_content"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -130,7 +130,9 @@
         android:layout_marginRight="@dimen/global_left"
         android:background="@drawable/xxx"
         android:layout_marginTop="5dp"
-        android:hint="回复："
+        android:textColor="#E5E5E5"
+        android:text="回复"
+
         />
 
 
@@ -144,7 +146,7 @@
         android:layout_height="1px"
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
-        android:background="#888888"
+        android:background="#E5E5E5"
         android:layout_marginTop="@dimen/main_content_top"
         android:layout_marginBottom="12dp"
         />

@@ -523,6 +523,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 view = View.inflate(MainActivity.this, R.layout.lv_project_item, null);
                 holder = new ProjectHolder();
                 holder.tv_title = (TextView) view.findViewById(R.id.tv_title);
+                holder.iv_sit= (ImageView) view.findViewById(R.id.iv_sit);
+
                 view.setTag(holder);
 
             } else {
@@ -530,6 +532,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 holder = (ProjectHolder) view.getTag();
             }
 
+
+            holder.iv_sit.setAlpha(0.54f);
 
             holder.tv_title.setText(projectList.get(position).getTitle());
 
@@ -540,6 +544,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     class ProjectHolder {
         TextView tv_title;
+        ImageView iv_sit;
     }
 
 

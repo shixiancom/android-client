@@ -1,5 +1,7 @@
 package com.shixian.android.client.utils;
 
+import android.support.v4.util.TimeUtils;
+
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -54,6 +56,8 @@ public class TimeUtil {
         }
         return interval;
     }
+
+
 
 
 

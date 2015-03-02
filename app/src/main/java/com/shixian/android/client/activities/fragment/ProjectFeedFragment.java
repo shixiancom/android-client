@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -337,7 +338,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                 if(project!=null)
                 {
                     TextView tv_name= (TextView) view.findViewById(R.id.tv_name);
-                    final TextView tv_follow= (TextView) view.findViewById(R.id.tv_follow);
+                    final Button bt_follow= (Button) view.findViewById(R.id.bt_follow);
                     TextView tv_content= (TextView) view.findViewById(R.id.tv_content);
 
                     tv_name.setText(project.title);
@@ -345,13 +346,15 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                         tv_content.setText(Html.fromHtml(project.description));
                     if(project.has_followed)
                     {
-                        tv_follow.setBackgroundResource(R.drawable.unfollow);
+                        bt_follow.setBackgroundResource(R.drawable.shape_unfollow);
+                        bt_follow.setText("已关注");
                     }else{
-                        tv_follow.setBackgroundResource(R.drawable.follow);
+                        bt_follow.setBackgroundResource(R.drawable.shape_follow);
+                        bt_follow.setText("关注");
                     }
 
 
-                    tv_follow.setOnClickListener(new View.OnClickListener() {
+                    bt_follow.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if(project.has_followed)
@@ -379,7 +382,8 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                                     @Override
                                     public void onSuccess(int i, Header[] headers, byte[] bytes) {
                                         Toast.makeText(context,"关注成功",Toast.LENGTH_SHORT).show();
-                                        tv_follow.setBackgroundResource(R.drawable.unfollow);
+                                        bt_follow.setBackgroundResource(R.drawable.shape_unfollow);
+                                        bt_follow.setText("已关注");
                                         project.has_followed=true;
                                     }
 
