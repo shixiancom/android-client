@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -90,7 +91,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
     @Override
     protected void initLable() {
-        context.setLable("项目主页");
+        context.setLable(getString(R.string.label_project));
     }
 
     @Override
@@ -210,6 +211,8 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
                 final String temp = new String(bytes);
                 if (!AppContants.errorMsg.equals(temp)) {
+
+                    Log.i("AAAA","xxcxcxcxcxc");
                     new Thread() {
                         public void run() {
 
@@ -232,6 +235,10 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
                                     pullToRefreshListView.onPullDownRefreshComplete();
 
+
+
+                                    pullToRefreshListView.getFooterLoadingLayout().show(false);
+
                                     context.dissProgress();
                                 }
                             });
@@ -242,6 +249,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
                 }else{
                     pullToRefreshListView.onPullDownRefreshComplete();
+                    pullToRefreshListView.getFooterLoadingLayout().show(false);
                 }
                 //adapter
             }
@@ -250,6 +258,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
                 Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT);
                 pullToRefreshListView.onPullDownRefreshComplete();
+                pullToRefreshListView.onPullUpRefreshComplete();
                 context.dissProgress();
             }
 
@@ -305,6 +314,8 @@ public class ProjectFeedFragment extends BaseFeedFragment {
     }
 
 
+
+    public static final int TYPE_PROJECT=2;
     class ProjectFeedAdapter extends BaseAdapter{
 
         @Override
@@ -314,25 +325,42 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
         @Override
         public Object getItem(int position) {
-            if(position==1)
+            if(position==0)
                 return project;
             return feedList.get(position-1);
         }
 
         @Override
         public long getItemId(int position) {
-            if(position==1)
-                return  position;
-            return position-1;
+            return  position;
+        }
+
+
+        @Override
+        public int getViewTypeCount() {
+            return 3;
+
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if(position==0)
+                return 2;
+
+            return feedList.get(position-1).type;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            View view=null;
-            FeedHolder holder=null;
-            if(position==0)
-            {
+
+            View view = null;
+
+
+            int itemType = getItemViewType(position);
+            switch (itemType) {
+                case TYPE_PROJECT:
+
                 view=View.inflate(context,R.layout.project_index_item,null);
 
                 if(project!=null)
@@ -347,10 +375,10 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                     if(project.has_followed)
                     {
                         bt_follow.setBackgroundResource(R.drawable.shape_unfollow);
-                        bt_follow.setText("已关注");
+                        bt_follow.setText(R.string.following);
                     }else{
                         bt_follow.setBackgroundResource(R.drawable.shape_follow);
-                        bt_follow.setText("关注");
+                        bt_follow.setText(R.string.follow);
                     }
 
 
@@ -383,7 +411,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                                     public void onSuccess(int i, Header[] headers, byte[] bytes) {
                                         Toast.makeText(context,"关注成功",Toast.LENGTH_SHORT).show();
                                         bt_follow.setBackgroundResource(R.drawable.shape_unfollow);
-                                        bt_follow.setText("已关注");
+                                        bt_follow.setText(R.string.following);
                                         project.has_followed=true;
                                     }
 
@@ -398,193 +426,48 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                     });
 
                 }
+                    break;
 
-                //设置关注按钮的点击事件
-
-
-
+                case BaseFeed.TYPE_FEED:
 
 
 
-            }else{
+                    view=initFeedItemView2(convertView);
+                    FeedHolder feedHolder= (FeedHolder) view.getTag();
 
-                view=initHolderAndItemView(convertView);
-                holder= (FeedHolder) view.getTag();
+/******************************************************************/
+                    Feed2 feed = (Feed2) feedList.get(position - 1);
+                    feed.position=position-1;
+                    initFeedItemViewData(feed,feedHolder);
+/**************************************************/
+                    initFeedItemOnClick(feed,feedHolder);
 
-                final BaseFeed baseFeed = feedList.get(position - 1);
-                baseFeed.position=position-1;
 
-//                String type = "";
-//                String project = "";
-//                String content;
-//
-//                holder.tv_response.setVisibility(View.VISIBLE);
-//                holder.v_line.setVisibility(View.VISIBLE);
-//                holder.iv_content.setVisibility(View.GONE);
-//
-//                if (!baseFeed.feedable_type.equals(AppContants.FEADE_TYPE_COMMON)) {
-//
-//
-//                    Feed2 feed = (Feed2) baseFeed;
-//
-//                    if (feed.data.project != null && !TextUtils.isEmpty(feed.data.project.title))
-//                        project = feed.data.project.title;
-//
-//                    holder.iv_content.setVisibility(View.GONE);
-//
-//
-//                    switch (feed.feedable_type) {
-//                        case "Idea":
-//                            type = context.getResources().getString(R.string.add_idea);
-//                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-//                            break;
-//                        case "Project":
-//                            type = context.getResources().getString(R.string.add_project);
-//                            project = feed.data.title;
-//                            holder.tv_content.setText(Html.fromHtml(feed.data.description));
-//                            //隐藏回复框
-//                            holder.tv_response.setVisibility(View.GONE);
-//                            break;
-//                        case "Plan":
-//                            type = context.getResources().getString(R.string.add_plan);
-//
-//                            holder.tv_content.setText(feed.data.content + "   截至到: " + feed.data.finish_on);
-//                            break;
-//                        case "Image":
-//
-//                            type = context.getResources().getString(R.string.add_image);
-//                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-//
-//                            String keys[]=feed.data.attachment.url.split("/");
-//                            String key=keys[keys.length-1];
-//
-//                            holder.iv_content.setTag(key);
-//                            holder.iv_content.setVisibility(View.VISIBLE);
-//                            ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.attachment.url);
-//
-//                            break;
-//                        case "UserProjectRelation":
-//                            type = context.getResources().getString(R.string.join);
-//                            //隐藏回复框
-//                            holder.tv_response.setVisibility(View.GONE);
-//                            holder.tv_content.setVisibility(View.GONE);
-//                            break;
-//                        case "Homework":
-//                            type = context.getResources().getString(R.string.finish_homework);
-//                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-//                            break;
-//                        case "Task":
-//                            type = context.getResources().getString(R.string.finish_task);
-//                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-//                            break;
-//                        case "Vote":
-//                            type = context.getResources().getString(R.string.finish_task);
-//
-//                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-//                            break;
-//                        case "Attachment":
-//                            type = context.getResources().getString(R.string.feed_attachment);
-//                            holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-//                            break;
-//                        case "Agreement":
-//
-//                            //TODO ??????????
-//                            holder.tv_content.setVisibility(View.GONE);
-//                            break;
-//                    }
-//
-//                    //头像图片处理
-//                    String keys[] = feed.data.user.avatar.small.url.split("/");
-//                    String key = keys[keys.length - 1];
-//
-////                ImageUtil.loadingImage(holder.iv_icon, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.user.avatar.small.url);
-//
-//                    Bitmap bm = ImageCache.getInstance().get(key);
-//
-//                    if (bm != null) {
-//                        holder.iv_icon.setImageBitmap(bm);
-//                    } else {
-//                        holder.iv_icon.setImageResource(R.drawable.ic_launcher);
-//                        holder.iv_icon.setTag(key);
-//                        if (callback != null) {
-//                            new ImageDownload(callback).execute(AppContants.DOMAIN + feed.data.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
-//                        }
-//                    }
-//
-//
-//                    holder.tv_type.setText(type);
-//                    holder.tv_proect.setText(project);
-//                    holder.tv_name.setText(feed.data.user.username);
-//
-//
-//                    //设置样式
-////                int textSize=DisplayUtil.sp2px(context,13);
-//                    holder.tv_name.setTextSize(13);
-//                    holder.tv_time.setTextSize(13);
-//                    holder.tv_content.setTextSize(13);
-//
-//                    ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
-//                    int imageSize = DisplayUtil.dip2px(context, 40);
-//                    params.height = imageSize;
-//                    params.width = imageSize;
-//                    holder.iv_icon.setLayoutParams(params);
-//
-//                    holder.tv_type.setVisibility(View.VISIBLE);
-//                    holder.tv_proect.setVisibility(View.VISIBLE);
-//
-//                } else {
-//                    Comment comment = (Comment) baseFeed;
-//                    //初始化一些common信息
-//                    holder.tv_name.setText(comment.user.username);
-//                    holder.tv_time.setText(TimeUtil.getDistanceTime(comment.created_at));
-//                    holder.tv_proect.setVisibility(View.GONE);
-//                    holder.tv_type.setVisibility(View.GONE);
-//                    holder.iv_content.setVisibility(View.GONE);
-//                    holder.tv_content.setVisibility(View.VISIBLE);
-//                    holder.tv_content.setText(Html.fromHtml(comment.content_html));
-//
-//
-//                    holder.tv_name.setTextSize(13);
-//                    holder.tv_time.setTextSize(13);
-//                    holder.tv_content.setTextSize(13);
-//
-//                    ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
-//                    int imageSize = DisplayUtil.dip2px(context, 20);
-//                    params.height = imageSize;
-//                    params.width = imageSize;
-//                    holder.iv_icon.setLayoutParams(params);
-//
-//
-//                    //头像图片处理
-//                    String keys[] = comment.user.avatar.small.url.split("/");
-//                    String key = keys[keys.length - 1];
-//
-//                    Bitmap bm = ImageCache.getInstance().get(key);
-//
-//                    if (bm != null) {
-//                        holder.iv_icon.setImageBitmap(bm);
-//                    } else {
-//                        holder.iv_icon.setImageResource(R.drawable.ic_launcher);
-//                        holder.iv_icon.setTag(position + key);
-//                        if (callback != null) {
-//                            new ImageDownload(callback).execute(AppContants.DOMAIN + comment.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
-//                        }
-//                    }
-//
-//
-//                    //隐藏回复框
-//                    if (!comment.isLast) {
-//                        holder.tv_response.setVisibility(View.GONE);
-//                        holder.v_line.setVisibility(View.GONE);
-//                    }
-//
-//                }
 
-                initFeedItemView(holder,baseFeed,position);
-                setFeedOnClickListener(context,holder,baseFeed);
+                    break;
+
+                case BaseFeed.TYPE_COMMENT:
+
+                    view= initCommentItem(convertView);
+
+
+
+                    CommentHolder commentHolder = (CommentHolder) view.getTag();
+
+
+/**************************************************************/
+                    Comment comment = (Comment) feedList.get(position - 1);
+                    initCommentItemData(comment,commentHolder);
+
+
+/******************************************/
+
+                    initCommentItemOnClick(comment,commentHolder);
+                    break;
 
 
             }
+
 
             return view;
         }
@@ -593,21 +476,23 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
 
 
-    protected void setFeedOnClickListener(final BaseActivity context, final FeedHolder holder,final BaseFeed baseFeed)
-    {
+
+    /***********************Adapter 点击事件 **************************/
+    /***********************Adapter 点击事件 **************************/
+    private void initFeedItemOnClick(final Feed2 feed,final FeedHolder feedHolder) {
 
         //设置点击事件
 
 
-        OnClickController controller = new OnClickController(context, baseFeed);
+        OnClickController controller = new OnClickController(context, feed);
 
 
 
 
         //点击头像和名字的响应事件是一致的 如果展示的是我的主页 再次点击不会响应
 
-        holder.iv_icon.setOnClickListener(controller);
-        holder.tv_name.setOnClickListener(controller);
+        feedHolder.iv_icon.setOnClickListener(controller);
+        feedHolder.tv_name.setOnClickListener(controller);
 
 
         //因为项目主页都是使用同一个项目内容 点击也会进入到同一个项目 所以就不需要了
@@ -623,37 +508,29 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 //            holder.tv_content.setOnClickListener(controller);
 //        }
 
-        if(holder.tv_content.getVisibility()==View.VISIBLE)
-        {
-            if(baseFeed instanceof Comment)
+//        if(feedHolder.tv_content.getVisibility()==View.VISIBLE)
+//        {
+//            feedHolder.tv_content.setOnClickListener(controller);
+//
+//        }
+
+
+
+        if (feedHolder.iv_content.getVisibility() == View.VISIBLE) {
+            if("Attachment".equals(feed.feedable_type))
             {
-                //点击跳出回复框 带@的
-                holder.tv_content.setOnClickListener(new View.OnClickListener() {
+                feedHolder.iv_content.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        popComment(v,baseFeed,lv);
-                    }
-                });
-            }
-        }
-
-
-
-        if (holder.iv_content.getVisibility() == View.VISIBLE) {
-            if(baseFeed instanceof Feed2 && "Attachment".equals(((Feed2)baseFeed).feedable_type))
-            {
-                holder.iv_content.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(context,"暂且不支持下载文件",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,R.string.cant_downlowb,Toast.LENGTH_SHORT).show();
                     }
                 });
             }else{
-                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+                feedHolder.iv_content.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent=new Intent(context, BigImageActivity.class);
-                        intent.putExtra("key",(String)holder.iv_content.getTag());
+                        intent.putExtra("key",(String)feedHolder.iv_content.getTag());
                         context.startActivity(intent);
                     }
                 });
@@ -663,23 +540,86 @@ public class ProjectFeedFragment extends BaseFeedFragment {
         }
 
 
-        if(holder.tv_response.getVisibility()==View.VISIBLE)
+        if(feedHolder.tv_response.getVisibility()==View.VISIBLE)
         {
-            holder.tv_response.setOnClickListener(new View.OnClickListener() {
+            feedHolder.tv_response.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    //这里我需要得到最后一条评论的位置  该如何是好呢 ？
+                    //是否要在feed中增加一条纪录该feed所有的评论数  还是有其他更好的方法  增加评论数到不难
+
+
+                    popComment(v, feed, lv);
+
+
+                }
+            });
+
+        }
+
+    }
+
+
+    private void initCommentItemOnClick(final Comment comment, CommentHolder commentHolder) {
+
+        //设置点击事件
+
+
+        OnClickController controller = new OnClickController(context, comment);
+
+
+
+
+        //点击头像和名字的响应事件是一致的 如果展示的是我的主页 再次点击不会响应
+
+        commentHolder.iv_icon.setOnClickListener(controller);
+        commentHolder.tv_name.setOnClickListener(controller);
+
+
+        //因为项目主页都是使用同一个项目内容 点击也会进入到同一个项目 所以就不需要了
+//                //项目
+//                if(project!=null)
+//                {
+//                    if(!baseFeed.project_id.equals(ProjectFeedFragment.this.project.id+""))
+//                        holder.tv_proect.setOnClickListener(controller);
+//                }
+
+
+//        if (holder.tv_content.getVisibility() == View.VISIBLE) {
+//            holder.tv_content.setOnClickListener(controller);
+//        }
+
+        if(commentHolder.tv_content.getVisibility()==View.VISIBLE)
+        {
+
+                //点击跳出回复框 带@的
+            commentHolder.tv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popComment(v,comment,lv);
+                    }
+                });
+
+        }
+
+
+
+
+
+
+        if(commentHolder.tv_response.getVisibility()==View.VISIBLE)
+        {
+            commentHolder.tv_response.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     //这里我需要得到最后一条评论的位置  该如何是好呢 ？
                     //是否要在feed中增加一条纪录该feed所有的评论数  还是有其他更好的方法  增加评论数到不难
                     //但是这肯定不是优雅的做法  由于一开始没有好好的构思 现在可能考虑投机取巧的方法去解决
-                    if(baseFeed instanceof  Comment)
-                    {
-                        popComment(v,((Comment)baseFeed).parent,lv);
-                    }else{
 
-                        popComment(v,baseFeed,lv);
-                    }
-                    //也只能这么做了
+                        popComment(v,comment.parent,lv);
+
 
                 }
 
@@ -687,7 +627,6 @@ public class ProjectFeedFragment extends BaseFeedFragment {
             });
 
         }
-
 
 
     }

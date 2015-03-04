@@ -124,7 +124,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
 
-    //TODO
+
    //private RedPointView titleImgPoint;
    private RedPointView layMsgPoint;
    private ImageView iv_msg;
@@ -168,11 +168,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //TODO 设置消息状态
+
                         if(status.total!=0)
                             settingMsgCount(status.total);
                         else{
-                            //TODO
+
                            hideMsg();
                         }
 
@@ -268,7 +268,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     User user = gson.fromJson(userInfo, User.class);
                     MainActivity.this.user=user;
                     Global.USER_ID=user.id;
+                    Global.USER_NAME=user.username;
+
                     tv_uname.setText(user.username);
+
                     SharedPerenceUtil.putUserInfo(MainActivity.this, userInfo);
 
                     //异步下载图片(头像)
@@ -322,7 +325,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
         setSupportActionBar(toolbar);
-//TODO
+
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -342,12 +345,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             public void onDrawerOpened(View drawerView) {
   //              Toast.makeText(MainActivity.this, "打开", Toast.LENGTH_LONG).show();
                 super.onDrawerOpened(drawerView);
+
+                //打开重新加载数据
+                //TODO
+                tv_uname.setText(user.username);
+
+                initUserProjects();
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
             //    Toast.makeText(MainActivity.this, "关闭", Toast.LENGTH_LONG).show();
                 super.onDrawerClosed(drawerView);
+
             }
         };
 

@@ -39,8 +39,12 @@ public class LoginActivity extends Activity
 
         }
 
+
+    private  Button main_login_btn;
     private void init() {
         setContentView(R.layout.activity_login);
+        main_login_btn= (Button) findViewById(R.id.main_login_btn);
+
 
         progressDialog=new ProgressDialog(this);
         progressDialog.setMessage("正在验证登陆信息");
@@ -57,13 +61,8 @@ public class LoginActivity extends Activity
             LoginUtil.validationToken(LoginActivity.this,mAccessToken,progressDialog);
         }else{
 
-            Button main_login_btn= (Button) findViewById(R.id.main_login_btn);
-            main_login_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    LoginUtil.getToken(LoginActivity.this, new AuthListener());
-                }
-            });
+
+            setOnclick();
 
         }
 
@@ -81,8 +80,17 @@ public class LoginActivity extends Activity
 
     }
 
+    public void setOnclick() {
+        main_login_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginUtil.getToken(LoginActivity.this, new AuthListener());
+            }
+        });
+    }
+
     //微薄登陆回调类
-    class AuthListener implements WeiboAuthListener {
+    public class AuthListener implements WeiboAuthListener {
 
         @Override
         public void onComplete(Bundle values) {

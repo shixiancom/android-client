@@ -49,64 +49,9 @@ public class IndexFragment extends BaseFeedFragment {
     private String firstPageDate;
 
 
-
-    //private FeedAdapter adapter;
-
-
-
-
-
-
-//    @Override
-//    public View initView(LayoutInflater inflater) {
-//
-//        View view = inflater.inflate(R.layout.fragment_index, null, false);
-//
-//        context.setLable("首页");
-//
-//        pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.lv_index);
-//        // 滚动到底自动加载可用
-//        pullToRefreshListView.setScrollLoadEnabled(true);
-//
-//
-//        // 设置下拉刷新的listener
-//        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
-//
-//            //下拉舒心完成
-//            @Override
-//            public void onPullDownToRefresh(
-//                    PullToRefreshBase<ListView> refreshView) {
-//
-//                //上啦刷新
-//                Log.i("AAAA","1111-------------------------------------------------------------------");
-//                initDate(null);
-//            }
-//
-//            @Override
-//            public void onPullUpToRefresh(
-//                    PullToRefreshBase<ListView> refreshView) {
-//                //getNewsList(moreUrl, false);
-//                //下拉加载更多
-//                Log.i("AAAA", "-------------------------------------------------------------------");
-//                getNextData();
-//
-//
-//
-//            }
-//        });
-//
-//        feedList = new ArrayList<BaseFeed>();
-//
-//
-//        initCacheData();
-//
-//        return view;
-//    }
-//
-//
     protected void initCacheData() {
 
-        firstPageDate= SharedPerenceUtil.getIndexFeed(context);
+        firstPageDate = SharedPerenceUtil.getIndexFeed(context);
         feedList = JsonUtils.ParseFeeds(firstPageDate);
         if (adapter == null) {
             adapter = new FeedAdapter();
@@ -121,8 +66,7 @@ public class IndexFragment extends BaseFeedFragment {
     @Override
     public void initDate(Bundle savedInstanceState) {
 
-        if(feedList!=null&&feedList.size()>0)
-        {
+        if (feedList != null && feedList.size() > 0) {
             if (adapter == null) {
                 adapter = new FeedAdapter();
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
@@ -132,11 +76,11 @@ public class IndexFragment extends BaseFeedFragment {
 
             }
 
-            if(currentFirstPos<=feedList.size())
+            if (currentFirstPos <= feedList.size())
                 pullToRefreshListView.getListView().setSelection(currentFirstPos);
 
 
-        }else{
+        } else {
 
             initFirst();
         }
@@ -146,11 +90,10 @@ public class IndexFragment extends BaseFeedFragment {
     /**
      * 初始化第一页数据
      */
-    public void initFirstData()
-    {
-        page=1;
+    public void initFirstData() {
+        page = 1;
         context.showProgress();
-        CommonEngine.getFeedData(AppContants.INDEX_URL,page, new AsyncHttpResponseHandler() {
+        CommonEngine.getFeedData(AppContants.INDEX_URL, page, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, final byte[] bytes) {
                 final String temp = new String(bytes);
@@ -167,7 +110,7 @@ public class IndexFragment extends BaseFeedFragment {
                             feedList = JsonUtils.ParseFeeds(firstPageDate);
 
 
-                            SharedPerenceUtil.putIndexFeed(context,firstPageDate);
+                            SharedPerenceUtil.putIndexFeed(context, firstPageDate);
 
 
                             //保存数据到本地
@@ -197,7 +140,7 @@ public class IndexFragment extends BaseFeedFragment {
                     }.start();
 
 
-                }else{
+                } else {
                     pullToRefreshListView.onPullDownRefreshComplete();
                 }
             }
@@ -217,16 +160,12 @@ public class IndexFragment extends BaseFeedFragment {
     }
 
 
-
-
-
     /**
      * 获取其他页数据
      */
-    public void getNextData()
-    {
-        page+=1;
-        CommonEngine.getFeedData(AppContants.INDEX_URL,page, new AsyncHttpResponseHandler() {
+    public void getNextData() {
+        page += 1;
+        CommonEngine.getFeedData(AppContants.INDEX_URL, page, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, final byte[] bytes) {
 
@@ -269,7 +208,7 @@ public class IndexFragment extends BaseFeedFragment {
                     }.start();
 
 
-                }else{
+                } else {
                     pullToRefreshListView.onPullUpRefreshComplete();
                 }
             }
@@ -297,21 +236,23 @@ public class IndexFragment extends BaseFeedFragment {
 
     }
 
-    /******************************************************************************************/
+    /**
+     * **************************************************************************************
+     */
     @Override
     protected void initLable() {
-        context.setLable("首页");
+        context.setLable(getString(R.string.label_index));
     }
 
     /**
      * 初始化图片处理回调类
      */
     protected void initImageCallBack() {
-        this.callback=new ImageCallback() {
+        this.callback = new ImageCallback() {
 
             @Override
             public void imageLoaded(Bitmap bitmap, Object tag) {
-                ImageView imageView = (ImageView)pullToRefreshListView.getListView()
+                ImageView imageView = (ImageView) pullToRefreshListView.getListView()
                         .findViewWithTag(tag);
 
                 if (imageView != null) {
@@ -320,10 +261,6 @@ public class IndexFragment extends BaseFeedFragment {
             }
         };
     }
-
-
-
-
 
 
     /************************************Adapter**********************************************/
@@ -350,24 +287,59 @@ public class IndexFragment extends BaseFeedFragment {
         }
 
         @Override
+        public int getViewTypeCount() {
+            return 2;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return feedList.get(position).type;
+        }
+
+        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-           View view=null;
-           FeedHolder holder=null;
 
-           view=initHolderAndItemView(convertView);
+            View view = null;
 
 
-            holder= (FeedHolder) view.getTag();
+            int itemType = getItemViewType(position);
+            switch (itemType) {
+                case BaseFeed.TYPE_FEED:
+                    view=initFeedItemView2(convertView);
+                    FeedHolder feedHolder= (FeedHolder) view.getTag();
 
-            final BaseFeed baseFeed=feedList.get(position);
-            baseFeed.position=position;
+/******************************************************************/
+                    Feed2 feed = (Feed2) feedList.get(position );
+                    feed.position=position;
+                    initFeedItemViewData(feed,feedHolder);
+/**************************************************/
+                    initFeedItemOnClick(feed,feedHolder);
 
-            initFeedItemView(holder,baseFeed,position);
 
 
-            //设置点击事件
-            setFeedOnClickListener(context,holder,baseFeed);
+                    break;
+
+                case BaseFeed.TYPE_COMMENT:
+
+                    view= initCommentItem(convertView);
+
+
+
+                    CommentHolder commentHolder = (CommentHolder) view.getTag();
+
+
+/**************************************************************/
+                    Comment comment = (Comment) feedList.get(position);
+                    initCommentItemData(comment,commentHolder);
+
+
+/******************************************/
+
+                    initCommentItemOnClick(comment,commentHolder);
+                    break;
+            }
+
 
 
             return view;
@@ -377,228 +349,36 @@ public class IndexFragment extends BaseFeedFragment {
 
 
 
-//   protected void initFeedItemView(FeedHolder holder,BaseFeed baseFeed,int position) {
-//
-//        baseFeed.position=position;
-//
-//        String type="";
-//        String project="";
-//
-//
-//        //开始switch
-//        holder.tv_response.setVisibility(View.VISIBLE);
-//        holder.v_line.setVisibility(View.VISIBLE);
-//        holder.iv_content.setVisibility(View.GONE);
-//
-//        //用户名和头像是同一设置的
-//
-//
-//        //Feed2类型的
-//        if(!baseFeed.feedable_type.equals(AppContants.FEADE_TYPE_COMMON))
-//        {
-//            holder.tv_content.setVisibility(View.VISIBLE);
-//
-//            Feed2 feed= (Feed2) baseFeed;
-//
-//            //设置project
-//            if(feed.data.project!=null&&!TextUtils.isEmpty(feed.data.project.title))
-//                project=feed.data.project.title;
-//            switch (feed.feedable_type) {
-//                case "Idea":
-//                    type = context.getResources().getString(R.string.add_idea);
-//                    holder.tv_content.setText(feed.data.content);
-//                    break;
-//                case "Project":
-//                    type = context.getResources().getString(R.string.add_project);
-//                    project = feed.data.title;
-//                    holder.tv_content.setText(Html.fromHtml(feed.data.description));
-//                    //隐藏回复框
-//                    holder.tv_response.setVisibility(View.GONE);
-//                    break;
-//                case "Plan":
-//                    type = context.getResources().getString(R.string.add_plan);
-//
-//                    holder.tv_content.setText(feed.data.content + "   截至到: " + feed.data.finish_on);
-//                    break;
-//                case "Image":
-//
-//                    type = context.getResources().getString(R.string.add_image);
-//                    holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-//
-//                    String keys[]=feed.data.attachment.url.split("/");
-//                    String key=keys[keys.length-1];
-//
-//                    holder.iv_content.setTag(key);
-//                    holder.iv_content.setVisibility(View.VISIBLE);
-//                    ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.attachment.url);
-//
-//                    break;
-//                case "UserProjectRelation":
-//                    type = context.getResources().getString(R.string.join);
-//                    //隐藏回复框
-//                    if(feed.hasChildren) {
-//                        holder.tv_response.setVisibility(View.GONE);
-//                        // holder.tv_content.setVisibility(View.INVISIBLE);
-//                    }else{
-//                        holder.tv_content.setVisibility(View.GONE);
-//                    }
-//                    break;
-//                case "Homework":
-//                    type = context.getResources().getString(R.string.finish_homework);
-//                    holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-//                    break;
-//                case "Task":
-//                    type = context.getResources().getString(R.string.finish_task);
-//                    holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-//                    break;
-//                case "Vote":
-//                    type = context.getResources().getString(R.string.finish_task);
-//
-//                    holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-//                    break;
-//                case "Attachment":
-//                    type = context.getResources().getString(R.string.feed_attachment);
-//                    holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-//                    break;
-//            }
-//
-//            if(feed.hasChildren) {
-//                holder.v_line.setVisibility(View.GONE);
-//
-//            }else{
-//                holder.tv_response.setVisibility(View.VISIBLE);
-//            }
-//
-//
-//            //头像图片处理
-//            String keys[]=feed.data.user.avatar.small.url.split("/");
-//            String key=keys[keys.length-1];
-//
-////                ImageUtil.loadingImage(holder.iv_icon, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.user.avatar.small.url);
-//
-//            Bitmap bm = ImageCache.getInstance().get(key);
-//
-//            if (bm != null) {
-//                holder.iv_icon.setImageBitmap(bm);
-//            } else {
-//                holder.iv_icon.setImageResource(R.drawable.ic_launcher);
-//                holder.iv_icon.setTag(key);
-//                if (callback != null) {
-//                    new ImageDownload(callback).execute(AppContants.DOMAIN+feed.data.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
-//                }
-//            }
-//
-//
-//            holder.tv_type.setText(type);
-//            holder.tv_proect.setText(project);
-//            holder.tv_name.setText(feed.data.user.username);
-//
-//            //设置样式
-////                int textSize=DisplayUtil.sp2px(context,13);
-//            holder.tv_name.setTextSize(13);
-//            holder.tv_time.setTextSize(11);
-//            holder.tv_content.setTextSize(15);
-//
-//            ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
-//            int imageSize=DisplayUtil.dip2px(context,40);
-//            params.height=imageSize;
-//            params.width =imageSize;
-//            holder.iv_icon.setLayoutParams(params);
-//
-//            holder.tv_type.setVisibility(View.VISIBLE);
-//            holder.tv_proect.setVisibility(View.VISIBLE);
-//
-//        }else{
-//            Comment comment= (Comment) baseFeed;
-//            //初始化一些common信息
-//            holder.tv_name.setText(comment.user.username);
-//            holder.tv_time.setText(TimeUtil.getDistanceTime(comment.created_at));
-//            holder.tv_proect.setVisibility(View.GONE);
-//            holder.tv_type.setVisibility(View.GONE);
-//            holder.iv_content.setVisibility(View.GONE);
-//            holder.tv_content.setVisibility(View.VISIBLE);
-//            holder.tv_content.setText(comment.content);
-//
-//
-//
-//            holder.tv_name.setTextSize(13);
-//            holder.tv_time.setTextSize(11);
-//            holder.tv_content.setTextSize(14);
-//
-//            ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
-//            int imageSize=DisplayUtil.dip2px(context,20);
-//            params.height=imageSize;
-//            params.width =imageSize;
-//            holder.iv_icon.setLayoutParams(params);
-//
-//
-//            //头像图片处理
-//            String keys[]=comment.user.avatar.small.url.split("/");
-//            String key=keys[keys.length-1];
-//
-//            Bitmap bm = ImageCache.getInstance().get(key);
-//
-//            if (bm != null) {
-//                holder.iv_icon.setImageBitmap(bm);
-//            } else {
-//                holder.iv_icon.setImageResource(R.drawable.ic_launcher);
-//                holder.iv_icon.setTag(position+key);
-//                if (callback != null) {
-//                    new ImageDownload(callback).execute(AppContants.DOMAIN+comment.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
-//                }
-//            }
-//
-//
-//            //隐藏回复框
-//            if(!comment.isLast) {
-//                holder.tv_response.setVisibility(View.GONE);
-//                holder.v_line.setVisibility(View.GONE);
-//            }
-//
-//        }
-//
-//    }
 
 
-    @Override
-    protected void setFeedOnClickListener(final BaseActivity context, final FeedHolder holder,final BaseFeed baseFeed) {
 
-        IndexOnClickController controller=new IndexOnClickController(context,baseFeed);
-        holder.iv_icon.setOnClickListener(controller);
-        holder.tv_name.setOnClickListener(controller);
+    /*****************************Adapter的监听事件函数********************/
+    protected void initFeedItemOnClick(final Feed2 feed,final FeedHolder feedHolder)
+    {
+        IndexOnClickController controller = new IndexOnClickController(context, feed);
+        feedHolder.iv_icon.setOnClickListener(controller);
+        feedHolder.tv_name.setOnClickListener(controller);
         //项目
-        holder.tv_proect.setOnClickListener(controller);
+        feedHolder.tv_proect.setOnClickListener(controller);
 
-        if(holder.tv_content.getVisibility()==View.VISIBLE)
-        {
-            if(baseFeed instanceof Comment)
-            {
-              //点击跳出回复框 带@的
-               holder.tv_content.setOnClickListener(new View.OnClickListener() {
-                   @Override
-                   public void onClick(View v) {
-                       popComment(v,baseFeed,lv);
-                   }
-               });
-            }else{
-                holder.tv_content.setOnClickListener(controller);
-            }
+        if (feedHolder.tv_content.getVisibility() == View.VISIBLE) {
+
+            feedHolder.tv_content.setOnClickListener(controller);
+
 
         }
 
 
-        if(holder.iv_content.getVisibility()==View.VISIBLE)
-        {
+        if (feedHolder.iv_content.getVisibility() == View.VISIBLE) {
 
-            if(baseFeed instanceof Feed2 && "Attachment".equals(((Feed2)baseFeed).feedable_type))
-            {
-                holder.iv_content.setOnClickListener(controller);
-            }else{
-                holder.iv_content.setOnClickListener(new View.OnClickListener() {
+            if ( "Attachment".equals(feed.feedable_type)) {
+                feedHolder.iv_content.setOnClickListener(controller);
+            } else {
+                feedHolder.iv_content.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent=new Intent(context, BigImageActivity.class);
-                        intent.putExtra("key",(String)holder.iv_content.getTag());
+                        Intent intent = new Intent(context, BigImageActivity.class);
+                        intent.putExtra("key", (String) feedHolder.iv_content.getTag());
                         context.startActivity(intent);
                     }
                 });
@@ -609,25 +389,20 @@ public class IndexFragment extends BaseFeedFragment {
         }
 
 
-        if(holder.tv_response.getVisibility()==View.VISIBLE)
-        {
-            holder.tv_response.setOnClickListener(new View.OnClickListener() {
+        if (feedHolder.tv_response.getVisibility() == View.VISIBLE) {
+            feedHolder.tv_response.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     //这里我需要得到最后一条评论的位置  该如何是好呢 ？
                     //是否要在feed中增加一条纪录该feed所有的评论数  还是有其他更好的方法  增加评论数到不难
                     //但是这肯定不是优雅的做法  由于一开始没有好好的构思 现在可能考虑投机取巧的方法去解决
-                    if(baseFeed instanceof  Comment)
-                    {
-                        popComment(v,((Comment)baseFeed).parent,lv);
-                    }else{
 
-                        popComment(v,baseFeed,lv);
-                    }
+                        popComment(v, feed, lv);
+
                     //也只能这么做了
 
-               }
+                }
 
 
             });
@@ -635,4 +410,47 @@ public class IndexFragment extends BaseFeedFragment {
         }
     }
 
-}
+
+    protected void initCommentItemOnClick(final Comment comment,CommentHolder commentHolder) {
+
+        IndexOnClickController controller = new IndexOnClickController(context, comment);
+        commentHolder.iv_icon.setOnClickListener(controller);
+        commentHolder.tv_name.setOnClickListener(controller);
+
+
+
+
+        if (commentHolder.tv_content.getVisibility() == View.VISIBLE) {
+
+            commentHolder.tv_content.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popComment(v, comment, lv);
+                }
+            });
+        }
+
+
+
+
+        if (commentHolder.tv_response.getVisibility() == View.VISIBLE) {
+            commentHolder.tv_response.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    //这里我需要得到最后一条评论的位置  该如何是好呢 ？
+                    //是否要在feed中增加一条纪录该feed所有的评论数  还是有其他更好的方法  增加评论数到不难
+                    //但是这肯定不是优雅的做法  由于一开始没有好好的构思 现在可能考虑投机取巧的方法去解决
+
+                        popComment(v, comment.parent, lv);
+                    }
+                    //也只能这么做了
+
+
+
+            });
+
+        }
+    }
+
+ }

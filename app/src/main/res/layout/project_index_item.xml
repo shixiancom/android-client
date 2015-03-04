@@ -13,7 +13,7 @@
        >
 
         <com.shixian.android.client.views.FontTextView
-           android:layout_width="250dp"
+           android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:textSize="18sp"
            android:layout_marginTop="10dp"
@@ -21,6 +21,8 @@
            android:singleLine="true"
            android:id="@+id/tv_name"
            android:textColor="#000000"
+           android:maxEms="9"
+            android:ellipsize="end"
            />
 
        <Button
@@ -33,7 +35,7 @@
            android:layout_alignParentRight="true"
            android:layout_marginRight="10dp"
            android:layout_centerVertical="true"
-           android:text="关注"
+           android:text="@string/follow"
            android:textColor="@color/white"
            android:background="@drawable/shape_follow"
            android:padding="3dp"

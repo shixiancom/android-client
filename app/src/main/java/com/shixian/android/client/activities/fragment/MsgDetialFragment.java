@@ -501,24 +501,24 @@ public class MsgDetialFragment extends BaseFragment {
 
                     switch (switchOpt) {
                         case "Idea":
-                            type = context.getResources().getString(R.string.add_idea);
+                            type = context.getResources().getString(R.string.feed_add_idea);
                             holder.tv_content.setText(allItemType.content);
                             break;
                         case "Project":
-                            type = context.getResources().getString(R.string.add_project);
+                            type = context.getResources().getString(R.string.feed_add_project);
                             project = allItemType.project.title;
                             holder.tv_content.setText(Html.fromHtml(allItemType.description));
                             //隐藏回复框
                             holder.tv_response.setVisibility(View.GONE);
                             break;
                         case "Plan":
-                            type = context.getResources().getString(R.string.add_plan);
+                            type = context.getResources().getString(R.string.feed_add_plan);
 
-                            holder.tv_content.setText(allItemType.content + "   截至到: " + allItemType.finish_on);
+                            holder.tv_content.setText(allItemType.content + "   "+getString(R.string.feed_end)+": " + allItemType.finish_on);
                             break;
                         case "Image":
 
-                            type = context.getResources().getString(R.string.add_image);
+                            type = context.getResources().getString(R.string.feed_add_image);
                             holder.tv_content.setText(Html.fromHtml(allItemType.content_html));
 
                             String keys2[] = allItemType.attachment.url.split("/");
@@ -530,7 +530,7 @@ public class MsgDetialFragment extends BaseFragment {
 
                             break;
                         case "UserProjectRelation":
-                            type = context.getResources().getString(R.string.join);
+                            type = context.getResources().getString(R.string.feed_join_project);
                             //隐藏回复框
                             if (TextUtils.isEmpty(allItemType.comments_count)) {
                                 holder.tv_response.setVisibility(View.GONE);
@@ -540,22 +540,22 @@ public class MsgDetialFragment extends BaseFragment {
                             }
                             break;
                         case "Homework":
-                            type = context.getResources().getString(R.string.finish_homework);
+                            type = context.getResources().getString(R.string.feed_completed_task);
                             holder.tv_content.setText(Html.fromHtml(allItemType.content_html));
                             break;
                         case "Task":
-                            type = context.getResources().getString(R.string.finish_task);
+                            type = context.getResources().getString(R.string.feed_add_task);
                             holder.tv_content.setText(Html.fromHtml(allItemType.content_html));
                             break;
                         case "Vote":
-                            type = context.getResources().getString(R.string.finish_task);
+                            type = context.getResources().getString(R.string.feed_join_vote);
 
                             holder.tv_content.setText(Html.fromHtml(allItemType.content_html));
                             break;
                         case "Attachment":
 
 
-                            type = context.getResources().getString(R.string.feed_attachment);
+                            type = context.getResources().getString(R.string.feed_add_file);
                             holder.tv_content.setText(allItemType.content+"\n"+"  "+allItemType.file_name);
                             holder.iv_content.setVisibility(View.VISIBLE);
                             holder.iv_content.setImageResource(R.drawable.file);
@@ -878,7 +878,7 @@ public class MsgDetialFragment extends BaseFragment {
                 holder.iv_content.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(context, "暂且不支持下载文件", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.cant_downlowb, Toast.LENGTH_SHORT).show();
                     }
                 });
             }else{
@@ -1053,13 +1053,14 @@ public class MsgDetialFragment extends BaseFragment {
                     adapter.notifyDataSetChanged();
                     mEnterLayout.clearContent();
                     hideSoftkeyboard();
+                    Toast.makeText(context, R.string.send_ok, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
                     hideSoftkeyboard();
-                    Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.send_failed, Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -1156,7 +1157,7 @@ public class MsgDetialFragment extends BaseFragment {
             Log.i("AAAA","isComment-------------------------------");
             if(TextUtils.isEmpty(comment.getText()))
             {
-                comment.setText("@"+ ((Comment)tag).user.username);
+                comment.setText("@"+ ((Comment)tag).user.username+" ");
             }
         }
 

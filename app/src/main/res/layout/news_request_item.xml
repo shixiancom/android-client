@@ -17,8 +17,8 @@
             android:layout_marginTop="10dp"
             android:src="@drawable/ic_launcher"
             android:id="@+id/iv_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginBottom="5dp"/>
 
         <com.shixian.android.client.views.FontTextView
@@ -32,6 +32,7 @@
             android:layout_toRightOf="@id/iv_icon"
             android:textSize="13sp"
 
+
             />
 
 
@@ -44,18 +45,10 @@
             android:layout_toRightOf="@id/tv_name"
             android:layout_marginLeft="5dp"
             android:textSize="13sp"
+            android:text="请求加入项目"
             />
 
-        <com.shixian.android.client.views.FontTextView
-            android:textColor="#005580"
-            android:id="@+id/tv_post_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/iv_icon"
-            android:layout_toRightOf="@id/tv_type"
-            android:layout_marginLeft="5dp"
-            android:textSize="13sp"
-            />
+
 
         <com.shixian.android.client.views.FontTextView
             android:maxLength="13"
@@ -69,29 +62,6 @@
             android:layout_marginBottom="5dp"
             />
 
-        <com.shixian.android.client.views.FontTextView
-            android:textColor="#9B9B9B"
-            android:layout_below="@id/tv_name"
-            android:layout_alignTop="@id/tv_project"
-            android:id="@+id/tv_addpri"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tv_project"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="3dp"/>
-
-        <com.shixian.android.client.views.FontTextView
-            android:textColor="#005580"
-            android:layout_below="@id/tv_name"
-            android:layout_alignTop="@id/tv_project"
-            android:id="@+id/tv_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tv_addpri"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="3dp"
-
-            />
 
         <TextView
             android:layout_centerVertical="true"
@@ -111,7 +81,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <com.shixian.android.client.views.FontTextView
         android:lineSpacingMultiplier="1.3"
         android:id="@+id/tv_content"

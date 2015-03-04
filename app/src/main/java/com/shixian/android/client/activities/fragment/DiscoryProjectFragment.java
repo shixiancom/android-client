@@ -53,7 +53,7 @@ public class DiscoryProjectFragment extends BaseFragment {
 
         View view = View.inflate(context, R.layout.fragment_index, null);
 
-        context.setLable("发现");
+        context.setLable(getString(R.string.label_discover));
 
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.lv_index);
         // 滚动到底自动加载可用
@@ -302,13 +302,13 @@ public class DiscoryProjectFragment extends BaseFragment {
             {
                 //TODO
                holder.bt_fllowen.setBackgroundResource(R.drawable.shape_unfollow);
-                holder.bt_fllowen.setText("已关注");
+                holder.bt_fllowen.setText(R.string.following);
                // holder.tv_fllowen.setBackgroundResource(R.drawable.unfollow);
 
 
             }else{
                 holder.bt_fllowen.setBackgroundResource(R.drawable.shape_follow);
-                holder.bt_fllowen.setText("关注");
+                holder.bt_fllowen.setText(R.string.follow);
               //  holder.tv_fllowen.setBackgroundResource(R.drawable.follow);
             }
 
@@ -338,7 +338,7 @@ public class DiscoryProjectFragment extends BaseFragment {
 //                               }
 //                           });
 
-                        Toast.makeText(context,"赞不支持取消功能，我们正在飞速开发",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,"暂不支持取消功能，我们正在开发",Toast.LENGTH_SHORT).show();
                     }else{
                         //关注api
                         ApiUtils.post(String.format(AppContants.PROJECT_FOLLOW_URL,project.id),null,new AsyncHttpResponseHandler() {
@@ -346,7 +346,7 @@ public class DiscoryProjectFragment extends BaseFragment {
                             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                                 Toast.makeText(context,"关注成功",Toast.LENGTH_SHORT).show();
                                 holder.bt_fllowen.setBackgroundResource(R.drawable.shape_unfollow);
-                                holder.bt_fllowen.setText("已关注");
+                                holder.bt_fllowen.setText(R.string.following);
                                 project.has_followed=true;
                             }
 

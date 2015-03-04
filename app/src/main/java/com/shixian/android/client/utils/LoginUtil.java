@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -12,6 +13,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.shixian.android.client.R;
+import com.shixian.android.client.activities.LoginActivity;
 import com.shixian.android.client.activities.MainActivity;
 import com.shixian.android.client.model.Message;
 import com.shixian.android.client.sina.Constants;
@@ -88,6 +90,8 @@ public class LoginUtil {
                     context.finish();
                 } else {
                     Toast.makeText(context, msg.getValue(), Toast.LENGTH_LONG);
+                    ((LoginActivity)context).setOnclick();
+
                 }
 
                 progressDialog.dismiss();
@@ -98,6 +102,7 @@ public class LoginUtil {
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
                 Toast.makeText(context,context.getResources().getString(R.string.check_net), Toast.LENGTH_LONG).show();
                 progressDialog.dismiss();
+                ((LoginActivity)context).setOnclick();
             }
         });
     }

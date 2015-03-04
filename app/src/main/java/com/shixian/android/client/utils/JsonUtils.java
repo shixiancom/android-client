@@ -69,20 +69,34 @@ public class JsonUtils {
                 JSONObject jobj = jsonArrayrray.getJSONObject(j);
                 Feed2 feed = gson.fromJson(jobj.toString(), Feed2.class);
 
-                if(!"Agreement".equals(feed.feedable_type))
+                if(!"Agreement".equals(feed.feedable_type)) {
                     feeds.add(feed);
+                    feed.type=BaseFeed.TYPE_FEED;
+                }
 
+                if("Project".equals(feed.feedable_type))
+                {
 
+                    continue;
+                }
+
+                int i=0;
                 try{
                     String commArrayStr=jobj.getJSONObject("data").getString("comments");
                     if(!"[]".equals(commArrayStr)){
                         feed.hasChildren=true;
                         JSONArray array=new JSONArray(commArrayStr);
 
-                        for(int i=0;i<array.length();i++)
+
+                        for(i=0;i<array.length();i++)
                         {
+
+
+
                             Comment comment=gson.fromJson(array.getString(i), Comment.class);
                             comment.feedable_type= AppContants.FEADE_TYPE_COMMON;
+                            comment.type=BaseFeed.TYPE_COMMENT;
+
                             comment.parent=feed;
                             if(i==0)
                             {
@@ -97,15 +111,19 @@ public class JsonUtils {
                             comment.project_id=feed.project_id;
                             comment.parent_id=feed.id;
 
+
+
                             feeds.add(comment);
 
 
                         }
                     }
-                    feed.lastChildPosition=feeds.size()-1;
+
+                    //lastposition已经行不通了  只能按照距离去计算才对
+                    feed.lastChildPosition=i;
                 }catch (Exception e)
                 {
-                    feed.lastChildPosition=feeds.size()-1;
+                    feed.lastChildPosition=i;
                     continue;
                 }
 
@@ -133,8 +151,6 @@ public class JsonUtils {
             for(int i=0;i<jsonArray.length();i++)
             {
 
-
-
                 Project project=gson.fromJson(jsonArray.getString(i), Project.class);
                 projects.add(project);
             }
@@ -158,6 +174,10 @@ public class JsonUtils {
             for(int j=0;j<jsonArray.length();j++)
             {
                 News news=gson.fromJson(jsonArray.getString(j),News.class);
+                if("Agreement".equals(news.notifiable_type))
+                {
+                    continue;
+                }
                 newses.add(news);
 
             }
