@@ -901,7 +901,7 @@ public class MsgDetialFragment extends BaseFragment {
             holder.tv_content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    popComment(v,baseFeed,pullToRefreshListView.getListView());
+                    popComment(v,baseFeed,pullToRefreshListView.getListView(),0);
                 }
             });
 
@@ -948,7 +948,7 @@ public class MsgDetialFragment extends BaseFragment {
             holder.tv_content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    popComment(v,allItemType,pullToRefreshListView.getListView());
+                    popComment(v,allItemType,pullToRefreshListView.getListView(),0);
                 }
             });
 
@@ -1144,7 +1144,7 @@ public class MsgDetialFragment extends BaseFragment {
 
 
 
-    protected  void popComment(View v,Object tag,ListView lv) {
+    protected  void popComment(View v,Object tag,ListView lv,int type) {
         EditText comment = mEnterLayout.content;
 
         String data = (String) v.getTag();
@@ -1179,9 +1179,13 @@ public class MsgDetialFragment extends BaseFragment {
         int listHeight = lv.getHeight();
 
         oldListHigh = listHeight;
-        needScrollY = (itemLocation[1] + commonEnterRoot.getHeight()-itemHeight-4) - (listLocation[1] + listHeight);
 
-
+        if (type == 0) {
+            needScrollY = (itemLocation[1] + itemHeight) - (listLocation[1] + listHeight);
+        } else {
+            //  needScrollY = (itemLocation[1] + itemHeight + commonEnterRoot.getHeight()) - (listLocation[1] + listHeight);
+            needScrollY = itemLocation[1] - (listLocation[1] + listHeight);
+        }
         cal1 = 0;
 
         comment.requestFocus();

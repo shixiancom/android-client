@@ -358,8 +358,9 @@ public abstract  class BaseFeedFragment extends BaseFragment {
      * @param v
      * @param tag
      * @param lv
+     * @param type 如果type为0
      */
-   protected  void popComment(View v,Object tag,ListView lv) {
+    protected  void popComment(View v,Object tag,ListView lv,int type) {
         EditText comment = mEnterLayout.content;
 
         String data = (String) v.getTag();
@@ -367,20 +368,20 @@ public abstract  class BaseFeedFragment extends BaseFragment {
 //        showEnterLayout(tag);
 
 
-       //设置@啊
-       if(tag instanceof Comment)
-       {
+        //设置@啊
+        if(tag instanceof Comment)
+        {
 
-           Log.i("AAAA","isComment-------------------------------");
-           if(TextUtils.isEmpty(comment.getText()))
-           {
-               comment.setText("@"+ ((Comment)tag).user.username+" ");
-           }
-       }
+            Log.i("AAAA","isComment-------------------------------");
+            if(TextUtils.isEmpty(comment.getText()))
+            {
+                comment.setText("@"+ ((Comment)tag).user.username+" ");
+            }
+        }
 
         mEnterLayout.show(tag);
-       //把光标移动到最后
-       comment.setSelection(comment.getText().length());
+        //把光标移动到最后
+        comment.setSelection(comment.getText().length());
 
 
 //            mEnterLayout.restoreLoad(commentObject);
@@ -394,7 +395,14 @@ public abstract  class BaseFeedFragment extends BaseFragment {
         int listHeight = lv.getHeight();
 
         oldListHigh = listHeight;
-        needScrollY = (itemLocation[1] + commonEnterRoot.getHeight()-itemHeight-4) - (listLocation[1] + listHeight);
+        //needScrollY = (itemLocation[1] + commonEnterRoot.getHeight()-itemHeight-4) - (listLocation[1] + listHeight);
+
+        if (type == 0) {
+            needScrollY = (itemLocation[1] + itemHeight) - (listLocation[1] + listHeight);
+        } else {
+            //  needScrollY = (itemLocation[1] + itemHeight + commonEnterRoot.getHeight()) - (listLocation[1] + listHeight);
+            needScrollY = itemLocation[1] - (listLocation[1] + listHeight);
+        }
 
 
         cal1 = 0;
@@ -402,7 +410,6 @@ public abstract  class BaseFeedFragment extends BaseFragment {
         comment.requestFocus();
         Global.popSoftkeyboard(context, comment, true);
     }
-
 
 
     public void showEnterLayout(Object tag)

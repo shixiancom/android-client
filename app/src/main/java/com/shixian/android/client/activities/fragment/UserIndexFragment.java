@@ -516,7 +516,7 @@ public class UserIndexFragment extends BaseFeedFragment {
             commentHolder.tv_content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    popComment(v, comment, lv);
+                    popComment(v, comment, lv,0);
                 }
             });
 
@@ -533,7 +533,7 @@ public class UserIndexFragment extends BaseFeedFragment {
                     //是否要在feed中增加一条纪录该feed所有的评论数  还是有其他更好的方法  增加评论数到不难
                     //但是这肯定不是优雅的做法  由于一开始没有好好的构思 现在可能考虑投机取巧的方法去解决
 
-                    popComment(v, comment.parent, lv);
+                    popComment(v, comment.parent, lv,1);
 
                     //也只能这么做了
 
@@ -606,7 +606,7 @@ public class UserIndexFragment extends BaseFeedFragment {
                     //是否要在feed中增加一条纪录该feed所有的评论数  还是有其他更好的方法  增加评论数到不难
                     //但是这肯定不是优雅的做法  由于一开始没有好好的构思 现在可能考虑投机取巧的方法去解决
 
-                    popComment(v, feed, lv);
+                    popComment(v, feed, lv,1);
 
                     //也只能这么做了
 
