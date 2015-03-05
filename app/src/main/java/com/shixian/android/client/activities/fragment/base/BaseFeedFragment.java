@@ -511,7 +511,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
 
                     holder.iv_content.setTag(key);
                     holder.iv_content.setVisibility(View.VISIBLE);
-                    ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher), callback, key, AppContants.DOMAIN + feed.data.attachment.url);
+                    ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_tv_content), callback, key, AppContants.DOMAIN + feed.data.attachment.url);
 
                     break;
                 case "UserProjectRelation":
@@ -833,7 +833,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
         if (ic_bm != null) {
             feedHolder.iv_icon.setImageBitmap(ic_bm);
         } else {
-            feedHolder.iv_icon.setImageResource(R.drawable.ic_launcher);
+            feedHolder.iv_icon.setImageResource(R.drawable.default_icon);
             feedHolder.iv_icon.setTag(iconkey);
             if (callback != null) {
                 new ImageDownload(callback).execute(AppContants.DOMAIN + feed.data.user.avatar.small.url, iconkey, ImageDownload.CACHE_TYPE_LRU);
@@ -949,7 +949,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
         if (comment_ic_bm != null) {
             commentHolder.iv_icon.setImageBitmap(comment_ic_bm);
         } else {
-            commentHolder.iv_icon.setImageResource(R.drawable.ic_launcher);
+            commentHolder.iv_icon.setImageResource(R.drawable.default_icon);
             commentHolder.iv_icon.setTag(comment_ic_key);
             if (callback != null) {
                 new ImageDownload(callback).execute(AppContants.DOMAIN + comment.user.avatar.small.url, comment_ic_key, ImageDownload.CACHE_TYPE_LRU);
