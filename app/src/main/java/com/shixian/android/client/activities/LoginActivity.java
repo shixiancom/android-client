@@ -3,10 +3,9 @@ package com.shixian.android.client.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -14,9 +13,12 @@ import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.model.User;
 import com.shixian.android.client.sina.AccessTokenKeeper;
+import com.shixian.android.client.sina.Constants;
+import com.shixian.android.client.sina.widget.LoginButton;
 import com.shixian.android.client.utils.CommonUtil;
 import com.shixian.android.client.utils.LoginUtil;
 import com.shixian.android.client.utils.SharedPerenceUtil;
+import com.sina.weibo.sdk.auth.AuthInfo;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.exception.WeiboException;
@@ -29,6 +31,12 @@ public class LoginActivity extends Activity
 
     private ProgressDialog progressDialog;
 
+
+    private LoginButton loginButton;
+
+    private AuthInfo mAuthInfo;
+    private AuthListener mLoginListener = new AuthListener();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -40,14 +48,18 @@ public class LoginActivity extends Activity
         }
 
 
-    private  Button main_login_btn;
+
     private void init() {
         setContentView(R.layout.activity_login);
-        main_login_btn= (Button) findViewById(R.id.main_login_btn);
+
+        loginButton = (LoginButton) findViewById(R.id.login_button_default);
 
 
         progressDialog=new ProgressDialog(this);
         progressDialog.setMessage("正在验证登陆信息");
+        // 创建授权认证信息
+        mAuthInfo = new AuthInfo(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE);
+
 
 //        AccessTokenKeeper.clear(this);
           mAccessToken=AccessTokenKeeper.readAccessToken(LoginActivity.this);
@@ -60,6 +72,8 @@ public class LoginActivity extends Activity
             progressDialog.show();
             LoginUtil.validationToken(LoginActivity.this,mAccessToken,progressDialog);
         }else{
+
+
 
 
             setOnclick();
@@ -81,12 +95,11 @@ public class LoginActivity extends Activity
     }
 
     public void setOnclick() {
-        main_login_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LoginUtil.getToken(LoginActivity.this, new AuthListener());
-            }
-        });
+
+
+
+
+        loginButton.setWeiboAuthInfo(mAuthInfo, mLoginListener);
     }
 
     //微薄登陆回调类
@@ -135,6 +148,15 @@ public class LoginActivity extends Activity
     }
 
 
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+
+         loginButton.onActivityResult(requestCode, resultCode, data);
+    }
+
     @Override
     protected void onDestroy() {
         String userJson= SharedPerenceUtil.getUserInfo(this);
@@ -145,4 +167,7 @@ public class LoginActivity extends Activity
 
         super.onDestroy();
     }
+
+
+
 }

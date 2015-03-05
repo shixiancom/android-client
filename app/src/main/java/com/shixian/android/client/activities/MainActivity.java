@@ -2,9 +2,10 @@ package com.shixian.android.client.activities;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -15,14 +16,16 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,8 +41,6 @@ import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.engine.CommonEngine;
-import com.shixian.android.client.model.Comment;
-import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.NewsSataus;
 import com.shixian.android.client.model.SimpleProject;
 import com.shixian.android.client.model.User;
@@ -58,11 +59,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import cn.jpush.android.api.JPushInterface;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 import android.util.TypedValue;
-import com.shixian.android.client.views.RedPointView;
+
 
 /**
  * Created by doom on 15/2/2.
@@ -113,23 +115,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout ll_descory;
     private LinearLayout ll_index;
-    private LinearLayout ll_msg;
-
-
-
+    private RelativeLayout ll_msg;
 
     //用于记录 当前属于哪个
     private int current_menuid=R.id.ll_index;
 
-
-
-
-
    //private RedPointView titleImgPoint;
-   private RedPointView layMsgPoint;
+   private TextView tv_msg_count;
    private ImageView iv_msg;
 
     private User user;
+
+    private TextView toastView;
+
+    /**
+     * Toast 的Params
+     */
+    private WindowManager.LayoutParams mParams;
+
+    private WindowManager windowManager;
+
+
+
 
 
     @Override
@@ -143,9 +150,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         Global.screenWidth= CommonUtil.getScreenWidth(this);
 
         initUI();
+
+        initJpush();
+
         addFragment();
 
         initDate();
+    }
+
+    private void initJpush() {
+
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
     }
 
     private void initDate() {
@@ -169,8 +185,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     @Override
                     public void run() {
 
+                        //TODO
+
+                       // settingMsgCount(1);
+
                         if(status.total!=0)
                             settingMsgCount(status.total);
+
                         else{
 
                            hideMsg();
@@ -315,8 +336,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void initUI() {
+
+
+
+        windowManager=getWindowManager();
+
+
+
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
 
         drawable=toolbar.getNavigationIcon();
 
@@ -333,9 +362,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //                    case R.id.action_news_search:
 //                        Toast.makeText(MainActivity.this, "Search", Toast.LENGTH_LONG).show();
 //                        break;
-                    case R.id.action_quit:
-                        logout();
-                        break;
+//                    case R.id.action_quit:
+//                        logout();
+//                        break;
                 }
                 return true;
             }
@@ -411,7 +440,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
          * 抽屉中的三个选项
          */
         ll_descory= (LinearLayout) findViewById(R.id.ll_descory);
-        ll_msg= (LinearLayout) findViewById(R.id.ll_msg);
+        ll_msg= (RelativeLayout) findViewById(R.id.ll_msg);
         ll_index= (LinearLayout) findViewById(R.id.ll_index);
 
         ll_descory.setOnClickListener(this);
@@ -436,8 +465,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         iv_msg= (ImageView) findViewById(R.id.iv_msg);
         //TODO
       //  titleImgPoint=new RedPointView(this,toolbar);
-        layMsgPoint=new RedPointView(this,iv_msg);
-       // showMsg(5);
+          tv_msg_count= (TextView) findViewById(R.id.tv_msg_count);
+
 
 
         //头像的点击事件 和用户名的点击事件
@@ -574,6 +603,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
+
+
+
     public void switchFragment(BaseFragment fragment,String key)
     {
 
@@ -660,11 +692,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //        titleImgPoint.setColorBg(Color.RED);
 //        titleImgPoint.setPosition(Gravity.CENTER, Gravity.CENTER);
 
-        layMsgPoint.setContent(count);
-        layMsgPoint.setSizeContent(16);
-        layMsgPoint.setColorContent(Color.WHITE);
-        layMsgPoint.setColorBg(Color.RED);
-        layMsgPoint.setPosition((int) (iv_msg.getX() + 10), (int) iv_msg.getY());
+
+        tv_msg_count.setVisibility(View.VISIBLE);
+
+
+        tv_msg_count.setText(count+"");
+
+ //       showMsg(count);
+
+        showMyToast(count);
+
+
 
 
     }
@@ -673,7 +711,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void hideMsg()
     {
       //  titleImgPoint.hide();
-        layMsgPoint.hide();
+        tv_msg_count.setVisibility(View.GONE);
+        if(toastView!=null)
+            windowManager.removeView(toastView);
 
     }
 
@@ -682,5 +722,97 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onPause() {
         super.onPause();
         drawerLayout.closeDrawers();
+    }
+
+
+    /**
+     * 自定义Toast显示我们的消息数量
+     * @param count
+     */
+    public void showMyToast(int count) {
+        toastView = new TextView(this);
+        toastView.setBackgroundResource(R.drawable.cicle_msg);
+
+        toastView.setText(count+"");
+        toastView.setGravity(Gravity.CENTER);
+
+        mParams = new WindowManager.LayoutParams();
+        mParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        mParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        final SharedPreferences sp=getSharedPreferences("toastlocal",MODE_PRIVATE);
+
+        mParams.gravity = Gravity.LEFT+Gravity.TOP;
+        mParams.x =sp.getInt("lastx", 0);
+        mParams.y = sp.getInt("lasty", 0);
+        mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+//				| WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE   ◊‘∂®“ÂµƒÕ¡Àæ–Ë“™”√ªß¥•√˛
+                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+        mParams.format = PixelFormat.TRANSLUCENT;
+//		mParams.type = WindowManager.LayoutParams.TYPE_TOAST; Õ¡Àæ¥∞ÃÂÃÏ…˙≤ªœÏ”¶¥•√˛ ¬º˛
+        mParams.type = WindowManager.LayoutParams.TYPE_PRIORITY_PHONE;
+
+        windowManager.addView(toastView, mParams);
+
+        // ∏¯view∂‘œÛ…Ë÷√“ª∏ˆ¥•√˛ ¬º˛°£
+        toastView.setOnTouchListener(new View.OnTouchListener() {
+            int startX  ;
+            int startY  ;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+
+                        startX = (int) event.getRawX();
+                        startY = (int) event.getRawY();
+
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+
+                        int newX = (int) event.getRawX();
+                        int newY = (int) event.getRawY();
+
+                        int dx = newX - startX;
+                        int dy = newY - startY;
+
+
+                        mParams.x +=dx;
+                        mParams.y +=dy;
+                        if(mParams.x<0){
+                            mParams.x = 0;
+                        }
+                        if(mParams.y<0){
+                            mParams.y = 0;
+                        }
+                        if(mParams.x>(windowManager.getDefaultDisplay().getWidth()-toastView.getWidth())){
+                            mParams.x=(windowManager.getDefaultDisplay().getWidth()-toastView.getWidth());
+                        }
+                        if(mParams.y>(windowManager.getDefaultDisplay().getHeight()-toastView.getHeight())){
+                            mParams.y=(windowManager.getDefaultDisplay().getHeight()-toastView.getHeight());
+                        }
+                        windowManager.updateViewLayout(toastView, mParams);
+                        startX = (int) event.getRawX();
+                        startY = (int) event.getRawY();
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putInt("lastx", mParams.x);
+                        editor.putInt("lasty", mParams.y);
+                        editor.commit();
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        if(toastView!=null)
+            windowManager.removeView(toastView);
+        super.onDestroy();
     }
 }

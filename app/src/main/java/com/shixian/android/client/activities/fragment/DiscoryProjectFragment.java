@@ -89,7 +89,7 @@ public class DiscoryProjectFragment extends BaseFragment {
 
         projectList = new ArrayList<Project>();
 
-        initCacheData();
+
 
 
         return view;
@@ -186,7 +186,7 @@ public class DiscoryProjectFragment extends BaseFragment {
                 pullToRefreshListView.getListView().setSelection(currentFirstPos);
 
         }else{
-
+            initCacheData();
             initFirst();
         }
 

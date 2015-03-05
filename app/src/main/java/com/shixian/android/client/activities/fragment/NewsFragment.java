@@ -366,7 +366,7 @@ public class NewsFragment extends BaseFragment
                     if (bm != null) {
                         holder.iv_icon.setImageBitmap(bm);
                     } else {
-                        holder.iv_icon.setImageResource(R.drawable.ic_launcher);
+                        holder.iv_icon.setImageResource(R.drawable.default_icon);
                         if (callback != null) {
                             new ImageDownload(callback).execute(AppContants.DOMAIN + news.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
                         }

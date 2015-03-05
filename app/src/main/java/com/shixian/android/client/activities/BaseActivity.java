@@ -27,4 +27,7 @@ public abstract  class BaseActivity extends ActionBarActivity {
     public abstract  void showProgress();
 
     public abstract void dissProgress();
+
+
+
 }

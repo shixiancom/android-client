@@ -23,12 +23,16 @@
         android:textSize="24sp"/>
 
 
-    <Button
-        android:id="@+id/main_login_btn"
+
+
+    <com.shixian.android.client.sina.widget.LoginButton
+        android:id="@+id/login_button_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="75dp"
-        android:background="@drawable/login_weibo_login_btn_bg"/>
+        android:background="@drawable/login_weibo_login_btn_bg"
+        />
+
 </RelativeLayout>

@@ -18,9 +18,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.BaseActivity;
 import com.shixian.android.client.activities.BigImageActivity;
+import com.shixian.android.client.activities.DetailActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.OnClickController;
@@ -619,6 +621,21 @@ public class UserIndexFragment extends BaseFeedFragment {
     }
 
 
+    /*************重写生命周期方法*********************/
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((DetailActivity)context).hideQuitMenu();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(user.id.equals(Global.USER_ID))
+        {
+            ((DetailActivity)context).showQuitMenu();
+        }
 
 
+    }
 }

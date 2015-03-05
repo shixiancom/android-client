@@ -477,7 +477,7 @@ public class MsgDetialFragment extends BaseFragment {
                     if (bm != null) {
                         holder.iv_icon.setImageBitmap(bm);
                     } else {
-                        holder.iv_icon.setImageResource(R.drawable.ic_launcher);
+                        holder.iv_icon.setImageResource(R.drawable.default_icon);
                         holder.iv_icon.setTag(key);
                         if (callback != null) {
                             new ImageDownload(callback).execute(AppContants.DOMAIN+feedEntry.firstEntry.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
@@ -526,7 +526,7 @@ public class MsgDetialFragment extends BaseFragment {
 
                             holder.iv_content.setTag(key2);
                             holder.iv_content.setVisibility(View.VISIBLE);
-                            ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher), callback, key2, AppContants.DOMAIN + allItemType.attachment.url);
+                            ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_tv_content), callback, key2, AppContants.DOMAIN + allItemType.attachment.url);
 
                             break;
                         case "UserProjectRelation":
@@ -638,7 +638,7 @@ public class MsgDetialFragment extends BaseFragment {
                 if (bm != null) {
                     holder.iv_icon.setImageBitmap(bm);
                 } else {
-                    holder.iv_icon.setImageResource(R.drawable.ic_launcher);
+                    holder.iv_icon.setImageResource(R.drawable.default_icon);
                     holder.iv_icon.setTag(position+key);
                     if (callback != null) {
                         new ImageDownload(callback).execute(AppContants.DOMAIN+comment.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);

@@ -106,7 +106,7 @@
                    android:text="首页"/>
                 </LinearLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_height="@dimen/menu_item_height"
                 android:id="@+id/ll_msg"
                 android:gravity="center_vertical"
@@ -115,6 +115,7 @@
                 >
 
                 <ImageView
+
                     android:layout_marginLeft="@dimen/menu_ic_margin_left"
                     android:layout_width="24dp"
                     android:id="@+id/iv_msg"
@@ -125,6 +126,7 @@
 
 
                 <TextView
+                    android:layout_toRightOf="@id/iv_msg"
                     android:textSize="@dimen/menu_tv_sp"
                     android:layout_marginLeft="@dimen/menu_tv_margin_left"
                     android:layout_width="wrap_content"
@@ -132,7 +134,19 @@
                     android:text="消息"
 
                     />
-            </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_msg_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/cicle_msg"
+                    android:text="1"
+                    android:gravity="center"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:visibility="gone"
+                    />
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/ll_descory"

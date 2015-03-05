@@ -570,7 +570,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
             if (bm != null) {
                 holder.iv_icon.setImageBitmap(bm);
             } else {
-                holder.iv_icon.setImageResource(R.drawable.ic_launcher);
+                holder.iv_icon.setImageResource(R.drawable.default_icon);
                 holder.iv_icon.setTag(key);
                 if (callback != null) {
                     new ImageDownload(callback).execute(AppContants.DOMAIN+feed.data.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
@@ -673,7 +673,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
             if (bm != null) {
                 holder.iv_icon.setImageBitmap(bm);
             } else {
-                holder.iv_icon.setImageResource(R.drawable.ic_launcher);
+                holder.iv_icon.setImageResource(R.drawable.default_icon);
                 holder.iv_icon.setTag(position+key);
                 if (callback != null) {
                     new ImageDownload(callback).execute(AppContants.DOMAIN+comment.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
@@ -774,7 +774,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
 
                 feedHolder.iv_content.setTag(key);
                 feedHolder.iv_content.setVisibility(View.VISIBLE);
-                ImageUtil.loadingImage(feedHolder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher), callback, key, AppContants.DOMAIN + feed.data.attachment.url);
+                ImageUtil.loadingImage(feedHolder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_tv_content), callback, key, AppContants.DOMAIN + feed.data.attachment.url);
 
                 break;
             case "UserProjectRelation":
