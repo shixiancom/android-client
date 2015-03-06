@@ -73,7 +73,7 @@ public class IndexFragment extends BaseFeedFragment {
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
             } else {
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
-                adapter.notifyDataSetChanged();
+                //adapter.notifyDataSetChanged();
 
             }
 

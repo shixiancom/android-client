@@ -13,7 +13,7 @@ public interface AppContants {
     /**
      * 服务器接口地址前缀
      */
-    String DOMAIN="http://www.shixian.com";
+    String DOMAIN="http://asset.shixian.com";
 
     /**
      * 获取自身信息url
@@ -70,6 +70,12 @@ public interface AppContants {
 
     // 消息页面的点击事件  有很多相似指出  所以抽出来放在这里喽
     String MSG_RESOPNSE_URL=DOMAIN+"/api/v1/%s/%s.json";
+
+
+   //jpush需要的url
+    String JPUSH_NEED_URL=DOMAIN+"/api/v1/android_tokens";
+
+    String DEBUG_JPUSH_NEED_URL="http://172.168.97.167:3000"+"/api/v1/android_tokens";
 
 
 

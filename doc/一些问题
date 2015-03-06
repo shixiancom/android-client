@@ -1007,3 +1007,8 @@ The content of the adapter has changed but ListView did not receive a notificati
 03-05 20:48:49.889    6188-6188/com.android.MtpApplication E/MtpService﹕ battPlugged Type : 2
 03-05 20:48:50.990      114-114/? E/SMD﹕ DCD OFF
 03-05 20:48:53.990      114-114/? E/SMD﹕ DCD OFF
+
+
+
+android.app.RemoteServiceException: Bad notification posted from package com.shixian.android.client: Couldn't expand RemoteViews for: StatusBarNotification(pkg=com.shixian.android.client user=UserHandle{0} id=-1062403793 tag=null score=0 key=0|com.shixian.android.client|-1062403793|null|10060: Notification(pri=0 contentView=com.shixian.android.client/0x1090078 vibrate=null sound=null defaults=0x0 flags=0x22 color=0x00000000 vis=PRIVATE))
+            at android.app.ActivityThrea

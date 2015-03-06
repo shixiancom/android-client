@@ -526,7 +526,7 @@ public class MsgDetialFragment extends BaseFragment {
 
                             holder.iv_content.setTag(key2);
                             holder.iv_content.setVisibility(View.VISIBLE);
-                            ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_tv_content), callback, key2, AppContants.DOMAIN + allItemType.attachment.thumb.url);
+                            ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_iv), callback, key2, AppContants.DOMAIN + allItemType.attachment.thumb.url);
 
                             break;
                         case "UserProjectRelation":

@@ -93,7 +93,7 @@ public class ImageDownload extends AsyncTask<String, Integer, Bitmap> {
 			opt.inPreferredConfig = Bitmap.Config.RGB_565;
 //			opt.inPurgeable = true;
 //			opt.inInputShareable = true;
-            opt.inSampleSize = 2;
+
             opt.inJustDecodeBounds = false;
 
 

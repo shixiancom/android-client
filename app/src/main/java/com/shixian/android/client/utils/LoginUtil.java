@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -59,7 +60,7 @@ public class LoginUtil {
         final AsyncHttpClient client = new AsyncHttpClient();
 
 
-        client.get("http://www.shixian.com/api/v1/api_login.json", params, new AsyncHttpResponseHandler() {
+        client.get("http://asset.shixian.com/api/v1/api_login.json", params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
 
@@ -100,9 +101,10 @@ public class LoginUtil {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context,context.getResources().getString(R.string.check_net), Toast.LENGTH_LONG).show();
+            //    Toast.makeText(context,context.getResources().getString(R.string.check_net), Toast.LENGTH_LONG).show();
                 progressDialog.dismiss();
                 ((LoginActivity)context).setOnclick();
+
             }
         });
     }

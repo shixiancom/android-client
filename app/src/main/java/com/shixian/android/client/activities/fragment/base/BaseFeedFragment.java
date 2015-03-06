@@ -538,7 +538,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
                     holder.iv_content.setTag(key);
                     holder.iv_content.setVisibility(View.VISIBLE);
 
-                    ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_tv_content), callback, key, AppContants.DOMAIN + feed.data.attachment.thumb.url);
+                    ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_iv), callback, key, AppContants.DOMAIN + feed.data.attachment.thumb.url);
 
                     break;
                 case "UserProjectRelation":
@@ -804,7 +804,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
                 feedHolder.iv_content.setTag(key);
                 feedHolder.iv_content.setVisibility(View.VISIBLE);
 
-                    ImageUtil.loadingImage(feedHolder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_tv_content), callback, key, AppContants.DOMAIN + feed.data.attachment.url);
+                    ImageUtil.loadingImage(feedHolder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_iv), callback, key, AppContants.DOMAIN + feed.data.attachment.url);
 
                 break;
             case "UserProjectRelation":
@@ -908,6 +908,11 @@ public abstract  class BaseFeedFragment extends BaseFragment {
 
         if ("Homework".equals(feed.feedable_type) || "Project".equals(feed.feedable_type) || "Agreement".equals(feed.feedable_type)) {
             feedHolder.tv_response.setVisibility(View.GONE);
+        }
+
+        if(TextUtils.isEmpty(feedHolder.tv_content.getText()))
+        {
+            feedHolder.tv_content.setVisibility(View.GONE);
         }
 
 

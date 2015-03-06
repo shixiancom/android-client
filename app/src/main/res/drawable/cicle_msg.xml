@@ -8,16 +8,19 @@
 
     android:useLevel= "false" >
 
-    <solid android:color= "#ff0000" />
+    <solid android:color= "#B94A48" />
 
+    <!--
     <stroke
 
         android:width= "1dp"
 
         android:color= "@color/white" />
 
-    <size android:width= "30dp"
+        -->
 
-        android:height= "30dp" />
+    <size android:width= "15dp"
+
+        android:height= "15dp" />
 
 </shape>

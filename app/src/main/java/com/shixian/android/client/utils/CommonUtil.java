@@ -1,6 +1,7 @@
 package com.shixian.android.client.utils;
 
 import android.content.Context;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
@@ -28,5 +29,18 @@ public class CommonUtil {
                 .getSystemService(Context.WINDOW_SERVICE);
         Display display = manager.getDefaultDisplay();
         return display.getWidth();
+    }
+
+
+    //获取设备号
+    public static String getImei(Context context, String imei) {
+        try {
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            imei = telephonyManager.getDeviceId();
+        } catch (Exception e) {
+           // Log.e(ExampleUtil.class.getSimpleName(), e.getMessage());
+            Log.e("AAAA","获取设备号码失败");
+        }
+        return imei;
     }
 }

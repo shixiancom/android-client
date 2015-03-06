@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,7 +32,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.fragment.DiscoryProjectFragment;
@@ -65,6 +69,7 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 import android.util.TypedValue;
+import android.widget.ToggleButton;
 
 
 /**
@@ -159,11 +164,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initDate();
     }
 
-    private void initJpush() {
 
-        JPushInterface.setDebugMode(true);
-        JPushInterface.init(this);
-    }
 
     private void initDate() {
 
@@ -172,7 +173,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         //初始化用户的项目
         initUserProjects();
 
-        initMsgStatus();
+
 
     }
 
@@ -196,6 +197,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         else{
 
                            hideMsg();
+
                         }
 
                     }
@@ -292,6 +294,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     Global.USER_ID=user.id;
                     Global.USER_NAME=user.username;
 
+
+                    //发送推送需要的信息
+                    sendJpushData();
+
                     tv_uname.setText(user.username);
 
                     SharedPerenceUtil.putUserInfo(MainActivity.this, userInfo);
@@ -336,17 +342,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         });
     }
 
+
+
+
     private void initUI() {
 
 
 
+
+
         windowManager=getWindowManager();
+
 
         Global.iv_conte_size= DisplayUtil.dip2px(this,200);
 
 
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
 
 
         drawable=toolbar.getNavigationIcon();
@@ -714,8 +728,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     {
       //  titleImgPoint.hide();
         tv_msg_count.setVisibility(View.GONE);
-        if(toastView!=null)
+        if(toastView!=null) {
             windowManager.removeView(toastView);
+            toastView=null;
+        }
 
     }
 
@@ -732,7 +748,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      * @param count
      */
     public void showMyToast(int count) {
+        if(toastView!=null)
+        {
+            getWindowManager().removeView(toastView);
+            toastView=null;
+        }
+
         toastView = new TextView(this);
+        toastView.setTextColor(Color.WHITE);
+        toastView.setTextSize(11);
         toastView.setBackgroundResource(R.drawable.cicle_msg);
 
         toastView.setText(count+"");
@@ -742,11 +766,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         mParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
 
-        final SharedPreferences sp=getSharedPreferences("toastlocal",MODE_PRIVATE);
+
 
         mParams.gravity = Gravity.LEFT+Gravity.TOP;
-        mParams.x =sp.getInt("lastx", 0);
-        mParams.y = sp.getInt("lasty", 0);
+
+        mParams.x=40;
+        mParams.y=40;
         mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
 //				| WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE   ◊‘∂®“ÂµƒÕ¡Àæ–Ë“™”√ªß¥•√˛
                 | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
@@ -754,62 +779,105 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //		mParams.type = WindowManager.LayoutParams.TYPE_TOAST; Õ¡Àæ¥∞ÃÂÃÏ…˙≤ªœÏ”¶¥•√˛ ¬º˛
         mParams.type = WindowManager.LayoutParams.TYPE_PRIORITY_PHONE;
 
+
         windowManager.addView(toastView, mParams);
 
         // ∏¯view∂‘œÛ…Ë÷√“ª∏ˆ¥•√˛ ¬º˛°£
-        toastView.setOnTouchListener(new View.OnTouchListener() {
-            int startX  ;
-            int startY  ;
+//        toastView.setOnTouchListener(new View.OnTouchListener() {
+//            int startX  ;
+//            int startY  ;
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                switch (event.getAction()) {
+//                    case MotionEvent.ACTION_DOWN:
+//
+//                        startX = (int) event.getRawX();
+//                        startY = (int) event.getRawY();
+//
+//                        break;
+//                    case MotionEvent.ACTION_MOVE:
+//
+//                        int newX = (int) event.getRawX();
+//                        int newY = (int) event.getRawY();
+//
+//                        int dx = newX - startX;
+//                        int dy = newY - startY;
+//
+//
+//                        mParams.x +=dx;
+//                        mParams.y +=dy;
+//                        if(mParams.x<0){
+//                            mParams.x = 0;
+//                        }
+//                        if(mParams.y<0){
+//                            mParams.y = 0;
+//                        }
+//                        if(mParams.x>(windowManager.getDefaultDisplay().getWidth()-toastView.getWidth())){
+//                            mParams.x=(windowManager.getDefaultDisplay().getWidth()-toastView.getWidth());
+//                        }
+//                        if(mParams.y>(windowManager.getDefaultDisplay().getHeight()-toastView.getHeight())){
+//                            mParams.y=(windowManager.getDefaultDisplay().getHeight()-toastView.getHeight());
+//                        }
+//                        windowManager.updateViewLayout(toastView, mParams);
+//                        startX = (int) event.getRawX();
+//                        startY = (int) event.getRawY();
+//                        break;
+//
+//                    case MotionEvent.ACTION_UP:
+//
+//                        SharedPreferences.Editor editor = sp.edit();
+//                        editor.putInt("lastx", mParams.x);
+//                        editor.putInt("lasty", mParams.y);
+//                        editor.commit();
+//                        break;
+//                }
+//                return true;
+//            }
+//        });
+   }
+
+    /******************************************************JPUSH****************/
+    /**
+     * 发送极光推送信息
+     */
+    private void sendJpushData() {
+
+        String regId=JPushInterface.getRegistrationID(this);
+        RequestParams params=new RequestParams();
+        params.put("reg_id",regId);
+        params.put("uid",Global.USER_ID);
+        params.put("device",CommonUtil.getImei(this,""));
+
+
+        Log.i("AAAA1","reg:"+regId+" uid:"+Global.USER_ID+" device:"+CommonUtil.getImei(this,""));
+        ApiUtils.post(AppContants.DEBUG_JPUSH_NEED_URL,params,new AsyncHttpResponseHandler() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
+            public void onSuccess(int position, Header[] headers, byte[] bytes) {
+                Toast.makeText(MainActivity.this,"发送成功",Toast.LENGTH_LONG).show();
 
-                        startX = (int) event.getRawX();
-                        startY = (int) event.getRawY();
+                Log.i("AAAAA",new String(bytes));
+            }
 
-                        break;
-                    case MotionEvent.ACTION_MOVE:
+            @Override
+            public void onFailure(int position, Header[] headers, byte[] bytes, Throwable throwable) {
 
-                        int newX = (int) event.getRawX();
-                        int newY = (int) event.getRawY();
-
-                        int dx = newX - startX;
-                        int dy = newY - startY;
-
-
-                        mParams.x +=dx;
-                        mParams.y +=dy;
-                        if(mParams.x<0){
-                            mParams.x = 0;
-                        }
-                        if(mParams.y<0){
-                            mParams.y = 0;
-                        }
-                        if(mParams.x>(windowManager.getDefaultDisplay().getWidth()-toastView.getWidth())){
-                            mParams.x=(windowManager.getDefaultDisplay().getWidth()-toastView.getWidth());
-                        }
-                        if(mParams.y>(windowManager.getDefaultDisplay().getHeight()-toastView.getHeight())){
-                            mParams.y=(windowManager.getDefaultDisplay().getHeight()-toastView.getHeight());
-                        }
-                        windowManager.updateViewLayout(toastView, mParams);
-                        startX = (int) event.getRawX();
-                        startY = (int) event.getRawY();
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-
-                        SharedPreferences.Editor editor = sp.edit();
-                        editor.putInt("lastx", mParams.x);
-                        editor.putInt("lasty", mParams.y);
-                        editor.commit();
-                        break;
-                }
-                return true;
             }
         });
+
+
+
     }
 
+    /**
+     * 初始化极光推送
+     */
+    private void initJpush() {
+
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
+    }
+
+    /*********重写的生命周期方法****************/
     @Override
     protected void onDestroy() {
 
@@ -817,5 +885,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             getWindowManager().removeView(toastView);
         }
         super.onDestroy();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initMsgStatus();
     }
 }
