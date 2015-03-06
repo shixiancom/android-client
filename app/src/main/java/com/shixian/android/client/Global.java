@@ -31,6 +31,8 @@ public class Global {
 
     public static int screenWidth;
 
+    public static int iv_conte_size;
+
 
     //弹出软键盘
     public static void popSoftkeyboard(Context ctx, View view, boolean wantPop) {

@@ -521,12 +521,12 @@ public class MsgDetialFragment extends BaseFragment {
                             type = context.getResources().getString(R.string.feed_add_image);
                             holder.tv_content.setText(Html.fromHtml(allItemType.content_html));
 
-                            String keys2[] = allItemType.attachment.url.split("/");
+                            String keys2[] = allItemType.attachment.thumb.url.split("/");
                             String key2 = keys2[keys2.length - 1];
 
                             holder.iv_content.setTag(key2);
                             holder.iv_content.setVisibility(View.VISIBLE);
-                            ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_tv_content), callback, key2, AppContants.DOMAIN + allItemType.attachment.url);
+                            ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_tv_content), callback, key2, AppContants.DOMAIN + allItemType.attachment.thumb.url);
 
                             break;
                         case "UserProjectRelation":

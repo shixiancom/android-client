@@ -15,7 +15,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="5dp"
         >
-        <com.shixian.android.client.views.RoundCornerImageView
+        <com.shixian.android.client.views.RoundImageView
             android:scaleType="centerCrop"
             android:layout_width="20dp"
             android:layout_height="20dp"

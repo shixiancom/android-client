@@ -20,11 +20,12 @@ public class ImageUtil {
         if (bm != null) {
             iv.setImageBitmap(bm);
         } else {
-            iv.setImageResource(R.drawable.ic_launcher);
+            iv.setImageBitmap(defaultImage);
             iv.setTag(key);
             if (callback != null) {
-                new ImageDownload(callback).execute(url, key, ImageDownload.CACHE_TYPE_LRU);
+                new ImageDownload(callback,true).execute(url, key, ImageDownload.CACHE_TYPE_LRU);
             }
         }
     }
 }
+

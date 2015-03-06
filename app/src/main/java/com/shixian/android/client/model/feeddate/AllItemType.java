@@ -20,6 +20,13 @@ public class AllItemType extends  BaseFeedItem{
 
     public static class Attachment {
         public String url;
+
+        public  Thumb thumb;
+
+
+        public static class  Thumb{
+            public String url;
+        }
     }
 
 }

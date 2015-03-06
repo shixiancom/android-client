@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -63,6 +64,8 @@ public abstract  class BaseFeedFragment extends BaseFragment {
     protected ImageCallback callback;
     protected BaseAdapter adapter;
     protected int currentFirstPos=0;
+
+    protected  boolean isBusy=false;
 
 
 
@@ -206,6 +209,24 @@ public abstract  class BaseFeedFragment extends BaseFragment {
         settingListView(lv);
 
 
+
+        pullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if(scrollState== AbsListView.OnScrollListener.SCROLL_STATE_FLING){
+                    isBusy=true;
+                }else {
+                    isBusy=false;
+
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+
         // 滚动到底自动加载可用
         pullToRefreshListView.setScrollLoadEnabled(true);
 
@@ -261,6 +282,11 @@ public abstract  class BaseFeedFragment extends BaseFragment {
                 if (imageView != null) {
                     imageView.setImageBitmap(bitmap);
                 }
+
+                /**
+                 * TODO
+                 */
+                Log.i("AAAA",bitmap.getRowBytes() * bitmap.getHeight()+"---xxxx--");
             }
         };
     }
@@ -506,12 +532,13 @@ public abstract  class BaseFeedFragment extends BaseFragment {
                     type = context.getResources().getString(R.string.feed_add_image);
                     holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
 
-                    String keys[]=feed.data.attachment.url.split("/");
+                    String keys[]=feed.data.attachment.thumb.url.split("/");
                     String key=keys[keys.length-1];
 
                     holder.iv_content.setTag(key);
                     holder.iv_content.setVisibility(View.VISIBLE);
-                    ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_tv_content), callback, key, AppContants.DOMAIN + feed.data.attachment.url);
+
+                    ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_tv_content), callback, key, AppContants.DOMAIN + feed.data.attachment.thumb.url);
 
                     break;
                 case "UserProjectRelation":
@@ -573,7 +600,8 @@ public abstract  class BaseFeedFragment extends BaseFragment {
                 holder.iv_icon.setImageResource(R.drawable.default_icon);
                 holder.iv_icon.setTag(key);
                 if (callback != null) {
-                    new ImageDownload(callback).execute(AppContants.DOMAIN+feed.data.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
+                    if(!isBusy)
+                        new ImageDownload(callback).execute(AppContants.DOMAIN+feed.data.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
                 }
             }
 
@@ -676,7 +704,8 @@ public abstract  class BaseFeedFragment extends BaseFragment {
                 holder.iv_icon.setImageResource(R.drawable.default_icon);
                 holder.iv_icon.setTag(position+key);
                 if (callback != null) {
-                    new ImageDownload(callback).execute(AppContants.DOMAIN+comment.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
+                    if(!isBusy)
+                        new ImageDownload(callback).execute(AppContants.DOMAIN+comment.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
                 }
             }
 
@@ -774,7 +803,8 @@ public abstract  class BaseFeedFragment extends BaseFragment {
 
                 feedHolder.iv_content.setTag(key);
                 feedHolder.iv_content.setVisibility(View.VISIBLE);
-                ImageUtil.loadingImage(feedHolder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_tv_content), callback, key, AppContants.DOMAIN + feed.data.attachment.url);
+
+                    ImageUtil.loadingImage(feedHolder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_tv_content), callback, key, AppContants.DOMAIN + feed.data.attachment.url);
 
                 break;
             case "UserProjectRelation":
@@ -836,6 +866,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
             feedHolder.iv_icon.setImageResource(R.drawable.default_icon);
             feedHolder.iv_icon.setTag(iconkey);
             if (callback != null) {
+                if(!isBusy)
                 new ImageDownload(callback).execute(AppContants.DOMAIN + feed.data.user.avatar.small.url, iconkey, ImageDownload.CACHE_TYPE_LRU);
             }
         }
@@ -952,6 +983,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
             commentHolder.iv_icon.setImageResource(R.drawable.default_icon);
             commentHolder.iv_icon.setTag(comment_ic_key);
             if (callback != null) {
+                if(!isBusy)
                 new ImageDownload(callback).execute(AppContants.DOMAIN + comment.user.avatar.small.url, comment_ic_key, ImageDownload.CACHE_TYPE_LRU);
             }
         }

@@ -12,8 +12,9 @@ import com.shixian.android.client.contants.AppContants;
 import java.io.File;
 
 public class ImageCache {
-	private static final int MAXSIZE = 1024 * 1024 * 5;// 5M
-	private static final int DIS_CACHE_SIZE = 1024 * 1024 * 10; // 10MB占据SDCard的空间
+
+  //  private static final int MAXSIZE = 1024 * 1024 * 3;// 5M
+	private static final int DIS_CACHE_SIZE = 1024 * 1024 * 100; // 10MB占据SDCard的空间
 	protected static final String TAG = "ImageCache";
 	private static ImageCache cache = new ImageCache();
 
@@ -29,7 +30,9 @@ public class ImageCache {
 		// 当向集合中添加一个Bitmap的时候，能够获知Bitmap所占用的内存大小
 		// maxSize代表当前分配给Bitmap的集合的内存大小
 
-		lrucache = new LruCache<Object, Bitmap>(MAXSIZE) {
+       long cachesize= Runtime.getRuntime().maxMemory()/8;
+
+		lrucache = new LruCache<Object, Bitmap>((int) cachesize) {
 
 			@Override
 			protected int sizeOf(Object key, Bitmap value) {
@@ -81,6 +84,11 @@ public class ImageCache {
 		if (diskLruCache != null) {
 			diskLruCache.put(key.toString(), value);
 		}
+
+
+
+
+
 	}
 
 	public Bitmap get(Object key) {

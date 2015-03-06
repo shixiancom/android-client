@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -258,6 +259,10 @@ public class IndexFragment extends BaseFeedFragment {
                 if (imageView != null) {
                     imageView.setImageBitmap(bitmap);
                 }
+                /**
+                 * TODO
+                 */
+
             }
         };
     }

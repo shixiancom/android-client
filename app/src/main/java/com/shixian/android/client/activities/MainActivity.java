@@ -47,6 +47,7 @@ import com.shixian.android.client.model.User;
 import com.shixian.android.client.sina.AccessTokenKeeper;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
+import com.shixian.android.client.utils.DisplayUtil;
 import com.shixian.android.client.utils.SharedPerenceUtil;
 
 import org.apache.http.Header;
@@ -341,6 +342,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         windowManager=getWindowManager();
 
+        Global.iv_conte_size= DisplayUtil.dip2px(this,200);
 
 
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
@@ -811,8 +813,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
 
-        if(toastView!=null)
-            windowManager.removeView(toastView);
+        if(toastView!=null) {
+            getWindowManager().removeView(toastView);
+        }
         super.onDestroy();
     }
 }
