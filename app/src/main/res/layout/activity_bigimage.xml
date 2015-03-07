@@ -1,0 +1,35 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout
+        android:background="@color/background_floating_material_dark"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <ProgressBar
+                android:background="#000000"
+                android:id="@+id/progress"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        <com.shixian.android.client.views.phoneview.PhotoView
+            android:id="@+id/iv_photo"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_current_matrix"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="#60000000"
+            android:gravity="center"
+            android:textColor="@android:color/white" />
+    </FrameLayout>
+
+</merge>

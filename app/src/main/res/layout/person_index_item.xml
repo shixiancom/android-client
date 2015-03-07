@@ -100,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="3dp"
-                android:text="ACTIVITIES"
+                android:text="@string/user_activity"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -126,7 +126,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="3dp"
-                android:text="PROJECT"
+                android:text="@string/user_projects"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -151,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="3dp"
-                android:text="FLOWERS"
+                android:text="@string/user_ollowers"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -176,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="3dp"
-                android:text="FLLOWINGS"
+                android:text="@string/user_followings"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>

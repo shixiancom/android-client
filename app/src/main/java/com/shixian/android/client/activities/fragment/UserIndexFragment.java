@@ -584,17 +584,6 @@ public class UserIndexFragment extends BaseFeedFragment {
                         Toast.makeText(context,R.string.cant_downlowb, Toast.LENGTH_SHORT).show();
                     }
                 });
-            } else {
-                feedHolder.iv_content.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, BigImageActivity.class);
-                        intent.putExtra("key", (String) feedHolder.iv_content.getTag());
-                        context.startActivity(intent);
-                    }
-                });
-
-
             }
         }
 

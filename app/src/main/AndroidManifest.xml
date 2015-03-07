@@ -80,6 +80,9 @@
         <activity android:name=".activities.BigImageActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".activities.SimpleSampleActivity"/>
+
+
         <!-- 必须注册在微博授权，分享微博时候用到 -->
         <activity android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
             android:configChanges="keyboardHidden|orientation"

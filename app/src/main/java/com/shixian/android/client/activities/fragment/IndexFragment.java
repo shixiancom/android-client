@@ -18,6 +18,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.BaseActivity;
 import com.shixian.android.client.activities.BigImageActivity;
+import com.shixian.android.client.activities.SimpleSampleActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
@@ -378,17 +379,6 @@ public class IndexFragment extends BaseFeedFragment {
 
             if ( "Attachment".equals(feed.feedable_type)) {
                 feedHolder.iv_content.setOnClickListener(controller);
-            } else {
-                feedHolder.iv_content.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, BigImageActivity.class);
-                        intent.putExtra("key", (String) feedHolder.iv_content.getTag());
-                        context.startActivity(intent);
-                    }
-                });
-
-
             }
 
         }

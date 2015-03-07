@@ -1,6 +1,8 @@
 package com.shixian.android.client.activities.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +10,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -504,15 +507,15 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 //                }
 
 
-//        if (holder.tv_content.getVisibility() == View.VISIBLE) {
-//            holder.tv_content.setOnClickListener(controller);
-//        }
 
-//        if(feedHolder.tv_content.getVisibility()==View.VISIBLE)
-//        {
-//            feedHolder.tv_content.setOnClickListener(controller);
-//
-//        }
+
+        if(feedHolder.tv_content.getVisibility()==View.VISIBLE)
+        {
+
+            feedHolder.tv_content.setMovementMethod(LinkMovementMethod.getInstance());
+
+        }
+
 
 
 
@@ -525,17 +528,6 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                         Toast.makeText(context,R.string.cant_downlowb,Toast.LENGTH_SHORT).show();
                     }
                 });
-            }else{
-                feedHolder.iv_content.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent=new Intent(context, BigImageActivity.class);
-                        intent.putExtra("key",(String)feedHolder.iv_content.getTag());
-                        context.startActivity(intent);
-                    }
-                });
-
-
             }
         }
 

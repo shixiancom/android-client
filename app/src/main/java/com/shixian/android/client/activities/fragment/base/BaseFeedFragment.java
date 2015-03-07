@@ -1,5 +1,6 @@
 package com.shixian.android.client.activities.fragment.base;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com.loopj.android.http.RequestParams;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.BaseActivity;
+import com.shixian.android.client.activities.SimpleSampleActivity;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.enter.EnterLayout;
 import com.shixian.android.client.model.Comment;
@@ -283,10 +285,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
                     imageView.setImageBitmap(bitmap);
                 }
 
-                /**
-                 * TODO
-                 */
-                Log.i("AAAA",bitmap.getRowBytes() * bitmap.getHeight()+"---xxxx--");
+
             }
         };
     }
@@ -539,6 +538,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
                     holder.iv_content.setVisibility(View.VISIBLE);
 
                     ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_iv), callback, key, AppContants.DOMAIN + feed.data.attachment.thumb.url);
+
 
                     break;
                 case "UserProjectRelation":
@@ -798,13 +798,18 @@ public abstract  class BaseFeedFragment extends BaseFragment {
                 type = context.getResources().getString(R.string.feed_add_image);
                 feedHolder.tv_content.setText(Html.fromHtml(feed.data.content_html));
 
-                String keys[]=feed.data.attachment.url.split("/");
+                String keys[]=feed.data.attachment.thumb.url.split("/");
                 String key=keys[keys.length-1];
 
+                feedHolder.iv_content.setTag(R.id.tv_content,feed.data.attachment.thumb.url);
+
                 feedHolder.iv_content.setTag(key);
+
                 feedHolder.iv_content.setVisibility(View.VISIBLE);
 
-                    ImageUtil.loadingImage(feedHolder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_iv), callback, key, AppContants.DOMAIN + feed.data.attachment.url);
+               ImageUtil.loadingImage(feedHolder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_iv), callback, key, AppContants.DOMAIN + feed.data.attachment.thumb.url);
+
+              ivContentOnClickListener(feedHolder,feed.data.attachment.thumb.url);
 
                 break;
             case "UserProjectRelation":
@@ -918,6 +923,20 @@ public abstract  class BaseFeedFragment extends BaseFragment {
 
     }
 
+    private void ivContentOnClickListener(final FeedHolder feedHolder,final String url) {
+
+        feedHolder.iv_content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, SimpleSampleActivity.class);
+                intent.putExtra("key", (String) feedHolder.iv_content.getTag());
+                intent.putExtra("url", url);
+
+
+                context.startActivity(intent);
+            }
+        });
+    }
 
 
     protected View initCommentItem(View convertView) {
@@ -1003,6 +1022,10 @@ public abstract  class BaseFeedFragment extends BaseFragment {
 
 
 
+
+
+
+
     public static class FeedHolder {
 
         //事件类型 比如发布一个项目
@@ -1047,5 +1070,9 @@ public abstract  class BaseFeedFragment extends BaseFragment {
         public LinearLayout ll_body;
 
     }
+
+
+
+
 
 }
