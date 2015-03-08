@@ -16,9 +16,9 @@
 package com.shixian.android.client.activities;
 
 import android.app.Activity;
+import android.app.MediaRouteButton;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.net.Uri;
@@ -30,21 +30,28 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.shixian.android.client.R;
+import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
-import com.shixian.android.client.utils.DisplayUtil;
-import com.shixian.android.client.utils.ImageCache;
-import com.shixian.android.client.utils.ImageCallback;
-import com.shixian.android.client.utils.ImageDownload;
 import com.shixian.android.client.views.phoneview.PhotoViewAttacher;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -52,8 +59,8 @@ import java.util.Random;
 public class SimpleSampleActivity extends Activity {
 
 
-    private ProgressBar progressBar;
-    private ImageCallback callback;
+    private  ProgressBar progressBar;
+
 
     static final String PHOTO_TAP_TOAST_STRING = "Photo Tap! X: %.2f %% Y:%.2f %% ID: %d";
     static final String SCALE_TOAST_STRING = "Scaled to: %.2ff";
@@ -68,40 +75,47 @@ public class SimpleSampleActivity extends Activity {
 
     private ImageView mImageView;
 
+    static final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
+
+
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bigimage);
 
-        initImageCallBack();
+
+        DisplayImageOptions contentOptions = new DisplayImageOptions
+                .Builder()
+                .showImageOnLoading(R.drawable.default_iv)
+                .showImageForEmptyUri(R.drawable.default_iv)
+                .showImageOnFail(R.drawable.default_iv)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true).bitmapConfig(Bitmap.Config.ARGB_8888)
+                .imageScaleType(ImageScaleType.EXACTLY)
+                .build();
 
 
         progressBar= (ProgressBar) findViewById(R.id.progress);
 
 
-
         progressBar.setVisibility(View.VISIBLE);
+
+
 
 
          mImageView = (ImageView) findViewById(R.id.iv_photo);
         mCurrMatrixTv = (TextView) findViewById(R.id.tv_current_matrix);
 
-        final String key=getIntent().getStringExtra("key");
-        Bitmap bt= ImageCache.getInstance().get(key);
+
 
         //bt.reconfigure(DisplayUtil.dip2px(this,200),bt.getHeight()*bt.getWidth()/200,bt.getConfig());
 
 
 
-        if(bt!=null) {
-
-            mImageView.setImageBitmap(bt);
-        }else{
-            bt= BitmapFactory.decodeResource(getResources(), R.drawable.login_icon);
-        }
-
-
-        mImageView.setImageBitmap(bt);
         // The MAGIC happens here!
         mAttacher = new PhotoViewAttacher(mImageView);
 
@@ -112,24 +126,10 @@ public class SimpleSampleActivity extends Activity {
         //下载载原图
 
         String url=getIntent().getStringExtra("url");
-        String iconkeys[] = url.split("/");
-        String iconkey = iconkeys[iconkeys.length - 1]+"BIG";
+        ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
 
-//                ImageUtil.loadingImage(holder.iv_icon, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.user.avatar.small.url);
 
-        Bitmap ic_bm = ImageCache.getInstance().get(iconkey);
-
-        if (ic_bm != null) {
-            mImageView.setImageBitmap(ic_bm);
-            progressBar.setVisibility(View.GONE);
-        } else {
-
-            mImageView.setTag(iconkey);
-            if (callback != null) {
-
-                    new ImageDownload(callback).execute(AppContants.DOMAIN + url, iconkey, ImageDownload.CACHE_TYPE_LRU);
-            }
-        }
+        ImageLoader.getInstance().displayImage(AppContants.DOMAIN + url, mImageView, contentOptions, animateFirstListener);
 
 
 
@@ -228,25 +228,39 @@ public class SimpleSampleActivity extends Activity {
     }
 
 
-    protected void initImageCallBack() {
-        this.callback=new ImageCallback() {
-
-            @Override
-            public void imageLoaded(Bitmap bitmap, Object tag) {
+    public  class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
 
 
+        @Override
+        public void onLoadingStarted(String imageUri, View view) {
 
-                if (bitmap != null) {
-                    mImageView.setImageBitmap(bitmap);
-                    progressBar.setVisibility(View.GONE);
-                }else{
-                    Toast.makeText(SimpleSampleActivity.this,"下载原图失败",Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+            super.onLoadingStarted(imageUri, view);
+        }
+
+        @Override
+        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+            progressBar.setVisibility(View.GONE);
+            super.onLoadingFailed(imageUri, view, failReason);
+        }
+
+
+
+        @Override
+        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+
+//            progressBar.setVisibility(View.GONE);
+            if (loadedImage != null) {
+                ImageView imageView = (ImageView) view;
+                boolean firstDisplay = !displayedImages.contains(imageUri);
+                if (firstDisplay) {
+                    FadeInBitmapDisplayer.animate(imageView, 500);
+                    displayedImages.add(imageUri);
                 }
-
-
             }
-        };
+        }
     }
+
+
 
 }

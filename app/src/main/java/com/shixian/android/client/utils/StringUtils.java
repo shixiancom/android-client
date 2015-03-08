@@ -12,7 +12,7 @@ public class StringUtils {
 
     public static String trmDiv(String content)
     {
-        if(content.startsWith("<div>"))
+        if(content.startsWith("<div>")&&content.endsWith("</div>"))
         {
             return content.substring(5,content.length()-1-5);
         }

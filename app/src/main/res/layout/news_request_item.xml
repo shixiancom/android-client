@@ -92,6 +92,7 @@
         android:textColor="#666666"
         android:layout_marginTop="@dimen/content_top"
         android:layout_marginBottom="10dp"
+            android:textIsSelectable="true"
         />
 
         <Button

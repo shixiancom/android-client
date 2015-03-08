@@ -1,9 +1,6 @@
 package com.shixian.android.client.activities.fragment;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
+
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -18,10 +15,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.BaseActivity;
-import com.shixian.android.client.activities.BigImageActivity;
 import com.shixian.android.client.activities.DetailActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
@@ -34,11 +32,6 @@ import com.shixian.android.client.model.User;
 import com.shixian.android.client.model.feeddate.BaseFeed;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
-import com.shixian.android.client.utils.DisplayUtil;
-import com.shixian.android.client.utils.ImageCache;
-import com.shixian.android.client.utils.ImageCallback;
-import com.shixian.android.client.utils.ImageDownload;
-import com.shixian.android.client.utils.ImageUtil;
 import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
 import com.shixian.android.client.utils.StringUtils;
@@ -74,14 +67,15 @@ public class UserIndexFragment extends BaseFeedFragment {
                 adapter = new UserIndexFeedAdapte();
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
             } else {
-                adapter.notifyDataSetChanged();
+                pullToRefreshListView.getListView().setAdapter(adapter);
+
+
             }
 
     }
 
     @Override
     protected void initFirst() {
-        initImageCallBack();
         initFirstData();
     }
 
@@ -90,22 +84,6 @@ public class UserIndexFragment extends BaseFeedFragment {
         context.setLable(getString(R.string.label_profile));
     }
 
-    @Override
-    protected void initImageCallBack() {
-        this.callback = new ImageCallback() {
-
-            @Override
-            public void imageLoaded(Bitmap bitmap, Object tag) {
-                ImageView imageView = (ImageView) pullToRefreshListView.getListView()
-                        .findViewWithTag(tag);
-
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-
-                }
-            }
-        };
-    }
 
     @Override
     protected void getNextData() {
@@ -116,7 +94,6 @@ public class UserIndexFragment extends BaseFeedFragment {
                 final String temp = new String(bytes);
                 if (!AppContants.errorMsg.equals(bytes)) {
                     //获取第一页数据
-
                     new Thread() {
                         public void run() {
 
@@ -155,9 +132,7 @@ public class UserIndexFragment extends BaseFeedFragment {
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
-//                Log.i("AAAA", new String(bytes));
 
-                //TODO 错误可能定义的不是太准确  最后一天调整
                 Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
                 pullToRefreshListView.onPullUpRefreshComplete();
                 page -= 1;
@@ -167,7 +142,6 @@ public class UserIndexFragment extends BaseFeedFragment {
 
     @Override
     public void initDate(Bundle savedInstanceState) {
-        initImageCallBack();
         if (feedList != null && feedList.size() > 0) {
             if (adapter == null) {
                 adapter = new UserIndexFeedAdapte();
@@ -311,7 +285,7 @@ public class UserIndexFragment extends BaseFeedFragment {
 
     public static final int TYPE_USERITEM = 2;
 
-    class UserIndexFeedAdapte extends BaseAdapter {
+    class UserIndexFeedAdapte extends BaseFeedAdapter {
 
         @Override
         public int getCount() {
@@ -375,19 +349,10 @@ public class UserIndexFragment extends BaseFeedFragment {
                     String keys[] = user.avatar.small.url.split("/");
                     String key = keys[keys.length - 1];
 
-                    Bitmap bm = ImageCache.getInstance().get(key);
 
-                    if (bm != null) {
-                        iv_icon.setImageBitmap(bm);
-                    } else {
-                        iv_icon.setImageResource(R.drawable.ic_launcher);
-                        iv_icon.setTag(key);
-                        if (callback != null) {
-                            new ImageDownload(callback).execute(AppContants.DOMAIN + user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
-                        }
-                    }
+                    ImageLoader.getInstance().displayImage(AppContants.DOMAIN + user.avatar.small.url, iv_icon, feedOptions, animateFirstListener);
 
-                    //TODO
+
                     if (user.has_followed) {
                         bt_follow.setBackgroundResource(R.drawable.shape_unfollow);
                         bt_follow.setText(R.string.following);
@@ -459,37 +424,35 @@ public class UserIndexFragment extends BaseFeedFragment {
                 case BaseFeed.TYPE_FEED:
 
 
-
-                    view=initFeedItemView2(convertView);
-                    FeedHolder feedHolder= (FeedHolder) view.getTag();
+                    view = initFeedItemView2(convertView);
+                    FeedHolder feedHolder = (FeedHolder) view.getTag();
 
 /******************************************************************/
                     Feed2 feed = (Feed2) feedList.get(position - 1);
-                    feed.position=position-1;
-                    initFeedItemViewData(feed,feedHolder);
+                    feed.position = position - 1;
+                    initFeedItemViewData(feed, feedHolder, animateFirstListener);
 /**************************************************/
-                   initFeedItemOnClick(feed,feedHolder);
+                    initFeedItemOnClick(feed, feedHolder);
 
 
                     break;
 
                 case BaseFeed.TYPE_COMMENT:
 
-                   view= initCommentItem(convertView);
+                    view = initCommentItem(convertView);
 
 
-
-                   CommentHolder commentHolder = (CommentHolder) view.getTag();
+                    CommentHolder commentHolder = (CommentHolder) view.getTag();
 
 
 /**************************************************************/
-                   Comment comment = (Comment) feedList.get(position - 1);
-                   initCommentItemData(comment,commentHolder);
+                    Comment comment = (Comment) feedList.get(position - 1);
+                    initCommentItemData(comment, commentHolder, animateFirstListener);
 
 
 /******************************************/
 
-                   initCommentItemOnClick(comment,commentHolder);
+                    initCommentItemOnClick(comment, commentHolder);
                     break;
             }
 
@@ -498,7 +461,7 @@ public class UserIndexFragment extends BaseFeedFragment {
         }
     }
 
-    protected void initCommentItemOnClick(final Comment comment,CommentHolder commentHolder) {
+    protected void initCommentItemOnClick(final Comment comment, CommentHolder commentHolder) {
 
         OnClickController controller = new OnClickController(context, comment);
 
@@ -518,7 +481,7 @@ public class UserIndexFragment extends BaseFeedFragment {
             commentHolder.tv_content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    popComment(v, comment, lv,0);
+                    popComment(v, comment, listView, 0);
                 }
             });
 
@@ -535,7 +498,7 @@ public class UserIndexFragment extends BaseFeedFragment {
                     //是否要在feed中增加一条纪录该feed所有的评论数  还是有其他更好的方法  增加评论数到不难
                     //但是这肯定不是优雅的做法  由于一开始没有好好的构思 现在可能考虑投机取巧的方法去解决
 
-                    popComment(v, comment.parent, lv,1);
+                    popComment(v, comment.parent, listView, 1);
 
                     //也只能这么做了
 
@@ -550,8 +513,7 @@ public class UserIndexFragment extends BaseFeedFragment {
     }
 
 
-
-    protected void initFeedItemOnClick(final Feed2 feed,final FeedHolder feedHolder) {
+    protected void initFeedItemOnClick(final Feed2 feed, final FeedHolder feedHolder) {
 
         OnClickController feedcontroller = new OnClickController(context, feed);
 
@@ -581,7 +543,7 @@ public class UserIndexFragment extends BaseFeedFragment {
                 feedHolder.iv_content.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(context,R.string.cant_downlowb, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.cant_downlowb, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -597,7 +559,7 @@ public class UserIndexFragment extends BaseFeedFragment {
                     //是否要在feed中增加一条纪录该feed所有的评论数  还是有其他更好的方法  增加评论数到不难
                     //但是这肯定不是优雅的做法  由于一开始没有好好的构思 现在可能考虑投机取巧的方法去解决
 
-                    popComment(v, feed, lv,1);
+                    popComment(v, feed, listView, 1);
 
                     //也只能这么做了
 
@@ -610,19 +572,20 @@ public class UserIndexFragment extends BaseFeedFragment {
     }
 
 
-    /*************重写生命周期方法*********************/
+    /**
+     * **********重写生命周期方法********************
+     */
     @Override
     public void onPause() {
         super.onPause();
-        ((DetailActivity)context).hideQuitMenu();
+        ((DetailActivity) context).hideQuitMenu();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(user.id.equals(Global.USER_ID))
-        {
-            ((DetailActivity)context).showQuitMenu();
+        if (user.id.equals(Global.USER_ID)) {
+            ((DetailActivity) context).showQuitMenu();
         }
 
 

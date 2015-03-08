@@ -110,7 +110,9 @@ public class DiscoryProjectFragment extends BaseFragment {
             pullToRefreshListView.getListView().setAdapter(adapter);
 
         } else {
-            adapter.notifyDataSetChanged();
+            pullToRefreshListView.getListView().setAdapter(adapter);
+
+
         }
 
     }
@@ -256,6 +258,11 @@ public class DiscoryProjectFragment extends BaseFragment {
         currentFirstPos=pullToRefreshListView.getListView().getFirstVisiblePosition();
         super.onDestroyView();
 
+    }
+
+    @Override
+    public void setCurrentPosition(int position) {
+        pullToRefreshListView.getListView().setSelection(position);
     }
 
     class ProjectAdapter extends BaseAdapter {

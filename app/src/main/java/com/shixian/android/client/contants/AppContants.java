@@ -111,4 +111,14 @@ public interface AppContants {
      */
     int PAGESIZE=10;
 
+
+
+
+
+
+
+
+    /*************************定义的一些action************************/
+    String ACTION_FINISHACTIVITY="com.shixian.android.client.finishactivity";
+
 }

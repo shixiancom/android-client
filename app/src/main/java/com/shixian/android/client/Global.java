@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.shixian.android.client.model.User;
-import com.shixian.android.client.utils.ImageCache;
+
 
 /**
  * Created by s0ng on 2015/2/9.
@@ -27,7 +27,7 @@ public class Global {
     //cookie的格式是  key=value  传送的时候记得拆分
     public static String cookie;
 
-    public static ImageCache IMGCACHE=ImageCache.getInstance();
+
 
     public static int screenWidth;
 

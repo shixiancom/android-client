@@ -107,6 +107,7 @@
                 </LinearLayout>
 
             <RelativeLayout
+                android:layout_gravity="center_vertical"
                 android:layout_height="@dimen/menu_item_height"
                 android:id="@+id/ll_msg"
                 android:gravity="center_vertical"
@@ -126,16 +127,19 @@
 
 
                 <TextView
+                    android:id="@+id/tv_msg"
                     android:layout_toRightOf="@id/iv_msg"
                     android:textSize="@dimen/menu_tv_sp"
                     android:layout_marginLeft="@dimen/menu_tv_margin_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="消息"
+                    android:layout_alignTop="@+id/iv_msg"
 
                     />
 
                 <TextView
+                    android:layout_toRightOf="@id/tv_msg"
                     android:id="@+id/tv_msg_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -143,10 +147,11 @@
                     android:text="1"
                     android:textSize="11sp"
                     android:textColor="#ffffff"
-                    android:gravity="center"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginLeft="24dp"
                     android:visibility="gone"
+
+
                     />
             </RelativeLayout>
 

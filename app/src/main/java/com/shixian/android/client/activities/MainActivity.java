@@ -1,5 +1,6 @@
 package com.shixian.android.client.activities;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,6 +46,7 @@ import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.engine.CommonEngine;
+import com.shixian.android.client.model.News;
 import com.shixian.android.client.model.NewsSataus;
 import com.shixian.android.client.model.SimpleProject;
 import com.shixian.android.client.model.User;
@@ -78,6 +80,8 @@ import android.widget.ToggleButton;
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private String TAG = "MainActivity";
+
+
 
 
     /**
@@ -124,7 +128,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private RelativeLayout ll_msg;
 
     //用于记录 当前属于哪个
-    private int current_menuid=R.id.ll_index;
+    private BaseFragment currentFeed;
 
    //private RedPointView titleImgPoint;
    private TextView tv_msg_count;
@@ -150,6 +154,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_main);
+
+
+
+
 
         Global.MAIN=this;
         Global.context=this;
@@ -354,6 +362,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         windowManager=getWindowManager();
 
 
+
         Global.iv_conte_size= DisplayUtil.dip2px(this,200);
 
 
@@ -386,9 +395,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
         });
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name) {
+
+
             @Override
             public void onDrawerOpened(View drawerView) {
   //              Toast.makeText(MainActivity.this, "打开", Toast.LENGTH_LONG).show();
+
+                if(toastView!=null)
+                {
+                    toastView.setVisibility(View.GONE);
+                }
+
                 super.onDrawerOpened(drawerView);
 
                 //打开重新加载数据
@@ -402,6 +419,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             public void onDrawerClosed(View drawerView) {
             //    Toast.makeText(MainActivity.this, "关闭", Toast.LENGTH_LONG).show();
                 super.onDrawerClosed(drawerView);
+                if(toastView!=null)
+                {
+                    toastView.setVisibility(View.VISIBLE);
+                }
 
             }
         };
@@ -515,6 +536,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void addFragment() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         IndexFragment indexFragment=new IndexFragment();
+        currentFeed=indexFragment;
         fragmentTransaction.replace(R.id.main_fragment_layout, indexFragment);
         fragmentTransaction.commit();
     }
@@ -531,21 +553,40 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
 
         onBackQuit=false;
+
         switch (v.getId())
         {
             case R.id.ll_descory:
-                switchFragment(new DiscoryProjectFragment(),null);
+
+                if(currentFeed instanceof  DiscoryProjectFragment) {
+                    currentFeed.setCurrentPosition(0);
+                    drawerLayout.closeDrawers();
+                    return;
+                }
+                switchFragment(new DiscoryProjectFragment(),"ll_descory");
                 isIndex=false;
+
                 break;
             case R.id.ll_index:
                 isIndex=true;
-                switchFragment(new IndexFragment(),null);
+                if(currentFeed instanceof IndexFragment) {
+                    currentFeed.setCurrentPosition(0);
+                    drawerLayout.closeDrawers();
+                    return;
+                }
+                switchFragment(new IndexFragment(),"ll_index");
 
                 break;
             case R.id.ll_msg:
+                if(currentFeed instanceof  NewsFragment) {
+                    currentFeed.setCurrentPosition(0);
+                    drawerLayout.closeDrawers();
+                    return;
+                }
                 hideMsg();
-                switchFragment(new NewsFragment(),null);
+                switchFragment(new NewsFragment(),"ll_msg");
                 isIndex=false;
+
                 break;
         }
 
@@ -632,14 +673,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         {
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
+
+        }else {
+            fragmentTransaction.addToBackStack(null);
         }
 
-//        fragmentTransaction.
 
-//        NewsFragment newsFragment = new NewsFragment();
+
+
+
+        currentFeed=fragment;
+
+
 
         fragmentTransaction.replace(R.id.main_fragment_layout, fragment);
-        fragmentTransaction.addToBackStack(key);
+       // fragmentTransaction.replace(R.id.main_fragment_layout, fragment);
+
         fragmentTransaction.commit();
         drawerLayout.closeDrawers();
 
@@ -677,7 +726,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 Toast.makeText(this,"再次按返回键退出",Toast.LENGTH_SHORT).show();
             }
         }else{
-            super.onBackPressed();
+
+                super.onBackPressed();
         }
 
 
@@ -685,15 +735,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
-    //退出登陆操作  首先要清理数据 启动LoginActivity页面 然后finish
-    public void logout()
-    {
-        SharedPerenceUtil.clearAllData(this);
-        AccessTokenKeeper.clear(this);
-        Intent intent=new Intent(this,LoginActivity.class);
-        startActivity(intent);
-        finish();
-    }
+
 
 /*****************************************************************/
     /**
@@ -728,9 +770,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     {
       //  titleImgPoint.hide();
         tv_msg_count.setVisibility(View.GONE);
+
+        if(toastView!=null)
+            getWindowManager().removeView(toastView);
+    }
+
+    private void hideMyToast()
+    {
         if(toastView!=null) {
-            windowManager.removeView(toastView);
-            toastView=null;
+            toastView.setVisibility(View.GONE);
         }
 
     }
@@ -770,10 +818,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         mParams.gravity = Gravity.LEFT+Gravity.TOP;
 
-        mParams.x=40;
-        mParams.y=40;
+        mParams.x=DisplayUtil.dip2px(this,30);
+        mParams.y=DisplayUtil.dip2px(this,30);
         mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-//				| WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE   ◊‘∂®“ÂµƒÕ¡Àæ–Ë“™”√ªß¥•√˛
+//				| WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
                 | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
         mParams.format = PixelFormat.TRANSLUCENT;
 //		mParams.type = WindowManager.LayoutParams.TYPE_TOAST; Õ¡Àæ¥∞ÃÂÃÏ…˙≤ªœÏ”¶¥•√˛ ¬º˛
@@ -849,7 +897,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         params.put("device",CommonUtil.getImei(this,""));
 
 
-        Log.i("AAAA1","reg:"+regId+" uid:"+Global.USER_ID+" device:"+CommonUtil.getImei(this,""));
         ApiUtils.post(AppContants.DEBUG_JPUSH_NEED_URL,params,new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int position, Header[] headers, byte[] bytes) {
@@ -892,5 +939,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onResume() {
         super.onResume();
         initMsgStatus();
+
     }
 }

@@ -24,7 +24,6 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.BaseActivity;
-import com.shixian.android.client.activities.BigImageActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.OnClickController;
@@ -35,10 +34,6 @@ import com.shixian.android.client.model.Project;
 import com.shixian.android.client.model.feeddate.BaseFeed;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
-import com.shixian.android.client.utils.DisplayUtil;
-import com.shixian.android.client.utils.ImageCache;
-import com.shixian.android.client.utils.ImageDownload;
-import com.shixian.android.client.utils.ImageUtil;
 import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
 import com.shixian.android.client.utils.TimeUtil;
@@ -79,7 +74,9 @@ public class ProjectFeedFragment extends BaseFeedFragment {
             pullToRefreshListView.getListView().setAdapter(adapter);
 
         } else {
-            adapter.notifyDataSetChanged();
+            pullToRefreshListView.getListView().setAdapter(adapter);
+
+
         }
 
     }
@@ -88,7 +85,6 @@ public class ProjectFeedFragment extends BaseFeedFragment {
     protected void initFirst() {
         project.id= Integer.parseInt((String) getArguments().get("project_id"));
 
-        initImageCallBack();
         initFirstData();
     }
 
@@ -319,7 +315,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
 
     public static final int TYPE_PROJECT=2;
-    class ProjectFeedAdapter extends BaseAdapter{
+    class ProjectFeedAdapter extends BaseFeedAdapter{
 
         @Override
         public int getCount() {
@@ -441,7 +437,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 /******************************************************************/
                     Feed2 feed = (Feed2) feedList.get(position - 1);
                     feed.position=position-1;
-                    initFeedItemViewData(feed,feedHolder);
+                    initFeedItemViewData(feed,feedHolder,animateFirstListener);
 /**************************************************/
                     initFeedItemOnClick(feed,feedHolder);
 
@@ -460,7 +456,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
 /**************************************************************/
                     Comment comment = (Comment) feedList.get(position - 1);
-                    initCommentItemData(comment,commentHolder);
+                    initCommentItemData(comment,commentHolder,animateFirstListener);
 
 
 /******************************************/
@@ -542,7 +538,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                     //是否要在feed中增加一条纪录该feed所有的评论数  还是有其他更好的方法  增加评论数到不难
 
 
-                    popComment(v, feed, lv,1);
+                    popComment(v, feed, listView,1);
 
 
                 }
@@ -589,7 +585,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
             commentHolder.tv_content.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        popComment(v,comment,lv,0);
+                        popComment(v,comment,listView,0);
                     }
                 });
 
@@ -610,7 +606,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                     //是否要在feed中增加一条纪录该feed所有的评论数  还是有其他更好的方法  增加评论数到不难
                     //但是这肯定不是优雅的做法  由于一开始没有好好的构思 现在可能考虑投机取巧的方法去解决
 
-                        popComment(v,comment.parent,lv,1);
+                        popComment(v,comment.parent,listView,1);
 
 
                 }

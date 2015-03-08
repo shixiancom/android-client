@@ -54,6 +54,7 @@
         android:textSize="15sp"
         android:textColor="#666666"
         android:lineSpacingMultiplier="1.3"
+        android:textIsSelectable="true"
         />
 
     <View

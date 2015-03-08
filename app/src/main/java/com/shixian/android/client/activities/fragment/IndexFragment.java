@@ -16,9 +16,6 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.R;
-import com.shixian.android.client.activities.BaseActivity;
-import com.shixian.android.client.activities.BigImageActivity;
-import com.shixian.android.client.activities.SimpleSampleActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
@@ -27,11 +24,7 @@ import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.feeddate.BaseFeed;
 import com.shixian.android.client.utils.CommonUtil;
-import com.shixian.android.client.utils.DisplayUtil;
-import com.shixian.android.client.utils.ImageCache;
-import com.shixian.android.client.utils.ImageCallback;
-import com.shixian.android.client.utils.ImageDownload;
-import com.shixian.android.client.utils.ImageUtil;
+
 import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
 import com.shixian.android.client.utils.TimeUtil;
@@ -60,7 +53,9 @@ public class IndexFragment extends BaseFeedFragment {
             pullToRefreshListView.getListView().setAdapter(adapter);
 
         } else {
-            adapter.notifyDataSetChanged();
+            pullToRefreshListView.getListView().setAdapter(adapter);
+
+
         }
 
     }
@@ -233,9 +228,13 @@ public class IndexFragment extends BaseFeedFragment {
     protected void initFirst() {
         initCacheData();
 
-        initImageCallBack();
         initFirstData();
 
+    }
+
+    public  void setCurrentPosition(int position)
+    {
+        listView.setSelection(position);
     }
 
     /**
@@ -246,27 +245,8 @@ public class IndexFragment extends BaseFeedFragment {
         context.setLable(getString(R.string.label_index));
     }
 
-    /**
-     * 初始化图片处理回调类
-     */
-    protected void initImageCallBack() {
-        this.callback = new ImageCallback() {
 
-            @Override
-            public void imageLoaded(Bitmap bitmap, Object tag) {
-                ImageView imageView = (ImageView) pullToRefreshListView.getListView()
-                        .findViewWithTag(tag);
 
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                }
-                /**
-                 * TODO
-                 */
-
-            }
-        };
-    }
 
 
     /************************************Adapter**********************************************/
@@ -274,7 +254,8 @@ public class IndexFragment extends BaseFeedFragment {
     /**
      * adapter对象
      */
-    class FeedAdapter extends BaseAdapter {
+    class FeedAdapter extends BaseFeedAdapter {
+
 
         @Override
         public int getCount() {
@@ -318,7 +299,7 @@ public class IndexFragment extends BaseFeedFragment {
 /******************************************************************/
                     Feed2 feed = (Feed2) feedList.get(position );
                     feed.position=position;
-                    initFeedItemViewData(feed,feedHolder);
+                    initFeedItemViewData(feed,feedHolder,animateFirstListener);
 /**************************************************/
                     initFeedItemOnClick(feed,feedHolder);
 
@@ -337,7 +318,7 @@ public class IndexFragment extends BaseFeedFragment {
 
 /**************************************************************/
                     Comment comment = (Comment) feedList.get(position);
-                    initCommentItemData(comment,commentHolder);
+                    initCommentItemData(comment,commentHolder,animateFirstListener);
 
 
 /******************************************/
@@ -345,8 +326,6 @@ public class IndexFragment extends BaseFeedFragment {
                     initCommentItemOnClick(comment,commentHolder);
                     break;
             }
-
-
 
             return view;
 
@@ -393,7 +372,7 @@ public class IndexFragment extends BaseFeedFragment {
                     //是否要在feed中增加一条纪录该feed所有的评论数  还是有其他更好的方法  增加评论数到不难
                     //但是这肯定不是优雅的做法  由于一开始没有好好的构思 现在可能考虑投机取巧的方法去解决
 
-                        popComment(v, feed, lv,1);
+                        popComment(v, feed, listView,1);
 
                     //也只能这么做了
 
@@ -420,7 +399,7 @@ public class IndexFragment extends BaseFeedFragment {
             commentHolder.tv_content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    popComment(v, comment, lv,0);
+                    popComment(v, comment, listView,0);
                 }
             });
         }
@@ -437,7 +416,7 @@ public class IndexFragment extends BaseFeedFragment {
                     //是否要在feed中增加一条纪录该feed所有的评论数  还是有其他更好的方法  增加评论数到不难
                     //但是这肯定不是优雅的做法  由于一开始没有好好的构思 现在可能考虑投机取巧的方法去解决
 
-                        popComment(v, comment.parent, lv,1);
+                        popComment(v, comment.parent, listView,1);
                     }
                     //也只能这么做了
 

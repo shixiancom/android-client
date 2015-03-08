@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,10 +24,17 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.BaseActivity;
-import com.shixian.android.client.activities.BigImageActivity;
+
+import com.shixian.android.client.activities.SimpleSampleActivity;
+import com.shixian.android.client.activities.fragment.base.AbsListViewBaseFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
@@ -43,10 +51,6 @@ import com.shixian.android.client.model.feeddate.BaseFeed;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
 import com.shixian.android.client.utils.DisplayUtil;
-import com.shixian.android.client.utils.ImageCache;
-import com.shixian.android.client.utils.ImageCallback;
-import com.shixian.android.client.utils.ImageDownload;
-import com.shixian.android.client.utils.ImageUtil;
 import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
 import com.shixian.android.client.utils.StringUtils;
@@ -64,13 +68,13 @@ import com.shixian.android.client.activities.fragment.base.BaseFeedFragment.Feed
 /**
  * Created by s0ng on 2015/2/10.
  */
-public class MsgDetialFragment extends BaseFragment {
+public class MsgDetialFragment extends AbsListViewBaseFragment {
 
     private String TAG = "IndexFragment";
 
 
 
-    private PullToRefreshListView pullToRefreshListView;
+
 
     private String firstPageDate;
 
@@ -83,13 +87,59 @@ public class MsgDetialFragment extends BaseFragment {
 
     private FeedAdapter adapter;
 
-    private ImageCallback callback;
 
     private String lable;
 
 
+    //图片加载有关＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+    //大头像
+    protected DisplayImageOptions feedOptions;
+    //内容
+    protected DisplayImageOptions contentOptions;
+    //小头像
+    protected DisplayImageOptions commentOptions;
 
-    //private FeedAdapter adapter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //头像的
+        feedOptions = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.default_icon)
+                .showImageForEmptyUri(R.drawable.default_icon)
+                .showImageOnFail(R.drawable.default_icon)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .displayer(new RoundedBitmapDisplayer(20))
+                .build();
+
+
+        contentOptions = new DisplayImageOptions
+                .Builder()
+                .showImageOnLoading(R.drawable.default_iv)
+                .showImageForEmptyUri(R.drawable.default_iv)
+                .showImageOnFail(R.drawable.default_iv)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true).bitmapConfig(Bitmap.Config.RGB_565)
+                .imageScaleType(ImageScaleType.EXACTLY)
+                .build();
+
+
+        commentOptions = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.default_icon)
+                .showImageForEmptyUri(R.drawable.default_icon)
+                .showImageOnFail(R.drawable.default_icon)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .displayer(new RoundedBitmapDisplayer(10))
+                .build();
+
+    }
+
 
 
     @Override
@@ -244,6 +294,11 @@ public class MsgDetialFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void setCurrentPosition(int position) {
+        pullToRefreshListView.getListView().setSelection(position);
+    }
+
     /*********************************************获取数据*******************************/
     /**
      * 初始化第一页数据
@@ -344,7 +399,6 @@ public class MsgDetialFragment extends BaseFragment {
         initNews();
 
         initLable();
-        initImageCallBack();
 
         initFirstData();
 
@@ -372,28 +426,6 @@ public class MsgDetialFragment extends BaseFragment {
 
     }
 
-    /**
-     * 初始化图片处理回调类
-     */
-    protected void initImageCallBack() {
-        this.callback=new ImageCallback() {
-
-            @Override
-            public void imageLoaded(Bitmap bitmap, Object tag) {
-                ImageView imageView = (ImageView)pullToRefreshListView.getListView()
-                        .findViewWithTag(tag);
-
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                }
-            }
-        };
-    }
-
-
-
-
-
 
     /************************************Adapter**********************************************/
 
@@ -401,6 +433,8 @@ public class MsgDetialFragment extends BaseFragment {
      * adapter对象
      */
     class FeedAdapter extends BaseAdapter {
+
+        protected ImageLoadingListener animateFirstListener = new BaseFeedFragment.AnimateFirstDisplayListener();
 
         @Override
         public int getCount() {
@@ -466,23 +500,8 @@ public class MsgDetialFragment extends BaseFragment {
                 if(allItemType!=null)
                 {
 
-                    //头像图片处理
-                    String keys[]=feedEntry.firstEntry.user.avatar.small.url.split("/");
-                    String key=keys[keys.length-1];
 
-//                ImageUtil.loadingImage(holder.iv_icon, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.user.avatar.small.url);
-
-                    Bitmap bm = ImageCache.getInstance().get(key);
-
-                    if (bm != null) {
-                        holder.iv_icon.setImageBitmap(bm);
-                    } else {
-                        holder.iv_icon.setImageResource(R.drawable.default_icon);
-                        holder.iv_icon.setTag(key);
-                        if (callback != null) {
-                            new ImageDownload(callback).execute(AppContants.DOMAIN+feedEntry.firstEntry.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
-                        }
-                    }
+                    ImageLoader.getInstance().displayImage(AppContants.DOMAIN + allItemType.user.avatar.small.url, holder.iv_icon, feedOptions, animateFirstListener);
 
 
                     String type="";
@@ -520,13 +539,13 @@ public class MsgDetialFragment extends BaseFragment {
 
                             type = context.getResources().getString(R.string.feed_add_image);
                             holder.tv_content.setText(Html.fromHtml(allItemType.content_html));
-
-                            String keys2[] = allItemType.attachment.thumb.url.split("/");
-                            String key2 = keys2[keys2.length - 1];
-
-                            holder.iv_content.setTag(key2);
                             holder.iv_content.setVisibility(View.VISIBLE);
-                            ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_iv), callback, key2, AppContants.DOMAIN + allItemType.attachment.thumb.url);
+
+
+                            ImageLoader.getInstance().displayImage(AppContants.DOMAIN + allItemType.attachment.thumb.url, holder.iv_content, contentOptions, animateFirstListener);
+
+                            ivContentOnClickListener(holder,allItemType.attachment.url);
+
 
                             break;
                         case "UserProjectRelation":
@@ -629,21 +648,8 @@ public class MsgDetialFragment extends BaseFragment {
                 lp.setMargins(0, DisplayUtil.dip2px(context, 5), 0, DisplayUtil.dip2px(context, 10));
 
 
-                //头像图片处理
-                String keys[]=comment.user.avatar.small.url.split("/");
-                String key=keys[keys.length-1];
+                ImageLoader.getInstance().displayImage(AppContants.DOMAIN + comment.user.avatar.small.url, holder.iv_icon, commentOptions, animateFirstListener);
 
-                Bitmap bm = ImageCache.getInstance().get(key);
-
-                if (bm != null) {
-                    holder.iv_icon.setImageBitmap(bm);
-                } else {
-                    holder.iv_icon.setImageResource(R.drawable.default_icon);
-                    holder.iv_icon.setTag(position+key);
-                    if (callback != null) {
-                        new ImageDownload(callback).execute(AppContants.DOMAIN+comment.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
-                    }
-                }
 
                 //隐藏回复框
                 holder.tv_response.setVisibility(View.GONE);
@@ -675,6 +681,21 @@ public class MsgDetialFragment extends BaseFragment {
             return view;
 
         }
+    }
+
+    private void ivContentOnClickListener(final FeedHolder feedHolder,final String url) {
+
+        feedHolder.iv_content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, SimpleSampleActivity.class);
+                intent.putExtra("key", (String) feedHolder.iv_content.getTag());
+                intent.putExtra("url", url);
+
+
+                context.startActivity(intent);
+            }
+        });
     }
 
 //   protected void initFeedItemView(FeedHolder holder,BaseFeed baseFeed,int position) {
@@ -881,17 +902,6 @@ public class MsgDetialFragment extends BaseFragment {
                         Toast.makeText(context, R.string.cant_downlowb, Toast.LENGTH_SHORT).show();
                     }
                 });
-            }else{
-                holder.iv_content.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent=new Intent(context, BigImageActivity.class);
-                        intent.putExtra("key",(String)holder.iv_content.getTag());
-                        context.startActivity(intent);
-                    }
-                });
-
-
             }
         }
 
@@ -929,15 +939,6 @@ public class MsgDetialFragment extends BaseFragment {
                     }
                 });
 
-            }else{
-                holder.iv_content.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent=new Intent(context, BigImageActivity.class);
-                        intent.putExtra("key",(String)holder.iv_content.getTag());
-                        context.startActivity(intent);
-                    }
-                });
             }
 
         }

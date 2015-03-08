@@ -17,8 +17,15 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.DetailActivity;
+import com.shixian.android.client.activities.fragment.base.AbsListViewBaseFragment;
+import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
@@ -29,9 +36,7 @@ import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.News;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.DisplayUtil;
-import com.shixian.android.client.utils.ImageCache;
-import com.shixian.android.client.utils.ImageCallback;
-import com.shixian.android.client.utils.ImageDownload;
+
 import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
 import com.shixian.android.client.utils.StringUtils;
@@ -40,7 +45,7 @@ import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshBase;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView;
 
 import org.apache.http.Header;
-import org.apache.http.client.methods.HttpOptions;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,11 +53,11 @@ import java.util.List;
 /**
  * Created by doom on 15/2/8.
  */
-public class NewsFragment extends BaseFragment
+public class NewsFragment extends AbsListViewBaseFragment
 {
     private static final String TAG = "NewsFragment";
-    private ImageCallback callback;
-    private PullToRefreshListView pullToRefreshListView;
+
+
     private List<News> newsList;
     private String firstPageData;
 
@@ -60,6 +65,26 @@ public class NewsFragment extends BaseFragment
 
     private int page=1;
 
+
+    DisplayImageOptions feedOptions;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //头像的
+         feedOptions = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.default_icon)
+                .showImageForEmptyUri(R.drawable.default_icon)
+                .showImageOnFail(R.drawable.default_icon)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .displayer(new RoundedBitmapDisplayer(20))
+                .build();
+
+
+    }
 
 
     @Override
@@ -119,7 +144,8 @@ public class NewsFragment extends BaseFragment
             pullToRefreshListView.getListView().setAdapter(adapter);
 
         } else {
-            adapter.notifyDataSetChanged();
+            pullToRefreshListView.getListView().setAdapter(adapter);
+
         }
 
 
@@ -128,7 +154,6 @@ public class NewsFragment extends BaseFragment
     @Override
     public void initDate(Bundle savedInstanceState) {
 
-        initImageCallBack();
 
         if(newsList!=null&&newsList.size()>0)
         {
@@ -151,8 +176,13 @@ public class NewsFragment extends BaseFragment
 
     }
 
+    @Override
+    public void setCurrentPosition(int position) {
+        pullToRefreshListView.getListView().setSelection(position);
+    }
+
     private void initFirst() {
-        initImageCallBack();
+
         context.showProgress();
         ApiUtils.get(AppContants.NOTIFICATION_URL,null,new AsyncHttpResponseHandler() {
             @Override
@@ -264,26 +294,16 @@ public class NewsFragment extends BaseFragment
 
 
 
-    protected void initImageCallBack() {
-        this.callback = new ImageCallback() {
-
-            @Override
-            public void imageLoaded(Bitmap bitmap, Object tag) {
-                ImageView imageView = (ImageView) pullToRefreshListView.getListView()
-                        .findViewWithTag(tag);
-
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                }
-            }
-        };
-    }
 
 
     public static final int TYPE_REQUEST=1;
     public static final int TYPE_OTHER=0;
 
     class NewsAdapter extends BaseAdapter{
+
+
+        protected ImageLoadingListener animateFirstListener = new BaseFeedFragment.AnimateFirstDisplayListener();
+
 
         @Override
         public int getCount() {
@@ -360,24 +380,16 @@ public class NewsFragment extends BaseFragment
                     holder.tv_post_type.setVisibility(View.GONE);
 
                     //头像图片处理
-                    String keys[] = news.user.avatar.small.url.split("/");
-                    String key = keys[keys.length - 1];
-                    Bitmap bm = ImageCache.getInstance().get(key);
-                    if (bm != null) {
-                        holder.iv_icon.setImageBitmap(bm);
-                    } else {
-                        holder.iv_icon.setImageResource(R.drawable.default_icon);
-                        if (callback != null) {
-                            new ImageDownload(callback).execute(AppContants.DOMAIN + news.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
-                        }
-                    }
+
+                    ImageLoader.getInstance().displayImage(AppContants.DOMAIN + news.user.avatar.small.url, holder.iv_icon, feedOptions, animateFirstListener);
+
 
                     ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
                     int imageSize= DisplayUtil.dip2px(context, 40);
                     params.height=imageSize;
                     params.width =imageSize;
                     holder.iv_icon.setLayoutParams(params);
-                    holder.iv_icon.setTag(key);
+
 
                     switch (news.noti_type) {
                         case "invit_follow":

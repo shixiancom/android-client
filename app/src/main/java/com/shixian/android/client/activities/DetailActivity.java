@@ -1,6 +1,7 @@
 package com.shixian.android.client.activities;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +15,7 @@ import com.shixian.android.client.activities.fragment.MsgDetialFragment;
 import com.shixian.android.client.activities.fragment.ProjectFeedFragment;
 import com.shixian.android.client.activities.fragment.UserIndexFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
+import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.sina.AccessTokenKeeper;
 import com.shixian.android.client.utils.SharedPerenceUtil;
@@ -133,7 +135,10 @@ public class DetailActivity extends BaseActivity {
         AccessTokenKeeper.clear(this);
         Intent intent=new Intent(this,LoginActivity.class);
         startActivity(intent);
-        finish();
+        Intent broadIntent=new Intent();
+        broadIntent.setAction(AppContants.ACTION_FINISHACTIVITY);
+        sendBroadcast(broadIntent);
+
     }
 
     @Override

@@ -2,9 +2,7 @@ package com.shixian.android.client.activities.fragment.base;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -26,9 +24,15 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
-import com.shixian.android.client.activities.BaseActivity;
 import com.shixian.android.client.activities.SimpleSampleActivity;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.enter.EnterLayout;
@@ -37,10 +41,6 @@ import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.feeddate.BaseFeed;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.DisplayUtil;
-import com.shixian.android.client.utils.ImageCache;
-import com.shixian.android.client.utils.ImageCallback;
-import com.shixian.android.client.utils.ImageDownload;
-import com.shixian.android.client.utils.ImageUtil;
 import com.shixian.android.client.utils.StringUtils;
 import com.shixian.android.client.utils.TimeUtil;
 import com.shixian.android.client.views.PersonItemLinearLayout;
@@ -48,32 +48,42 @@ import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshBase;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView;
 
 import org.apache.http.Header;
-import org.w3c.dom.Text;
-
-import java.lang.annotation.Target;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by s0ng on 2015/2/12.
  */
-public abstract  class BaseFeedFragment extends BaseFragment {
+public abstract  class BaseFeedFragment extends AbsListViewBaseFragment {
 
     protected int page = 1;
-    protected PullToRefreshListView pullToRefreshListView;
+
     protected String firstPageDate;
     protected List<BaseFeed> feedList;
-    protected ImageCallback callback;
     protected BaseAdapter adapter;
     protected int currentFirstPos=0;
 
-    protected  boolean isBusy=false;
+    protected AbsListView listView;
+
+
+
+
+    //图片加载有关＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+    //大头像
+    protected DisplayImageOptions feedOptions;
+    //内容
+    protected DisplayImageOptions contentOptions;
+    //小头像
+    protected DisplayImageOptions commentOptions;
+
 
 
 
     /*************************************用于管理回复框 一级软键盘弹出 到这listView 变小  要滚动listView 这里网上资料很少 研究了差不多一天多***
      * 并且考虑到集成回复表情，但是考虑到论坛的性质 将回复表情功能砍掉*******************************************************************/
-    protected ListView lv;
+
     protected int oldListHigh = 0;
     protected int needScrollY = 0;
     protected int cal1 = 0;
@@ -193,6 +203,67 @@ public abstract  class BaseFeedFragment extends BaseFragment {
     };
 
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //头像的
+        feedOptions = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.default_icon)
+                .showImageForEmptyUri(R.drawable.default_icon)
+                .showImageOnFail(R.drawable.default_icon)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .displayer(new RoundedBitmapDisplayer(20))
+                .build();
+
+        contentOptions = new DisplayImageOptions
+                .Builder()
+                .showImageOnLoading(R.drawable.default_iv)
+                .showImageForEmptyUri(R.drawable.default_iv)
+                .showImageOnFail(R.drawable.default_iv)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true).bitmapConfig(Bitmap.Config.RGB_565)
+                .imageScaleType(ImageScaleType.EXACTLY)
+                .build();
+
+        commentOptions = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.default_icon)
+                .showImageForEmptyUri(R.drawable.default_icon)
+                .showImageOnFail(R.drawable.default_icon)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .displayer(new RoundedBitmapDisplayer(10))
+                .build();
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        AnimateFirstDisplayListener.displayedImages.clear();
+    }
+
+    public static class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
+
+        static final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
+
+        @Override
+        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+            if (loadedImage != null) {
+                ImageView imageView = (ImageView) view;
+                boolean firstDisplay = !displayedImages.contains(imageUri);
+                if (firstDisplay) {
+                    FadeInBitmapDisplayer.animate(imageView, 500);
+                    displayedImages.add(imageUri);
+                }
+            }
+        }
+    }
+
 
     @Override
     public View initView(LayoutInflater inflater) {
@@ -205,29 +276,17 @@ public abstract  class BaseFeedFragment extends BaseFragment {
         pullToRefreshListView.getListView().setDividerHeight(0);
 
 
-        this.lv=pullToRefreshListView.getListView();
+
+        this.listView=pullToRefreshListView.getListView();
+
+
         commonEnterRoot=context.findViewById(R.id.commonEnterRoot);
 
-        settingListView(lv);
+        settingListView(listView);
 
 
 
-        pullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if(scrollState== AbsListView.OnScrollListener.SCROLL_STATE_FLING){
-                    isBusy=true;
-                }else {
-                    isBusy=false;
 
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        });
 
         // 滚动到底自动加载可用
         pullToRefreshListView.setScrollLoadEnabled(true);
@@ -273,24 +332,6 @@ public abstract  class BaseFeedFragment extends BaseFragment {
     protected abstract void initLable();
 
 
-    protected void initImageCallBack() {
-        this.callback=new ImageCallback() {
-
-            @Override
-            public void imageLoaded(Bitmap bitmap, Object tag) {
-                ImageView imageView = (ImageView)pullToRefreshListView.getListView()
-                        .findViewWithTag(tag);
-
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                }
-
-
-            }
-        };
-    }
-
-
     protected abstract  void getNextData();
 
     @Override
@@ -314,7 +355,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
 
     }
 
-    protected void settingListView(ListView listView)
+    protected void settingListView(final AbsListView listView)
     {
         listView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -346,7 +387,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
             @Override
             public void onGlobalLayout() {
 
-                int listHeight = lv.getHeight();
+                int listHeight = listView.getHeight();
 
 
 
@@ -357,7 +398,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
 
                     } else if (cal1 == 1) {
                         int scrollResult = needScrollY + oldListHigh - listHeight;
-                        lv.smoothScrollBy(scrollResult, 1);
+                        listView.smoothScrollBy(scrollResult, 1);
                         needScrollY = 0;
 
                     }
@@ -385,7 +426,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
      * @param lv
      * @param type 如果type为0
      */
-    protected  void popComment(View v,Object tag,ListView lv,int type) {
+    protected  void popComment(View v,Object tag,AbsListView lv,int type) {
         EditText comment = mEnterLayout.content;
 
         String data = (String) v.getTag();
@@ -480,247 +521,6 @@ public abstract  class BaseFeedFragment extends BaseFragment {
     }
 
 
-    /**
-     * 初始化Feed的Item 由于三个页面都一样所以再这里进行抽取
-     *
-     */
-    protected void initFeedItemView(FeedHolder holder,BaseFeed baseFeed,int position) {
-
-
-        String type="";
-        String project="";
-
-
-        //开始switch
-        holder.tv_response.setVisibility(View.VISIBLE);
-        holder.v_line.setVisibility(View.VISIBLE);
-        holder.iv_content.setVisibility(View.GONE);
-
-        //用户名和头像是同一设置的
-
-
-        //Feed2类型的
-        if(!baseFeed.feedable_type.equals(AppContants.FEADE_TYPE_COMMON))
-        {
-            holder.tv_content.setVisibility(View.VISIBLE);
-
-            Feed2 feed= (Feed2) baseFeed;
-
-            //设置project
-            if(feed.data.project!=null&&!TextUtils.isEmpty(feed.data.project.title))
-                project=feed.data.project.title;
-            switch (feed.feedable_type) {
-                case "Idea":
-                    type = context.getResources().getString(R.string.add_idea);
-                    holder.tv_content.setText(feed.data.content.trim());
-                    break;
-                case "Project":
-                    type = context.getResources().getString(R.string.add_project);
-                    project = feed.data.title;
-                    holder.tv_content.setText(Html.fromHtml(feed.data.description));
-                    //隐藏回复框
-                    holder.tv_response.setVisibility(View.GONE);
-                    break;
-                case "Plan":
-                    type = context.getResources().getString(R.string.feed_add_plan);
-
-                    holder.tv_content.setText(feed.data.content + "   "+getString(R.string.feed_end)+": " + feed.data.finish_on);
-                    break;
-                case "Image":
-
-                    type = context.getResources().getString(R.string.feed_add_image);
-                    holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-
-                    String keys[]=feed.data.attachment.thumb.url.split("/");
-                    String key=keys[keys.length-1];
-
-                    holder.iv_content.setTag(key);
-                    holder.iv_content.setVisibility(View.VISIBLE);
-
-                    ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_iv), callback, key, AppContants.DOMAIN + feed.data.attachment.thumb.url);
-
-
-                    break;
-                case "UserProjectRelation":
-                    type = context.getResources().getString(R.string.feed_join_project);
-                    //隐藏回复框
-                    if(feed.hasChildren) {
-                        holder.tv_response.setVisibility(View.GONE);
-
-                    }
-                    holder.tv_content.setVisibility(View.GONE);
-                    break;
-                case "Homework":
-                    type = context.getResources().getString(R.string.feed_completed_task);
-                    holder.tv_content.setText(feed.data.content);
-                    break;
-                case "Task":
-                    type = context.getResources().getString(R.string.feed_add_task);
-                    holder.tv_content.setText(feed.data.content);
-                    break;
-                case "Vote":
-                    type = context.getResources().getString(R.string.feed_join_vote);
-
-                    holder.tv_content.setText(feed.data.content);
-                    break;
-                case "Attachment":
-                    type = context.getResources().getString(R.string.feed_add_file);
-                    holder.tv_content.setText(feed.data.content+"\n"+"  "+feed.data.file_name);
-                    holder.iv_content.setVisibility(View.VISIBLE);
-                    holder.iv_content.setImageResource(R.drawable.file);
-                    break;
-
-                case "Agreement":
-//                    type="加入项目";
-//                    holder.tv_content.setVisibility(View.GONE);
-                    break;
-
-            }
-
-            if(feed.hasChildren) {
-
-                holder.tv_response.setVisibility(View.GONE);
-
-            }else{
-                holder.v_line.setVisibility(View.GONE);
-            }
-
-
-            //头像图片处理
-            String keys[]=feed.data.user.avatar.small.url.split("/");
-            String key=keys[keys.length-1];
-
-//                ImageUtil.loadingImage(holder.iv_icon, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.user.avatar.small.url);
-
-            Bitmap bm = ImageCache.getInstance().get(key);
-
-            if (bm != null) {
-                holder.iv_icon.setImageBitmap(bm);
-            } else {
-                holder.iv_icon.setImageResource(R.drawable.default_icon);
-                holder.iv_icon.setTag(key);
-                if (callback != null) {
-                    if(!isBusy)
-                        new ImageDownload(callback).execute(AppContants.DOMAIN+feed.data.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
-                }
-            }
-
-
-            holder.tv_type.setText(type);
-            holder.tv_proect.setText(project);
-            holder.tv_name.setText(feed.data.user.username);
-            holder.tv_time.setText(TimeUtil.getDistanceTime(feed.created_at));
-
-            //设置样式
-//                int textSize=DisplayUtil.sp2px(context,13);
-//            holder.tv_name.setTextSize(13);
-//            holder.tv_time.setTextSize(11);
-//            holder.tv_content.setTextSize(15);
-//
-//            ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
-//            int imageSize= DisplayUtil.dip2px(context, 40);
-//            params.height=imageSize;
-//            params.width =imageSize;
-//            holder.iv_icon.setLayoutParams(params);
-//
-//            LinearLayout.LayoutParams lp= (LinearLayout.LayoutParams) holder.ll_body.getLayoutParams();
-//
-//            //设置内容与顶部拒领14dp 内容与底部之间12dp
-//            lp.setMargins(0,DisplayUtil.dip2px(context, 14),0,DisplayUtil.dip2px(context, 12));
-
-            //设置8dp 为头像留白
-            //    ( (RelativeLayout.LayoutParams)holder.ll_name_type.getLayoutParams()).setMargins(0,0,0,0);
-
-//            RelativeLayout.LayoutParams layoutParams= (RelativeLayout.LayoutParams) holder.rl_title.getLayoutParams();
-//            layoutParams.setMargins(0,0,0,0);
-
-//
-
-
-
-
-
-            holder.tv_type.setVisibility(View.VISIBLE);
-            holder.tv_proect.setVisibility(View.VISIBLE);
-
-            if("Homework".equals(baseFeed.feedable_type)||"Project".equals(baseFeed.feedable_type)||"Agreement".equals(baseFeed.feedable_type))
-            {
-                holder.tv_response.setVisibility(View.GONE);
-            }
-
-
-
-        }else{
-            Comment comment= (Comment) baseFeed;
-            //初始化一些common信息
-            holder.tv_name.setText(comment.user.username);
-            holder.tv_time.setText(TimeUtil.getDistanceTime(comment.created_at));
-            holder.tv_proect.setVisibility(View.GONE);
-            holder.tv_type.setVisibility(View.GONE);
-            holder.iv_content.setVisibility(View.GONE);
-            holder.tv_content.setVisibility(View.VISIBLE);
-            holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(comment.content_html)));
-
-
-
-
-            holder.tv_name.setTextSize(13);
-            holder.tv_time.setTextSize(11);
-            holder.tv_content.setTextSize(14);
-
-            ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
-            int imageSize=DisplayUtil.dip2px(context,20);
-            params.height=imageSize;
-            params.width =imageSize;
-            holder.iv_icon.setLayoutParams(params);
-            LinearLayout.LayoutParams lp= (LinearLayout.LayoutParams) holder.ll_body.getLayoutParams();
-            lp.setMargins(0,DisplayUtil.dip2px(context, 5),0,DisplayUtil.dip2px(context, 10));
-
-            //设置5dp为头像留白
-//            ( (LinearLayout.LayoutParams)holder.ll_name_type.getLayoutParams()).setMargins(DisplayUtil.dip2px(context,5),0,0,0);
-
-
-//            android.widget.AbsListView.LayoutParams layoutParams= (android.widget.AbsListView.LayoutParams) holder.rl_title.getLayoutParams();
-//            if(comment.isFirst)
-//            {
-//
-//                layoutParams.setMargins(0,DisplayUtil.dip2px(context,12),0,0);
-//            }else{
-//                layoutParams.setMargins(0,0,0,0);
-//            }
-
-
-
-
-            //头像图片处理
-            String keys[]=comment.user.avatar.small.url.split("/");
-            String key=keys[keys.length-1];
-
-            Bitmap bm = ImageCache.getInstance().get(key);
-
-            if (bm != null) {
-                holder.iv_icon.setImageBitmap(bm);
-            } else {
-                holder.iv_icon.setImageResource(R.drawable.default_icon);
-                holder.iv_icon.setTag(position+key);
-                if (callback != null) {
-                    if(!isBusy)
-                        new ImageDownload(callback).execute(AppContants.DOMAIN+comment.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
-                }
-            }
-
-
-            //隐藏回复框
-            if(!comment.isLast) {
-                holder.tv_response.setVisibility(View.GONE);
-                holder.v_line.setVisibility(View.GONE);
-            }
-
-
-
-        }
-
-    }
 
 
 
@@ -737,11 +537,11 @@ public abstract  class BaseFeedFragment extends BaseFragment {
             feedHolder.tv_name = (TextView) view.findViewById(R.id.tv_name);
             feedHolder.tv_proect = (TextView) view.findViewById(R.id.tv_project);
             feedHolder.tv_time = (TextView) view.findViewById(R.id.tv_time);
-            ;
+
             feedHolder.tv_content = (TextView) view.findViewById(R.id.tv_content);
-            ;
+
             feedHolder.iv_content = (ImageView) view.findViewById(R.id.iv_content);
-            ;
+
             feedHolder.tv_response = (TextView) view.findViewById(R.id.tv_response);
             feedHolder.tv_type = (TextView) view.findViewById(R.id.tv_type);
             feedHolder.v_line = view.findViewById(R.id.v_line);
@@ -760,7 +560,8 @@ public abstract  class BaseFeedFragment extends BaseFragment {
     }
 
 
-    protected void initFeedItemViewData(Feed2 feed,FeedHolder feedHolder) {
+
+    protected void initFeedItemViewData(Feed2 feed,FeedHolder feedHolder,ImageLoadingListener animateFirstListener) {
         String type = "";
         String project = "";
 
@@ -798,18 +599,11 @@ public abstract  class BaseFeedFragment extends BaseFragment {
                 type = context.getResources().getString(R.string.feed_add_image);
                 feedHolder.tv_content.setText(Html.fromHtml(feed.data.content_html));
 
-                String keys[]=feed.data.attachment.thumb.url.split("/");
-                String key=keys[keys.length-1];
-
-                feedHolder.iv_content.setTag(R.id.tv_content,feed.data.attachment.thumb.url);
-
-                feedHolder.iv_content.setTag(key);
-
                 feedHolder.iv_content.setVisibility(View.VISIBLE);
+                ImageLoader.getInstance().displayImage(AppContants.DOMAIN + feed.data.attachment.thumb.url, feedHolder.iv_content, contentOptions, animateFirstListener);
 
-               ImageUtil.loadingImage(feedHolder.iv_content, BitmapFactory.decodeResource(getResources(), R.drawable.default_iv), callback, key, AppContants.DOMAIN + feed.data.attachment.thumb.url);
 
-              ivContentOnClickListener(feedHolder,feed.data.attachment.thumb.url);
+                ivContentOnClickListener(feedHolder,feed.data.attachment.url);
 
                 break;
             case "UserProjectRelation":
@@ -857,24 +651,8 @@ public abstract  class BaseFeedFragment extends BaseFragment {
         }
 
 
-        //头像图片处理
-        String iconkeys[] = feed.data.user.avatar.small.url.split("/");
-        String iconkey = iconkeys[iconkeys.length - 1];
 
-//                ImageUtil.loadingImage(holder.iv_icon, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.user.avatar.small.url);
-
-        Bitmap ic_bm = ImageCache.getInstance().get(iconkey);
-
-        if (ic_bm != null) {
-            feedHolder.iv_icon.setImageBitmap(ic_bm);
-        } else {
-            feedHolder.iv_icon.setImageResource(R.drawable.default_icon);
-            feedHolder.iv_icon.setTag(iconkey);
-            if (callback != null) {
-                if(!isBusy)
-                new ImageDownload(callback).execute(AppContants.DOMAIN + feed.data.user.avatar.small.url, iconkey, ImageDownload.CACHE_TYPE_LRU);
-            }
-        }
+        ImageLoader.getInstance().displayImage(AppContants.DOMAIN + feed.data.user.avatar.small.url, feedHolder.iv_icon, feedOptions, animateFirstListener);
 
 
         feedHolder.tv_type.setText(type);
@@ -968,7 +746,7 @@ public abstract  class BaseFeedFragment extends BaseFragment {
 
 
 
-    protected void initCommentItemData(Comment comment,CommentHolder commentHolder) {
+    protected void initCommentItemData(Comment comment,CommentHolder commentHolder,ImageLoadingListener animateFirstListener) {
         //开始switch
         commentHolder.tv_response.setVisibility(View.VISIBLE);
 //        commentHolder.v_line.setVisibility(View.VISIBLE);
@@ -996,21 +774,8 @@ public abstract  class BaseFeedFragment extends BaseFragment {
 
 
         //头像图片处理
-        String comment_ic_keys[] = comment.user.avatar.small.url.split("/");
-        String comment_ic_key = comment_ic_keys[comment_ic_keys.length - 1];
+        ImageLoader.getInstance().displayImage(AppContants.DOMAIN + comment.user.avatar.small.url, commentHolder.iv_icon, commentOptions, animateFirstListener);
 
-        Bitmap comment_ic_bm = ImageCache.getInstance().get(comment_ic_key);
-
-        if (comment_ic_bm != null) {
-            commentHolder.iv_icon.setImageBitmap(comment_ic_bm);
-        } else {
-            commentHolder.iv_icon.setImageResource(R.drawable.default_icon);
-            commentHolder.iv_icon.setTag(comment_ic_key);
-            if (callback != null) {
-                if(!isBusy)
-                new ImageDownload(callback).execute(AppContants.DOMAIN + comment.user.avatar.small.url, comment_ic_key, ImageDownload.CACHE_TYPE_LRU);
-            }
-        }
 
 
         //隐藏回复框
@@ -1071,6 +836,15 @@ public abstract  class BaseFeedFragment extends BaseFragment {
 
     }
 
+
+    protected  abstract  class BaseFeedAdapter extends BaseAdapter{
+
+        protected ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
+
+    }
+
+
+    public   void setCurrentPosition(int position){};
 
 
 
