@@ -70,7 +70,7 @@
         android:layout_marginRight="10dp"
         android:maxLines="10"
         android:ellipsize="end"
-        android:textIsSelectable="true"
+
         />
     <View
         android:layout_width="match_parent"
