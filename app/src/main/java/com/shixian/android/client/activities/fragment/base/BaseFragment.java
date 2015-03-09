@@ -17,6 +17,8 @@ public abstract class BaseFragment extends Fragment  {
 
     protected BaseActivity context;
 
+    protected Bundle savedInstanceState;
+
 
 
 
@@ -24,8 +26,6 @@ public abstract class BaseFragment extends Fragment  {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
 
@@ -34,8 +34,16 @@ public abstract class BaseFragment extends Fragment  {
         context= (BaseActivity) getActivity();
 
         View view=initView(inflater);
-        initDate(savedInstanceState);
+//        initDate(savedInstanceState);
+        this.savedInstanceState=savedInstanceState;
         return view;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initDate(savedInstanceState);
     }
 
     public abstract View initView(LayoutInflater inflater);

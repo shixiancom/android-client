@@ -63,7 +63,7 @@ public abstract  class BaseFeedFragment extends AbsListViewBaseFragment {
     protected String firstPageDate;
     protected List<BaseFeed> feedList;
     protected BaseAdapter adapter;
-    protected int currentFirstPos=0;
+
 
     protected AbsListView listView;
 

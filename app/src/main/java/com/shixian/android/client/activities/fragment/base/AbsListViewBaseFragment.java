@@ -32,6 +32,8 @@ public abstract class AbsListViewBaseFragment extends BaseFragment {
 
 	protected PullToRefreshListView pullToRefreshListView;
 
+    protected int currentFirstPos=0;
+
 	protected boolean pauseOnScroll = false;
 	protected boolean pauseOnFling = true;
 
@@ -44,6 +46,23 @@ public abstract class AbsListViewBaseFragment extends BaseFragment {
 
 
 	private void applyScrollListener() {
-        pullToRefreshListView.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), pauseOnScroll, pauseOnFling));
+        pullToRefreshListView.setOnScrollListener(new MyPauseOnScrollListener(ImageLoader.getInstance(), pauseOnScroll, pauseOnFling));
+
 	}
+
+    protected class MyPauseOnScrollListener extends PauseOnScrollListener{
+
+        public MyPauseOnScrollListener(ImageLoader imageLoader, boolean pauseOnScroll, boolean pauseOnFling) {
+            super(imageLoader, pauseOnScroll, pauseOnFling);
+        }
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            super.onScrollStateChanged(view, scrollState);
+            currentFirstPos=pullToRefreshListView.getListView().getFirstVisiblePosition();
+
+        }
+    }
+
+
 }

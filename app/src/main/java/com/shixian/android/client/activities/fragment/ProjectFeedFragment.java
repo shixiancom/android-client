@@ -167,7 +167,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
             } else {
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
-                adapter.notifyDataSetChanged();
+
             }
 
             if(currentFirstPos<=feedList.size())

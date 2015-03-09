@@ -168,8 +168,11 @@ public class NewsFragment extends AbsListViewBaseFragment
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
             } else {
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
-                adapter.notifyDataSetChanged();
+
             }
+
+            if (currentFirstPos <= newsList.size())
+                pullToRefreshListView.getListView().setSelection(currentFirstPos);
 
 
         }else{

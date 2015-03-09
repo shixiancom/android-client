@@ -54,8 +54,7 @@ public class IndexFragment extends BaseFeedFragment {
             pullToRefreshListView.getListView().setAdapter(adapter);
 
         } else {
-            pullToRefreshListView.getListView().setAdapter(adapter);
-
+           pullToRefreshListView.getListView().setAdapter(adapter);
 
         }
 
