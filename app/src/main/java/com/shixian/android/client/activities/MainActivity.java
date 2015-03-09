@@ -165,8 +165,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         initUI();
 
-        initJpush();
-
         addFragment();
 
         initDate();
@@ -185,7 +183,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
-    private void initMsgStatus() {
+    public void initMsgStatus() {
         ApiUtils.get(AppContants.MSG_STATUS_URL,null,new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, final byte[] bytes) {
@@ -412,7 +410,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 //TODO
                 tv_uname.setText(user.username);
 
-                initUserProjects();
+
             }
 
             @Override
@@ -423,6 +421,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 {
                     toastView.setVisibility(View.VISIBLE);
                 }
+                initUserProjects();
 
             }
         };
@@ -536,7 +535,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void addFragment() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         IndexFragment indexFragment=new IndexFragment();
-        currentFeed=indexFragment;
         fragmentTransaction.replace(R.id.main_fragment_layout, indexFragment);
         fragmentTransaction.commit();
     }
@@ -678,14 +676,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             fragmentTransaction.addToBackStack(null);
         }
 
-
-
-
-
-        currentFeed=fragment;
-
-
-
         fragmentTransaction.replace(R.id.main_fragment_layout, fragment);
        // fragmentTransaction.replace(R.id.main_fragment_layout, fragment);
 
@@ -771,8 +761,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
       //  titleImgPoint.hide();
         tv_msg_count.setVisibility(View.GONE);
 
-        if(toastView!=null)
+        if(toastView!=null) {
             getWindowManager().removeView(toastView);
+            toastView=null;
+        }
     }
 
     private void hideMyToast()
@@ -796,7 +788,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      * @param count
      */
     public void showMyToast(int count) {
-        if(toastView!=null)
+        if(toastView!=null&&toastView.getVisibility()==View.VISIBLE)
         {
             getWindowManager().removeView(toastView);
             toastView=null;
@@ -915,14 +907,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
-    /**
-     * 初始化极光推送
-     */
-    private void initJpush() {
 
-        JPushInterface.setDebugMode(true);
-        JPushInterface.init(this);
-    }
 
     /*********重写的生命周期方法****************/
     @Override
@@ -940,5 +925,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onResume();
         initMsgStatus();
 
+    }
+
+
+    public void setCurrentFragment(BaseFragment fragment)
+    {
+        this.currentFeed=fragment;
     }
 }

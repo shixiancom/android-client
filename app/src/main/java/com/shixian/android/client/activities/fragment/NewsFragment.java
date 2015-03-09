@@ -24,6 +24,7 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.DetailActivity;
+import com.shixian.android.client.activities.MainActivity;
 import com.shixian.android.client.activities.fragment.base.AbsListViewBaseFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
@@ -80,11 +81,14 @@ public class NewsFragment extends AbsListViewBaseFragment
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
-                .displayer(new RoundedBitmapDisplayer(20))
+                .displayer(new RoundedBitmapDisplayer(10))
                 .build();
 
 
     }
+
+
+
 
 
     @Override
@@ -791,5 +795,13 @@ public class NewsFragment extends AbsListViewBaseFragment
         TextView tv_add_pri;
         TextView tv_post_type;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity)context).setCurrentFragment(this);
+
+    }
+
 
 }

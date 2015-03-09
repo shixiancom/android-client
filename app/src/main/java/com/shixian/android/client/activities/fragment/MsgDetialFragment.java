@@ -112,7 +112,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
-                .displayer(new RoundedBitmapDisplayer(20))
+                .displayer(new RoundedBitmapDisplayer(10))
                 .build();
 
 

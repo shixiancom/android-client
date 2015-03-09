@@ -4,9 +4,7 @@ import android.app.Application;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.utils.StorageUtils;
 
-import java.io.File;
 
 /**
  * Created by tangtang on 15/3/8.

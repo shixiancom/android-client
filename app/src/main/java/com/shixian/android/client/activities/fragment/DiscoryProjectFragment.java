@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.shixian.android.client.R;
+import com.shixian.android.client.activities.MainActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.DiscoryOnClickColler;
@@ -46,6 +47,13 @@ public class DiscoryProjectFragment extends BaseFragment {
     private int currentFirstPos=0;
 
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity)context).setCurrentFragment(this);
+
+    }
 
 
     @Override
@@ -118,6 +126,7 @@ public class DiscoryProjectFragment extends BaseFragment {
     }
 
     private void getNextData() {
+        ((MainActivity)context).initMsgStatus();
 
         page += 1;
         RequestParams params = new RequestParams();
@@ -197,6 +206,8 @@ public class DiscoryProjectFragment extends BaseFragment {
 
     private void initFirstData() {
         context.showProgress();
+
+        ((MainActivity)context).initMsgStatus();
 
         ApiUtils.get(AppContants.DESCORY_PROJECT_URL, null, new AsyncHttpResponseHandler() {
             @Override
@@ -373,6 +384,9 @@ public class DiscoryProjectFragment extends BaseFragment {
             return view;
         }
     }
+
+
+
 
     class Holder {
         TextView tv_title;

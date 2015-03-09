@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.R;
+import com.shixian.android.client.activities.MainActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
@@ -88,6 +89,10 @@ public class IndexFragment extends BaseFeedFragment {
      * 初始化第一页数据
      */
     public void initFirstData() {
+
+
+        ((MainActivity)context).initMsgStatus();
+
         page = 1;
         context.showProgress();
         CommonEngine.getFeedData(AppContants.INDEX_URL, page, new AsyncHttpResponseHandler() {
@@ -161,6 +166,7 @@ public class IndexFragment extends BaseFeedFragment {
      * 获取其他页数据
      */
     public void getNextData() {
+        ((MainActivity)context).initMsgStatus();
         page += 1;
         CommonEngine.getFeedData(AppContants.INDEX_URL, page, new AsyncHttpResponseHandler() {
             @Override
@@ -303,8 +309,6 @@ public class IndexFragment extends BaseFeedFragment {
 /**************************************************/
                     initFeedItemOnClick(feed,feedHolder);
 
-
-
                     break;
 
                 case BaseFeed.TYPE_COMMENT:
@@ -427,4 +431,11 @@ public class IndexFragment extends BaseFeedFragment {
         }
     }
 
- }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity)context).setCurrentFragment(this);
+
+    }
+}

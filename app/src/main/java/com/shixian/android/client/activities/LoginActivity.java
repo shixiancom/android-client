@@ -24,6 +24,8 @@ import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.exception.WeiboException;
 
+import cn.jpush.android.api.JPushInterface;
+
 
 public class LoginActivity extends Activity
 {
@@ -43,6 +45,7 @@ public class LoginActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 
+
         init();
 
 
@@ -52,6 +55,9 @@ public class LoginActivity extends Activity
 
     private void init() {
         setContentView(R.layout.activity_login);
+
+        initJpush();
+
 
         loginButton = (LoginButton) findViewById(R.id.login_button_default);
 
@@ -171,6 +177,25 @@ public class LoginActivity extends Activity
         super.onDestroy();
     }
 
+    /**
+     * 初始化极光推送
+     */
+    private void initJpush() {
+
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
+    }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        JPushInterface.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        JPushInterface.onPause(this);
+    }
 }
