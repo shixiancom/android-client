@@ -20,6 +20,7 @@ import com.shixian.android.client.activities.MainActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.DiscoryOnClickColler;
+import com.shixian.android.client.handler.content.ContentHandler;
 import com.shixian.android.client.model.Project;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
@@ -347,6 +348,8 @@ public class DiscoryProjectFragment extends BaseFragment {
             //设置监听事件
             DiscoryOnClickColler onClickColler=new DiscoryOnClickColler(context,project);
             holder.tv_content .setOnClickListener(onClickColler);
+            new ContentHandler(holder.tv_content).longClickCopy();
+
             holder.tv_title.setOnClickListener(onClickColler);
             holder.bt_fllowen.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -32,6 +32,7 @@ import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.controller.NewsOnClickController;
 import com.shixian.android.client.controller.OnClickController;
+import com.shixian.android.client.handler.content.ContentHandler;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.News;
@@ -396,6 +397,8 @@ public class NewsFragment extends AbsListViewBaseFragment
                     params.height=imageSize;
                     params.width =imageSize;
                     holder.iv_icon.setLayoutParams(params);
+
+                    new ContentHandler(holder.tv_content).longClickCopy();
 
 
                     switch (news.noti_type) {

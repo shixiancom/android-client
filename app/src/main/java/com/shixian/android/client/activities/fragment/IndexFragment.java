@@ -21,6 +21,7 @@ import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.engine.CommonEngine;
+import com.shixian.android.client.handler.content.ContentHandler;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.feeddate.BaseFeed;
@@ -352,7 +353,6 @@ public class IndexFragment extends BaseFeedFragment {
         if (feedHolder.tv_content.getVisibility() == View.VISIBLE) {
 
             feedHolder.tv_content.setOnClickListener(controller);
-
 
         }
 

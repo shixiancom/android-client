@@ -43,6 +43,7 @@ import com.shixian.android.client.controller.OnAllItemTypeClickController;
 import com.shixian.android.client.controller.OnClickController;
 import com.shixian.android.client.engine.CommonEngine;
 import com.shixian.android.client.enter.EnterLayout;
+import com.shixian.android.client.handler.content.ContentHandler;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.News;
@@ -489,6 +490,9 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                 view=convertView;
                 holder= (FeedHolder) view.getTag();
             }
+
+
+            new ContentHandler(holder.tv_content).longClickCopy();
 
             if(position==0) {
 

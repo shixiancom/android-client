@@ -1,5 +1,7 @@
 package com.shixian.android.client.activities.fragment.base;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -36,6 +38,7 @@ import com.shixian.android.client.R;
 import com.shixian.android.client.activities.SimpleSampleActivity;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.enter.EnterLayout;
+import com.shixian.android.client.handler.content.ContentHandler;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.feeddate.BaseFeed;
@@ -573,6 +576,8 @@ public abstract  class BaseFeedFragment extends AbsListViewBaseFragment {
 
         feedHolder.tv_content.setVisibility(View.VISIBLE);
 
+        new ContentHandler(feedHolder.tv_content).longClickCopy();
+
 
         //设置project
         if (feed.data.project != null && !TextUtils.isEmpty(feed.data.project.title))
@@ -760,6 +765,7 @@ public abstract  class BaseFeedFragment extends AbsListViewBaseFragment {
         commentHolder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(comment.content_html)));
 
 
+        new ContentHandler(commentHolder.tv_content).longClickCopy();
 //        commentHolder.tv_name.setTextSize(13);
 //        commentHolder.tv_time.setTextSize(11);
 //        commentHolder.tv_content.setTextSize(14);
@@ -845,6 +851,7 @@ public abstract  class BaseFeedFragment extends AbsListViewBaseFragment {
 
 
     public   void setCurrentPosition(int position){};
+
 
 
 
