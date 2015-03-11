@@ -168,6 +168,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         addFragment();
 
         initDate();
+        
     }
 
 

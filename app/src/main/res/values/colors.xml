@@ -7,4 +7,6 @@
     <color name="select_comment_color">#FCFCDA</color>
     <color name="font_green">#3bbd79</color>
     <item name="green" type="color">#FF3BBD79</item>
+    <color name="transparent_background">#ffffffff</color>
+    <color name="blue">#ff87cefa</color>
 </resources>

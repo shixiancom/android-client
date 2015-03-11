@@ -24,7 +24,9 @@
             android:ellipsize="end"
             android:layout_weight="1"
             android:layout_marginRight="16dp"
-           />
+            android:background="@drawable/text_common_selector"
+
+            />
 
        <Button
            android:minWidth="88dp"

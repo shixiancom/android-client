@@ -27,9 +27,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
-
+            android:background="@drawable/text_common_selector"
             android:singleLine="true"
             android:textSize="@dimen/menu_tv_sp" />
+
 
     </LinearLayout>
 

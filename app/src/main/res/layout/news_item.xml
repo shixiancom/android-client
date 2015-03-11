@@ -11,7 +11,7 @@
         android:gravity="center_vertical"
         >
 
-        <com.shixian.android.client.views.RoundCornerImageView
+        <ImageView
             android:scaleType="centerCrop"
             android:layout_marginLeft="@dimen/global_left"
             android:layout_marginTop="10dp"
@@ -31,6 +31,7 @@
             android:layout_alignTop="@id/iv_icon"
             android:layout_toRightOf="@id/iv_icon"
             android:textSize="13sp"
+            android:background="@drawable/text_common_selector"
 
             />
 
@@ -55,6 +56,8 @@
             android:layout_toRightOf="@id/tv_type"
             android:layout_marginLeft="5dp"
             android:textSize="13sp"
+            android:background="@drawable/text_common_selector"
+
             />
 
         <com.shixian.android.client.views.FontTextView
@@ -67,6 +70,8 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/iv_icon"
             android:layout_marginBottom="5dp"
+            android:background="@drawable/text_common_selector"
+
             />
 
         <com.shixian.android.client.views.FontTextView
@@ -78,6 +83,8 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/tv_project"
             android:layout_marginBottom="5dp"
+            android:background="@drawable/text_common_selector"
+
             android:layout_marginLeft="3dp"/>
 
         <com.shixian.android.client.views.FontTextView
@@ -90,6 +97,8 @@
             android:layout_toRightOf="@id/tv_addpri"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="3dp"
+            android:background="@drawable/text_common_selector"
+
 
             />
 
@@ -123,7 +132,7 @@
         android:textColor="#666666"
         android:layout_marginTop="@dimen/content_top"
         android:layout_marginBottom="10dp"
-
+            android:background="@drawable/text_common_selector"
         />
 
         <Button
