@@ -73,7 +73,7 @@ public interface AppContants {
 
 
    //jpush需要的url
-    String JPUSH_NEED_URL=DOMAIN+"/api/v1/android_tokens";
+    String JPUSH_NEED_URL="http://shixian.com"+"/api/v1/android_tokens";
 
     String DEBUG_JPUSH_NEED_URL="http://172.168.97.167:3000"+"/api/v1/android_tokens";
 
@@ -120,5 +120,6 @@ public interface AppContants {
 
     /*************************定义的一些action************************/
     String ACTION_FINISHACTIVITY="com.shixian.android.client.finishactivity";
+    String ACTION_JPUSHACTIVITY="com.shixian.android.client.jpushactivity";
 
 }

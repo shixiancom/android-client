@@ -50,7 +50,7 @@ public class ContentHandler {
                 dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        v.setBackgroundColor(Color.WHITE);
+                        v.setBackgroundColor(Color.TRANSPARENT);
                     }
                 });
 

@@ -82,7 +82,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
-                .displayer(new RoundedBitmapDisplayer(10))
+                .displayer(new RoundedBitmapDisplayer(5))
                 .build();
 
 
@@ -458,7 +458,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                             holder.tv_project.setText(project);
                             holder.tv_name.setText(news.user.username);
                             holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.addcomment)));
-                            holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(news.data.content_html)));
+                            holder.tv_content.setText(news.data.content);
                             holder.tv_post_type.setVisibility(View.VISIBLE);
                             holder.tv_post_type.setText("回复");
                             holder.tv_add.setVisibility(View.GONE);
@@ -477,7 +477,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_attachment).replace("{project_title}", project)));
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(R.string.attachment);
-                                    holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(news.data.content_html)));
+                                    holder.tv_content.setText(news.data.content);
                                     holder.tv_add.setText("文件");
                                     holder.tv_add_pri.setVisibility(View.VISIBLE);
                                     holder.tv_add_pri.setText("添加了");
@@ -488,7 +488,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_task).replace("{project_title}", project)));
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(R.string.attachment);
-                                    holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(news.data.content_html)));
+                                    holder.tv_content.setText(news.data.content);
                                     holder.tv_add.setText("任务提交");
                                     holder.tv_add_pri.setVisibility(View.VISIBLE);
                                     holder.tv_add_pri.setText("添加了");
@@ -500,7 +500,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(R.string.attachment);
                                     holder.tv_add.setText("想法");
-                                    holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(news.data.content_html)));
+                                    holder.tv_content.setText(news.data.content);
                                     holder.tv_add_pri.setVisibility(View.VISIBLE);
                                     holder.tv_add_pri.setText("添加了");
 
@@ -512,7 +512,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_image).replace("{project_title}", project)));
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(R.string.attachment);
-                                    holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(news.data.content_html)));
+                                    holder.tv_content.setText(news.data.content);
                                     holder.tv_add.setText("图片");
                                     holder.tv_add_pri.setVisibility(View.VISIBLE);
                                     holder.tv_add_pri.setText("添加了");
@@ -534,7 +534,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_vote).replace("{project_title}", project)));
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(R.string.attachment);
-                                    holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(news.data.content_html)));
+                                    holder.tv_content.setText(news.data.content);
                                     holder.tv_add.setText("投票");
                                     holder.tv_add_pri.setVisibility(View.VISIBLE);
                                     holder.tv_add_pri.setText("添加了");
@@ -545,7 +545,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_vote).replace("{project_title}", project)));
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(R.string.attachment);
-                                    holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(news.data.content_html)));
+                                    holder.tv_content.setText(news.data.content);
                                     holder.tv_add.setText("任务");
                                     holder.tv_add_pri.setVisibility(View.VISIBLE);
                                     holder.tv_add_pri.setText("添加了");
@@ -584,7 +584,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                             holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_homework).replace("{project_title}", project)));
                             holder.tv_name.setText(news.user.username);
                             holder.tv_type.setText(R.string.attachment);
-                            holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(news.data.content_html)));
+                            holder.tv_content.setText(news.data.content);
                             holder.tv_add.setText("任务");
                             holder.tv_add_pri.setVisibility(View.VISIBLE);
                             holder.tv_add_pri.setText("完成了您分配的");
@@ -599,7 +599,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_mention_attachment)));
-                                    holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(news.data.content_html)));
+                                    holder.tv_content.setText(news.data.content);
 
 
                                     break;
@@ -609,7 +609,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_mention_comment)));
-                                    holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(news.data.content_html)));
+                                    holder.tv_content.setText(news.data.content);
                                     break;
 
                                 case "Homework":
@@ -618,7 +618,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_mention_homework)));
-                                    holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(news.data.content_html)));
+                                    holder.tv_content.setText(news.data.content);
                                     break;
 
                                 case "Idea":
@@ -627,7 +627,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_mention_idea)));
-                                    holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(news.data.content_html)));
+                                    holder.tv_content.setText(news.data.content);
                                     break;
 
                                 case "Image":
@@ -636,7 +636,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_mention_image)));
-                                    holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(news.data.content_html)));
+                                    holder.tv_content.setText(news.data.content);
                                     break;
 
                                 case "task":
@@ -645,7 +645,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_mention_task)));
-                                    holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(news.data.content_html)));
+                                    holder.tv_content.setText(news.data.content);
                                     break;
 
                             }
@@ -661,7 +661,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                             holder.tv_content.setVisibility(View.VISIBLE);
                             holder.tv_name.setText(news.user.username);
                             holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_reply)));
-                            holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(news.data.content_html)));
+                            holder.tv_content.setText(news.data.content);
                             holder.tv_post_type.setVisibility(View.VISIBLE);
                             holder.tv_post_type.setText("回复");
                             holder.tv_add.setVisibility(View.GONE);
@@ -677,7 +677,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                             holder.tv_name.setText(news.user.username);
                             holder.tv_type.setText(Html.fromHtml("在"));
 
-                            holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(news.data.content_html)));
+                            holder.tv_content.setText(news.data.content);
                             if (news.project.getTitle().length() > 10) {
                                 project = news.project.getTitle().substring(0, 8) + "...";
                             } else {
@@ -806,6 +806,7 @@ public class NewsFragment extends AbsListViewBaseFragment
     public void onResume() {
         super.onResume();
         ((MainActivity)context).setCurrentFragment(this);
+        ((MainActivity)context).hideMsg();
 
     }
 

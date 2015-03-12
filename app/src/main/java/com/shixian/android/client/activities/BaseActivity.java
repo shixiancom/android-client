@@ -44,8 +44,8 @@ public abstract  class BaseActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        new FinishActivityReceiver();
         super.onCreate(savedInstanceState);
+        receiver=new FinishActivityReceiver();
         IntentFilter filter=new IntentFilter();
         filter.addAction(AppContants.ACTION_FINISHACTIVITY);
         registerReceiver(receiver,filter);

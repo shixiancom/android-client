@@ -2,7 +2,10 @@ package com.shixian.android.client.activities;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -70,6 +73,7 @@ import cn.jpush.android.api.JPushInterface;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
+
 import android.util.TypedValue;
 import android.widget.ToggleButton;
 
@@ -82,14 +86,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private String TAG = "MainActivity";
 
 
-
-
     /**
      * 如果是主页的话该值为true
      */
     private boolean isIndex;
 
-    private boolean onBackQuit=false;
+    private boolean onBackQuit = false;
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -120,7 +122,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     /**
      * 丑陋的进度条 搞好逻辑之后替换
      */
-    private SmoothProgressBar mProgressBar ;
+    private SmoothProgressBar mProgressBar;
 
 
     private LinearLayout ll_descory;
@@ -130,9 +132,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     //用于记录 当前属于哪个
     private BaseFragment currentFeed;
 
-   //private RedPointView titleImgPoint;
-   private TextView tv_msg_count;
-   private ImageView iv_msg;
+    //private RedPointView titleImgPoint;
+    private TextView tv_msg_count;
+    private ImageView iv_msg;
 
     private User user;
 
@@ -145,8 +147,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private WindowManager windowManager;
 
-
-
+    private SwicthFrageReveiver swicthFrageReveiver;
 
 
     @Override
@@ -155,22 +156,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //        setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_main);
 
+        initReceiver();
 
 
-
-
-        Global.MAIN=this;
-        Global.context=this;
-        Global.screenWidth= CommonUtil.getScreenWidth(this);
+        Global.MAIN = this;
+        Global.context = this;
+        Global.screenWidth = CommonUtil.getScreenWidth(this);
 
         initUI();
 
         addFragment();
 
         initDate();
-        
+
     }
 
+    private void initReceiver() {
+
+        swicthFrageReveiver = new SwicthFrageReveiver();
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(AppContants.ACTION_JPUSHACTIVITY);
+        registerReceiver(swicthFrageReveiver, filter);
+    }
 
 
     private void initDate() {
@@ -181,29 +189,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initUserProjects();
 
 
-
     }
 
     public void initMsgStatus() {
-        ApiUtils.get(AppContants.MSG_STATUS_URL,null,new AsyncHttpResponseHandler() {
+        ApiUtils.get(AppContants.MSG_STATUS_URL, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, final byte[] bytes) {
-                Gson gson=new Gson();
-                final NewsSataus status=gson.fromJson(new String(bytes), NewsSataus.class);
+                Gson gson = new Gson();
+                final NewsSataus status = gson.fromJson(new String(bytes), NewsSataus.class);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
 
                         //TODO
 
-                       // settingMsgCount(1);
+                        // settingMsgCount(1);
 
-                        if(status.total!=0)
+                        if (status.total != 0)
                             settingMsgCount(status.total);
 
-                        else{
+                        else {
 
-                           hideMsg();
+                            hideMsg();
 
                         }
 
@@ -284,7 +291,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      * 初始化左侧抽屉user 信息
      */
     private void initUserInfo() {
-        userInfo=SharedPerenceUtil.getUserInfo(this);
+        userInfo = SharedPerenceUtil.getUserInfo(this);
 
         CommonEngine.getMyUserInfo(new AsyncHttpResponseHandler() {
             @Override
@@ -297,9 +304,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 if (!AppContants.errorMsg.equals(userInfo)) {
                     Gson gson = new Gson();
                     User user = gson.fromJson(userInfo, User.class);
-                    MainActivity.this.user=user;
-                    Global.USER_ID=user.id;
-                    Global.USER_NAME=user.username;
+                    MainActivity.this.user = user;
+                    Global.USER_ID = user.id;
+                    Global.USER_NAME = user.username;
 
 
                     //发送推送需要的信息
@@ -350,31 +357,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-
-
     private void initUI() {
 
 
+        windowManager = getWindowManager();
 
 
-
-        windowManager=getWindowManager();
-
-
-
-        Global.iv_conte_size= DisplayUtil.dip2px(this,200);
+        Global.iv_conte_size = DisplayUtil.dip2px(this, 200);
 
 
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
 
+        drawable = toolbar.getNavigationIcon();
 
-
-        drawable=toolbar.getNavigationIcon();
-
-       // bt_msg_count= (Button) findViewById(R.id.bt_msg_count);
-
+        // bt_msg_count= (Button) findViewById(R.id.bt_msg_count);
 
 
         setSupportActionBar(toolbar);
@@ -398,10 +396,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void onDrawerOpened(View drawerView) {
-  //              Toast.makeText(MainActivity.this, "打开", Toast.LENGTH_LONG).show();
+                //              Toast.makeText(MainActivity.this, "打开", Toast.LENGTH_LONG).show();
 
-                if(toastView!=null)
-                {
+                if (toastView != null) {
                     toastView.setVisibility(View.GONE);
                 }
 
@@ -416,10 +413,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void onDrawerClosed(View drawerView) {
-            //    Toast.makeText(MainActivity.this, "关闭", Toast.LENGTH_LONG).show();
+                //    Toast.makeText(MainActivity.this, "关闭", Toast.LENGTH_LONG).show();
                 super.onDrawerClosed(drawerView);
-                if(toastView!=null)
-                {
+                if (toastView != null) {
                     toastView.setVisibility(View.VISIBLE);
                 }
                 initUserProjects();
@@ -427,7 +423,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
         };
 
-        mProgressBar= (SmoothProgressBar) findViewById(R.id.pocket);
+        mProgressBar = (SmoothProgressBar) findViewById(R.id.pocket);
         mProgressBar.setSmoothProgressDrawableBackgroundDrawable(
                 SmoothProgressBarUtils.generateDrawableWithColors(
                         getResources().getIntArray(R.array.pocket_background_colors),
@@ -450,21 +446,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         lv_menu = (ListView) findViewById(R.id.lv_menu);
 
 
-
         lv_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                SimpleProject project=projectList.get(position);
-                if(project!=null)
-                {
+                SimpleProject project = projectList.get(position);
+                if (project != null) {
                     //跳转到项目页面
-                    Bundle bundle=new Bundle();
-                    ProjectFeedFragment feedFragment=new ProjectFeedFragment();
-                    bundle.putString("project_id",project.getId()+"");
+                    Bundle bundle = new Bundle();
+                    ProjectFeedFragment feedFragment = new ProjectFeedFragment();
+                    bundle.putString("project_id", project.getId() + "");
 
                     bundle.putInt("type", IndexOnClickController.PROJECT_FRAGMENT);
-                    Intent intent=new Intent(MainActivity.this,DetailActivity.class);
+                    Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                     intent.putExtras(bundle);
                     MainActivity.this.startActivity(intent);
 
@@ -476,42 +470,39 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         /**
          * 抽屉中的三个选项
          */
-        ll_descory= (LinearLayout) findViewById(R.id.ll_descory);
-        ll_msg= (RelativeLayout) findViewById(R.id.ll_msg);
-        ll_index= (LinearLayout) findViewById(R.id.ll_index);
+        ll_descory = (LinearLayout) findViewById(R.id.ll_descory);
+        ll_msg = (RelativeLayout) findViewById(R.id.ll_msg);
+        ll_index = (LinearLayout) findViewById(R.id.ll_index);
 
         ll_descory.setOnClickListener(this);
         ll_msg.setOnClickListener(this);
         ll_index.setOnClickListener(this);
 
 
-
         //设置左侧抽屉的宽度等于屏幕宽度减去Toolbar的高度
-        LinearLayout ll_left= (LinearLayout) findViewById(R.id.ll_left);
-        int actionBarHeight=0;
+        LinearLayout ll_left = (LinearLayout) findViewById(R.id.ll_left);
+        int actionBarHeight = 0;
         TypedValue tv = new TypedValue();
         if (this.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
             actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, this.getResources().getDisplayMetrics());
         }
-        ll_left.getLayoutParams().width=Global.screenWidth-actionBarHeight;
-
+        ll_left.getLayoutParams().width = Global.screenWidth - actionBarHeight;
 
 
         //现实消息
-       // showMsg(5);
-        iv_msg= (ImageView) findViewById(R.id.iv_msg);
+        // showMsg(5);
+        iv_msg = (ImageView) findViewById(R.id.iv_msg);
         //TODO
-      //  titleImgPoint=new RedPointView(this,toolbar);
-          tv_msg_count= (TextView) findViewById(R.id.tv_msg_count);
-
+        //  titleImgPoint=new RedPointView(this,toolbar);
+        tv_msg_count = (TextView) findViewById(R.id.tv_msg_count);
 
 
         //头像的点击事件 和用户名的点击事件
-        View.OnClickListener userOnClickListener=new View.OnClickListener() {
+        View.OnClickListener userOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(user!=null) {
+                if (user != null) {
                     Bundle bundle = new Bundle();
 
                     bundle.putInt("type", IndexOnClickController.USER_FRAGMENT);
@@ -534,9 +525,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     protected void addFragment() {
+
+
+        int addFragmentTag = getIntent().getIntExtra("what", 0);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        IndexFragment indexFragment=new IndexFragment();
-        fragmentTransaction.replace(R.id.main_fragment_layout, indexFragment);
+
+        BaseFragment fragment = null;
+        switch (addFragmentTag) {
+            case 0:
+                fragment = new IndexFragment();
+                break;
+            case 1:
+                fragment = new NewsFragment();
+                break;
+            case 2:
+                fragment = new DiscoryProjectFragment();
+                break;
+        }
+
+
+        fragmentTransaction.replace(R.id.main_fragment_layout, fragment);
         fragmentTransaction.commit();
     }
 
@@ -547,44 +555,42 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-
     @Override
     public void onClick(View v) {
 
-        onBackQuit=false;
+        onBackQuit = false;
 
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.ll_descory:
 
-                if(currentFeed instanceof  DiscoryProjectFragment) {
+                if (currentFeed instanceof DiscoryProjectFragment) {
                     currentFeed.setCurrentPosition(0);
                     drawerLayout.closeDrawers();
                     return;
                 }
-                switchFragment(new DiscoryProjectFragment(),"ll_descory");
-                isIndex=false;
+                switchFragment(new DiscoryProjectFragment(), "ll_descory");
+                isIndex = false;
 
                 break;
             case R.id.ll_index:
-                isIndex=true;
-                if(currentFeed instanceof IndexFragment) {
+                isIndex = true;
+                if (currentFeed instanceof IndexFragment) {
                     currentFeed.setCurrentPosition(0);
                     drawerLayout.closeDrawers();
                     return;
                 }
-                switchFragment(new IndexFragment(),"ll_index");
+                switchFragment(new IndexFragment(), "ll_index");
 
                 break;
             case R.id.ll_msg:
-                if(currentFeed instanceof  NewsFragment) {
+                if (currentFeed instanceof NewsFragment) {
                     currentFeed.setCurrentPosition(0);
                     drawerLayout.closeDrawers();
                     return;
                 }
-                hideMsg();
-                switchFragment(new NewsFragment(),"ll_msg");
-                isIndex=false;
+
+                switchFragment(new NewsFragment(), "ll_msg");
+                isIndex = false;
 
                 break;
         }
@@ -618,7 +624,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 view = View.inflate(MainActivity.this, R.layout.lv_project_item, null);
                 holder = new ProjectHolder();
                 holder.tv_title = (TextView) view.findViewById(R.id.tv_title);
-                holder.iv_sit= (ImageView) view.findViewById(R.id.iv_sit);
+                holder.iv_sit = (ImageView) view.findViewById(R.id.iv_sit);
 
                 view.setTag(holder);
 
@@ -643,60 +649,40 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-
-
-
-    public void showProgress()
-    {
+    public void showProgress() {
         mProgressBar.progressiveStart();
         mProgressBar.setVisibility(View.VISIBLE);
     }
 
-    public void dissProgress()
-    {
+    public void dissProgress() {
         mProgressBar.progressiveStop();
         mProgressBar.setVisibility(View.GONE);
     }
 
 
+    public void switchFragment(BaseFragment fragment, String key) {
 
-
-
-    public void switchFragment(BaseFragment fragment,String key)
-    {
-
-        onBackQuit=false;
+        onBackQuit = false;
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-        if(fragment instanceof  IndexFragment)
-        {
-            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
-
-        }else {
-            fragmentTransaction.addToBackStack(null);
-        }
-
         fragmentTransaction.replace(R.id.main_fragment_layout, fragment);
-       // fragmentTransaction.replace(R.id.main_fragment_layout, fragment);
+        // fragmentTransaction.replace(R.id.main_fragment_layout, fragment);
 
         fragmentTransaction.commit();
         drawerLayout.closeDrawers();
 
     }
 
-    public void  setLable(String lable)
-    {
+    public void setLable(String lable) {
         toolbar.setTitle(lable);
     }
 
 
-    public void settingMsgCount(int count)
-    {
+    public void settingMsgCount(int count) {
 
 
-        if(count>99)
-            count=99;
+        if (count > 99)
+            count = 99;
 
         showMsg(count);
 
@@ -706,34 +692,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onBackPressed() {
 
-        if(currentFeed instanceof IndexFragment)
-        {
-            if(onBackQuit)
-            {
+        if (onBackQuit) {
 
-                super.onBackPressed();
-            }else {
-                onBackQuit=true;
-                Toast.makeText(this,"再次按返回键退出",Toast.LENGTH_SHORT).show();
-            }
-        }else{
-
-                super.onBackPressed();
+            super.onBackPressed();
+        } else {
+            onBackQuit = true;
+            Toast.makeText(this, "再次按返回键退出", Toast.LENGTH_SHORT).show();
         }
 
 
-
-
     }
-
 
 
 /*****************************************************************/
     /**
      * 现实消息数量
      */
-    public  void showMsg(int count)
-    {
+    public void showMsg(int count) {
 
 //        titleImgPoint.setContent(count);
 //        titleImgPoint.setSizeContent(16);
@@ -745,32 +720,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         tv_msg_count.setVisibility(View.VISIBLE);
 
 
-        tv_msg_count.setText(count+"");
+        tv_msg_count.setText(count + "");
 
- //       showMsg(count);
+        //       showMsg(count);
 
         showMyToast(count);
 
 
-
-
     }
 
 
-    public void hideMsg()
-    {
-      //  titleImgPoint.hide();
+    public void hideMsg() {
+        //  titleImgPoint.hide();
         tv_msg_count.setVisibility(View.GONE);
 
-        if(toastView!=null) {
+        if (toastView != null) {
             getWindowManager().removeView(toastView);
-            toastView=null;
+            toastView = null;
         }
     }
 
-    private void hideMyToast()
-    {
-        if(toastView!=null) {
+    private void hideMyToast() {
+        if (toastView != null) {
             toastView.setVisibility(View.GONE);
         }
 
@@ -786,13 +757,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     /**
      * 自定义Toast显示我们的消息数量
+     *
      * @param count
      */
     public void showMyToast(int count) {
-        if(toastView!=null&&toastView.getVisibility()==View.VISIBLE)
-        {
+        if (toastView != null && toastView.getVisibility() == View.VISIBLE) {
             getWindowManager().removeView(toastView);
-            toastView=null;
+            toastView = null;
         }
 
         toastView = new TextView(this);
@@ -800,7 +771,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         toastView.setTextSize(11);
         toastView.setBackgroundResource(R.drawable.cicle_msg);
 
-        toastView.setText(count+"");
+        toastView.setText(count + "");
         toastView.setGravity(Gravity.CENTER);
 
         mParams = new WindowManager.LayoutParams();
@@ -808,11 +779,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
 
 
+        mParams.gravity = Gravity.LEFT + Gravity.TOP;
 
-        mParams.gravity = Gravity.LEFT+Gravity.TOP;
-
-        mParams.x=DisplayUtil.dip2px(this,30);
-        mParams.y=DisplayUtil.dip2px(this,30);
+        mParams.x = DisplayUtil.dip2px(this, 30);
+        mParams.y = DisplayUtil.dip2px(this, 30);
         mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
 //				| WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
                 | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
@@ -875,7 +845,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //                return true;
 //            }
 //        });
-   }
+    }
 
     /******************************************************JPUSH****************/
     /**
@@ -883,19 +853,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      */
     private void sendJpushData() {
 
-        String regId=JPushInterface.getRegistrationID(this);
-        RequestParams params=new RequestParams();
-        params.put("reg_id",regId);
-        params.put("uid",Global.USER_ID);
-        params.put("device",CommonUtil.getImei(this,""));
+        String regId = JPushInterface.getRegistrationID(this);
+        RequestParams params = new RequestParams();
+        params.put("reg_id", regId);
+        params.put("uid", Global.USER_ID);
+        params.put("device", CommonUtil.getImei(this, ""));
 
 
-        ApiUtils.post(AppContants.DEBUG_JPUSH_NEED_URL,params,new AsyncHttpResponseHandler() {
+        ApiUtils.post(AppContants.JPUSH_NEED_URL, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int position, Header[] headers, byte[] bytes) {
-                Toast.makeText(MainActivity.this,"发送成功",Toast.LENGTH_LONG).show();
 
-                Log.i("AAAAA",new String(bytes));
             }
 
             @Override
@@ -905,18 +873,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         });
 
 
-
     }
 
 
-
-    /*********重写的生命周期方法****************/
+    /**
+     * ******重写的生命周期方法***************
+     */
     @Override
     protected void onDestroy() {
 
-        if(toastView!=null) {
+        if (toastView != null) {
             getWindowManager().removeView(toastView);
         }
+
+        if (swicthFrageReveiver != null) {
+            unregisterReceiver(swicthFrageReveiver);
+            swicthFrageReveiver=null;
+        }
+
         super.onDestroy();
     }
 
@@ -924,13 +898,34 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        initMsgStatus();
+        //     initMsgStatus();
 
     }
 
 
-    public void setCurrentFragment(BaseFragment fragment)
-    {
-        this.currentFeed=fragment;
+    public void setCurrentFragment(BaseFragment fragment) {
+        this.currentFeed = fragment;
+    }
+
+
+    class SwicthFrageReveiver extends BroadcastReceiver {
+
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            Log.e("AAAA", "x--------------------------------x");
+
+            if (currentFeed instanceof NewsFragment) {
+                currentFeed.setCurrentPosition(0);
+                drawerLayout.closeDrawers();
+                return;
+            }
+
+            switchFragment(new NewsFragment(), "ll_msg");
+            isIndex = false;
+            hideMsg();
+
+        }
     }
 }

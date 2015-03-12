@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -32,7 +33,9 @@ public class LoginActivity extends Activity
     private String TAG = "LoginActivity";
     private Oauth2AccessToken mAccessToken;
 
-    private ProgressDialog progressDialog;
+  //  private ProgressDialog progressDialog;
+
+   ProgressDialog mProgressDialog ;
 
 
     private LoginButton loginButton;
@@ -62,8 +65,14 @@ public class LoginActivity extends Activity
         loginButton = (LoginButton) findViewById(R.id.login_button_default);
 
 
-        progressDialog=new ProgressDialog(this);
-        progressDialog.setMessage("正在验证登陆信息");
+       // progressDialog=new ProgressDialog(this);
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("正在验证登陆信息");
+
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setCancelable(false);
+
+
         // 创建授权认证信息
         mAuthInfo = new AuthInfo(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE);
 
@@ -76,8 +85,8 @@ public class LoginActivity extends Activity
 
             //这里还要验证token是否可用
             //在这里需要现实进度条给用户提示
-            progressDialog.show();
-            LoginUtil.validationToken(LoginActivity.this,mAccessToken,progressDialog);
+            mProgressDialog.show();
+            LoginUtil.validationToken(LoginActivity.this,mAccessToken,mProgressDialog);
         }else{
 
 
@@ -126,8 +135,8 @@ public class LoginActivity extends Activity
                 AccessTokenKeeper.writeAccessToken(LoginActivity.this, mAccessToken);
                 CommonUtil.logDebug(TAG,mAccessToken.getToken());
                 //从服务器请求cookie？？
-                progressDialog.show();
-                LoginUtil.validationToken(LoginActivity.this,mAccessToken,progressDialog);
+                mProgressDialog.show();
+                LoginUtil.validationToken(LoginActivity.this,mAccessToken,mProgressDialog);
 
             } else {
                 // 以下几种情况，您会收到 Code：

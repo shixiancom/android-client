@@ -218,7 +218,7 @@ public abstract  class BaseFeedFragment extends AbsListViewBaseFragment {
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
-                .displayer(new RoundedBitmapDisplayer(10))
+                .displayer(new RoundedBitmapDisplayer(5))
                 .build();
 
         contentOptions = new DisplayImageOptions
@@ -239,7 +239,7 @@ public abstract  class BaseFeedFragment extends AbsListViewBaseFragment {
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
-                .displayer(new RoundedBitmapDisplayer(10))
+                .displayer(new RoundedBitmapDisplayer(4))
                 .build();
 
     }
@@ -602,7 +602,7 @@ public abstract  class BaseFeedFragment extends AbsListViewBaseFragment {
             case "Image":
 
                 type = context.getResources().getString(R.string.feed_add_image);
-                feedHolder.tv_content.setText(Html.fromHtml(feed.data.content_html));
+                feedHolder.tv_content.setText(feed.data.content);
 
                 feedHolder.iv_content.setVisibility(View.VISIBLE);
                 ImageLoader.getInstance().displayImage(AppContants.DOMAIN + feed.data.attachment.thumb.url, feedHolder.iv_content, contentOptions, animateFirstListener);
@@ -762,7 +762,7 @@ public abstract  class BaseFeedFragment extends AbsListViewBaseFragment {
         commentHolder.tv_name.setText(comment.user.username);
         commentHolder.tv_time.setText(TimeUtil.getDistanceTime(comment.created_at));
         commentHolder.tv_content.setVisibility(View.VISIBLE);
-        commentHolder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(comment.content_html)));
+        commentHolder.tv_content.setText(comment.content);
 
 
         new ContentHandler(commentHolder.tv_content).longClickCopy();

@@ -419,6 +419,11 @@ public class UserIndexFragment extends BaseFeedFragment {
                         }
                     });
 
+                    if (user.id.equals(Global.USER_ID))
+                    {
+                        bt_follow.setVisibility(View.GONE);
+                    }
+
                     break;
 
                 case BaseFeed.TYPE_FEED:
@@ -586,6 +591,7 @@ public class UserIndexFragment extends BaseFeedFragment {
         super.onResume();
         if (user.id.equals(Global.USER_ID)) {
             ((DetailActivity) context).showQuitMenu();
+
         }
 
 

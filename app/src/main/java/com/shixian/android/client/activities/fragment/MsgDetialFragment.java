@@ -113,7 +113,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
-                .displayer(new RoundedBitmapDisplayer(10))
+                .displayer(new RoundedBitmapDisplayer(5))
                 .build();
 
 
@@ -136,7 +136,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
-                .displayer(new RoundedBitmapDisplayer(10))
+                .displayer(new RoundedBitmapDisplayer(4))
                 .build();
 
     }
@@ -545,7 +545,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                         case "Image":
 
                             type = context.getResources().getString(R.string.feed_add_image);
-                            holder.tv_content.setText(Html.fromHtml(allItemType.content_html));
+                            holder.tv_content.setText(allItemType.content);
                             holder.iv_content.setVisibility(View.VISIBLE);
 
 
@@ -571,12 +571,12 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                             break;
                         case "Task":
                             type = context.getResources().getString(R.string.feed_add_task);
-                            holder.tv_content.setText(Html.fromHtml(allItemType.content_html));
+                            holder.tv_content.setText(allItemType.content);
                             break;
                         case "Vote":
                             type = context.getResources().getString(R.string.feed_join_vote);
 
-                            holder.tv_content.setText(Html.fromHtml(allItemType.content_html));
+                            holder.tv_content.setText(allItemType.content);
                             break;
                         case "Attachment":
 
@@ -638,7 +638,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                 holder.tv_type.setVisibility(View.GONE);
                 holder.iv_content.setVisibility(View.GONE);
                 holder.tv_content.setVisibility(View.VISIBLE);
-                holder.tv_content.setText(Html.fromHtml(StringUtils.trmDiv(comment.content)));
+                holder.tv_content.setText(comment.content);
 
 
 
