@@ -2,31 +2,25 @@ package com.shixian.android.client.activities.fragment;
 
 
 import android.os.Bundle;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
-import com.shixian.android.client.activities.BaseActivity;
 import com.shixian.android.client.activities.DetailActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.OnClickController;
 import com.shixian.android.client.engine.CommonEngine;
 import com.shixian.android.client.model.Comment;
-import com.shixian.android.client.model.Feed;
 import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.User;
 import com.shixian.android.client.model.feeddate.BaseFeed;
@@ -34,10 +28,6 @@ import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
 import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
-import com.shixian.android.client.utils.StringUtils;
-import com.shixian.android.client.utils.TimeUtil;
-import com.shixian.android.client.views.PersonItemLinearLayout;
-import com.sina.weibo.sdk.component.view.CommentComponentView;
 
 import org.apache.http.Header;
 

@@ -4,16 +4,11 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
-
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.BaseActivity;
 import com.shixian.android.client.activities.fragment.ProjectFeedFragment;
 import com.shixian.android.client.activities.fragment.UserIndexFragment;
-import com.shixian.android.client.contants.AppContants;
-import com.shixian.android.client.model.Comment;
-import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.feeddate.AllItemType;
-import com.shixian.android.client.model.feeddate.BaseFeed;
 
 /**
  * Created by s0ng on 2015/2/12.
@@ -86,7 +81,6 @@ public class OnAllItemTypeClickController implements View.OnClickListener{
                 break;
             //回复框 发表项目的时候是隐藏的
             case R.id.tv_response:
-                Toast.makeText(context,"tv_name",Toast.LENGTH_SHORT).show();
                 break;
 
         }

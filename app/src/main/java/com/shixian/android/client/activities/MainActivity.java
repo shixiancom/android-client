@@ -1,12 +1,9 @@
 package com.shixian.android.client.activities;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -22,7 +19,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -34,9 +30,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.shixian.android.client.Global;
@@ -49,33 +43,26 @@ import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.engine.CommonEngine;
-import com.shixian.android.client.model.News;
 import com.shixian.android.client.model.NewsSataus;
 import com.shixian.android.client.model.SimpleProject;
 import com.shixian.android.client.model.User;
-import com.shixian.android.client.sina.AccessTokenKeeper;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
 import com.shixian.android.client.utils.DisplayUtil;
 import com.shixian.android.client.utils.SharedPerenceUtil;
-
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-
 import cn.jpush.android.api.JPushInterface;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 
 import android.util.TypedValue;
-import android.widget.ToggleButton;
 
 
 /**
@@ -84,6 +71,7 @@ import android.widget.ToggleButton;
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private String TAG = "MainActivity";
+
 
 
     /**
@@ -154,6 +142,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);
+
+
+
         setContentView(R.layout.activity_main);
 
         initReceiver();
@@ -869,6 +860,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onFailure(int position, Header[] headers, byte[] bytes, Throwable throwable) {
 
+
             }
         });
 
@@ -903,6 +895,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
+
+
+
+
+
+
     public void setCurrentFragment(BaseFragment fragment) {
         this.currentFeed = fragment;
     }
@@ -914,7 +912,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            Log.e("AAAA", "x--------------------------------x");
+
 
             if (currentFeed instanceof NewsFragment) {
                 currentFeed.setCurrentPosition(0);

@@ -27,8 +27,7 @@ import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView;
  */
 public abstract class AbsListViewBaseFragment extends BaseFragment {
 
-	protected static final String STATE_PAUSE_ON_SCROLL = "STATE_PAUSE_ON_SCROLL";
-	protected static final String STATE_PAUSE_ON_FLING = "STATE_PAUSE_ON_FLING";
+
 
 	protected PullToRefreshListView pullToRefreshListView;
 

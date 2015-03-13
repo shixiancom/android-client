@@ -23,6 +23,9 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/PopupMenuStyle">
+
+             
+
             </android.support.v7.widget.Toolbar>
 
             <fr.castorflex.android.smoothprogressbar.SmoothProgressBar

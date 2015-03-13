@@ -2,7 +2,6 @@ package com.shixian.android.client.activities.fragment;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -12,7 +11,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -32,16 +29,12 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.BaseActivity;
-
 import com.shixian.android.client.activities.SimpleSampleActivity;
 import com.shixian.android.client.activities.fragment.base.AbsListViewBaseFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
-import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
-import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.controller.OnAllItemTypeClickController;
 import com.shixian.android.client.controller.OnClickController;
-import com.shixian.android.client.engine.CommonEngine;
 import com.shixian.android.client.enter.EnterLayout;
 import com.shixian.android.client.handler.content.ContentHandler;
 import com.shixian.android.client.model.Comment;
@@ -54,16 +47,11 @@ import com.shixian.android.client.utils.CommonUtil;
 import com.shixian.android.client.utils.DisplayUtil;
 import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
-import com.shixian.android.client.utils.StringUtils;
 import com.shixian.android.client.utils.TimeUtil;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshBase;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView;
-
 import org.apache.http.Header;
-
-import java.util.ArrayList;
 import java.util.List;
-
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment.FeedHolder;
 
 /**

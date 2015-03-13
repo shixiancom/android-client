@@ -111,7 +111,6 @@
             android:layout_marginRight="16dp"
             android:textColor="#888888"
             android:textSize="11sp"
-            android:layout_marginTop="5dp"
             />
 
 

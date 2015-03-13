@@ -1,7 +1,6 @@
 package com.shixian.android.client.activities.fragment.base;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -44,7 +43,6 @@ import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.feeddate.BaseFeed;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.DisplayUtil;
-import com.shixian.android.client.utils.StringUtils;
 import com.shixian.android.client.utils.TimeUtil;
 import com.shixian.android.client.views.PersonItemLinearLayout;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshBase;

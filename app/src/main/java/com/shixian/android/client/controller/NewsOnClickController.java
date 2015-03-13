@@ -7,9 +7,6 @@ import android.view.View;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.BaseActivity;
 import com.shixian.android.client.activities.DetailActivity;
-import com.shixian.android.client.contants.AppContants;
-import com.shixian.android.client.model.Comment;
-import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.News;
 
 /**

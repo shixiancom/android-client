@@ -5,11 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
+import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
 
 /**
@@ -41,8 +42,20 @@ public abstract  class BaseActivity extends ActionBarActivity {
     //写个广播接受着 用于关闭activity
 
 
+    protected static final String LABEL="LABLE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+        if(null != savedInstanceState)
+        {
+
+            String label = savedInstanceState.getString(LABEL);
+            this.setTitle(label);
+
+        }
+
 
         super.onCreate(savedInstanceState);
         receiver=new FinishActivityReceiver();
@@ -72,4 +85,18 @@ public abstract  class BaseActivity extends ActionBarActivity {
 
         super.onDestroy();
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save away the original text, so we still have it if the activity
+        // needs to be killed while paused.
+
+
+        savedInstanceState.putString(LABEL,getTitle().toString());
+
+        super.onSaveInstanceState(savedInstanceState);
+
+    }
+
+
 }

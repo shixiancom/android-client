@@ -1,7 +1,6 @@
 package com.shixian.android.client.activities.fragment;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -19,7 +18,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.shixian.android.client.R;
@@ -27,28 +25,19 @@ import com.shixian.android.client.activities.DetailActivity;
 import com.shixian.android.client.activities.MainActivity;
 import com.shixian.android.client.activities.fragment.base.AbsListViewBaseFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
-import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.controller.NewsOnClickController;
-import com.shixian.android.client.controller.OnClickController;
 import com.shixian.android.client.handler.content.ContentHandler;
-import com.shixian.android.client.model.Comment;
-import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.News;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.DisplayUtil;
-
 import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
-import com.shixian.android.client.utils.StringUtils;
 import com.shixian.android.client.utils.TimeUtil;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshBase;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView;
-
 import org.apache.http.Header;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,7 +86,7 @@ public class NewsFragment extends AbsListViewBaseFragment
 
         View view=inflater.inflate(R.layout.fragment_index,null,false);
 
-        context.setLable(getString(R.string.label_notifications));
+
 
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.lv_index);
         // 滚动到底自动加载可用
@@ -805,6 +794,7 @@ public class NewsFragment extends AbsListViewBaseFragment
     @Override
     public void onResume() {
         super.onResume();
+        context.setLable(getString(R.string.label_notifications));
         ((MainActivity)context).setCurrentFragment(this);
         ((MainActivity)context).hideMsg();
 

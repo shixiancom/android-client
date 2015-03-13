@@ -49,8 +49,6 @@ public class OnClickController implements View.OnClickListener{
             //用户名
             case R.id.tv_name:
                 //跳转到个人主页
-                Toast.makeText(context,"iv_ivcon",Toast.LENGTH_SHORT).show();
-                //跳转到个人主页
                 UserIndexFragment uf=new UserIndexFragment();
 
 
@@ -87,11 +85,9 @@ public class OnClickController implements View.OnClickListener{
 
             //图片内容 默认是隐藏的 当feedable_type为image时显示
             case R.id.iv_content:
-                Toast.makeText(context,"tv_name",Toast.LENGTH_SHORT).show();
                 break;
             //回复框 发表项目的时候是隐藏的
             case R.id.tv_response:
-                Toast.makeText(context,"tv_name",Toast.LENGTH_SHORT).show();
                 break;
 
         }

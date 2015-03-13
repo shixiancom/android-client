@@ -9,6 +9,17 @@ android {
         targetSdkVersion 19
         versionCode 1
         versionName "1.0"
+
+        signingConfigs {
+            debug {
+                storeFile file("android－ceremonial.keystore")
+                storePassword "110120130"
+                keyAlias "shixian"
+                keyPassword "110120130"
+
+              }
+         }
+
     }
     buildTypes {
         release {

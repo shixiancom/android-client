@@ -1,7 +1,6 @@
 package com.shixian.android.client.activities;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
@@ -9,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.fragment.MsgDetialFragment;
 import com.shixian.android.client.activities.fragment.ProjectFeedFragment;
@@ -19,9 +17,7 @@ import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.sina.AccessTokenKeeper;
 import com.shixian.android.client.utils.SharedPerenceUtil;
-
 import java.util.Random;
-
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
