@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -151,13 +152,33 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         addFragment();
         initDate();
 
-        checkUpdate();
+      //  checkUpdate();
 
     }
 
     private void checkUpdate() {
 
-        //if(getSharedPreferences("config",MODE_PRIVATE))
+        if(SharedPerenceUtil.checkNeedUpdate(this))
+        {
+
+
+            //检查更新
+            ApiUtils.get("http://dev.shixian.com:3000/androidupdate.json",null, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int position, Header[] headers, byte[] bytes) {
+                    Log.i("AAAAB",new String(bytes));
+                    Toast.makeText(MainActivity.this,new String(bytes),Toast.LENGTH_SHORT).show();
+
+                }
+
+                @Override
+                public void onFailure(int position, Header[] headers, byte[] bytes, Throwable throwable) {
+                    Log.i("AAAAB",new String(bytes));
+                    Toast.makeText(MainActivity.this,new String(bytes),Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        }
     }
 
 
@@ -367,20 +388,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         setSupportActionBar(toolbar);
 
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-//                    case R.id.action_news_search:
-//                        Toast.makeText(MainActivity.this, "Search", Toast.LENGTH_LONG).show();
-//                        break;
-//                    case R.id.action_quit:
-//                        logout();
-//                        break;
-                }
-                return true;
-            }
-        });
+//        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem menuItem) {
+//                switch (menuItem.getItemId()) {
+////                    case R.id.action_news_search:
+////                        Toast.makeText(MainActivity.this, "Search", Toast.LENGTH_LONG).show();
+////                        break;
+////                    case R.id.action_quit:
+////                        logout();
+////                        break;
+//                }
+//                return true;
+//            }
+//        });
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name) {
 
 

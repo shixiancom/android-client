@@ -47,7 +47,6 @@
             android:text="关注"
             android:textColor="@color/white"
             android:background="@drawable/shape_follow"
-            android:padding="3dp"
             style="?android:attr/borderlessButtonStyle"
             android:paddingBottom="0dp"
             />
