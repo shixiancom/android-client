@@ -151,8 +151,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         addFragment();
         initDate();
 
+        checkUpdate();
+
     }
 
+    private void checkUpdate() {
+
+        //if(getSharedPreferences("config",MODE_PRIVATE))
+    }
 
 
     private void initReceiver() {

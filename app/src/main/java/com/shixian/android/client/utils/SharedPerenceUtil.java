@@ -1,6 +1,7 @@
 package com.shixian.android.client.utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.shixian.android.client.activities.MainActivity;
 
@@ -142,4 +143,18 @@ public class SharedPerenceUtil {
     public static void putNews(Context context, String temp) {
         context.getSharedPreferences("cachedate",context.MODE_PRIVATE).edit().putString("news",temp).commit();
     }
+
+
+    public static boolean checkNeedUpdate(Context context)
+    {
+        return context.getSharedPreferences("config", Context.MODE_PRIVATE).getBoolean("update",true);
+    }
+
+    public static void settingCheckUpdate(Context context,boolean isNeed)
+    {
+        context.getSharedPreferences("config", Context.MODE_PRIVATE).edit().putBoolean("update",isNeed).commit();
+
+    }
+
 }
+
