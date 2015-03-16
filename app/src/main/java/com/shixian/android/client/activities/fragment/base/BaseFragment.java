@@ -3,11 +3,13 @@ package com.shixian.android.client.activities.fragment.base;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.shixian.android.client.activities.BaseActivity;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by s0ng on 2015/2/9.
@@ -21,6 +23,11 @@ public abstract class BaseFragment extends Fragment  {
 
 
 
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(getClass().getSimpleName());
+    }
 
 
     @Override
@@ -44,6 +51,8 @@ public abstract class BaseFragment extends Fragment  {
     public void onResume() {
         super.onResume();
         initDate(savedInstanceState);
+        MobclickAgent.onPageStart(getClass().getSimpleName()); //统计页面
+        Log.i("AAAA",getClass().getSimpleName());
     }
 
     public abstract View initView(LayoutInflater inflater);

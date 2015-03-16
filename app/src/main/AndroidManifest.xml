@@ -46,8 +46,11 @@
     <!--自定义Toast-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
-
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+
+
+
 
 
 
@@ -172,6 +175,9 @@
         <!-- Required. AppKey copied from Portal -->
         <meta-data android:name="JPUSH_APPKEY" android:value="6f2cdcff9881fb58a2ea89c2"/>
 
+        <!--umeng-->
+        <meta-data android:value="55064514fd98c5505c000c07" android:name="UMENG_APPKEY"></meta-data>
+        <meta-data android:value="shixian" android:name="UMENG_CHANNEL"/>
 
     </application>
 

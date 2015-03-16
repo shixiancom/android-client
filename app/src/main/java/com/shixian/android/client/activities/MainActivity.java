@@ -15,7 +15,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -143,24 +142,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);
 
-
-
         setContentView(R.layout.activity_main);
-
         initReceiver();
-
-
         Global.MAIN = this;
         Global.context = this;
         Global.screenWidth = CommonUtil.getScreenWidth(this);
-
         initUI();
-
         addFragment();
-
         initDate();
 
     }
+
+
 
     private void initReceiver() {
 
@@ -740,7 +733,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         drawerLayout.closeDrawers();
     }
@@ -888,7 +881,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         //     initMsgStatus();
 

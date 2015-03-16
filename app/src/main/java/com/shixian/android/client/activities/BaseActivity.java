@@ -16,7 +16,7 @@ import com.shixian.android.client.utils.CommonUtil;
 /**
  * Created by s0ng on 2015/2/22.
  */
-public abstract  class BaseActivity extends ActionBarActivity {
+public abstract  class BaseActivity extends UmengActivity {
 
 
     /**

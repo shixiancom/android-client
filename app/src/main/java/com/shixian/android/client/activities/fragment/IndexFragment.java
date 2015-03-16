@@ -422,6 +422,7 @@ public class IndexFragment extends BaseFeedFragment {
     @Override
     public void onResume() {
         super.onResume();
+        ((MainActivity)context).initMsgStatus();
         ((MainActivity)context).setCurrentFragment(this);
 
     }

@@ -39,4 +39,6 @@ dependencies {
     compile project(':library-circular')
     compile files('libs/jpush-sdk-release1.7.3.jar')
     compile files('libs/universal-image-loader-1.9.4-SNAPSHOT.jar')
+    compile files('libs/umeng-analytics-v5.4.2.jar')
+
 }

@@ -22,6 +22,7 @@ import com.sina.weibo.sdk.auth.AuthInfo;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.exception.WeiboException;
+import com.umeng.analytics.MobclickAgent;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -40,6 +41,11 @@ public class LoginActivity extends Activity
 
     private AuthInfo mAuthInfo;
     private AuthListener mLoginListener = new AuthListener();
+
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -198,11 +204,15 @@ public class LoginActivity extends Activity
     protected void onResume() {
         super.onResume();
         JPushInterface.onResume(this);
+        MobclickAgent.onResume(this);
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         JPushInterface.onPause(this);
+        MobclickAgent.onPause(this);
+
     }
 }

@@ -53,7 +53,9 @@ public class DiscoryProjectFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        ((MainActivity)context).initMsgStatus();
         ((MainActivity)context).setCurrentFragment(this);
+
 
     }
 
