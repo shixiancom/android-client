@@ -56,6 +56,8 @@ public class LoginUtil {
         RequestParams params = new RequestParams();
         params.add("access_token", mAccessToken.getToken());
 
+        ApiUtils.client.setTimeout(30000);
+
 
         final AsyncHttpClient client = new AsyncHttpClient();
 
@@ -95,7 +97,7 @@ public class LoginUtil {
 
                 }
 
-                progressDialog.dismiss();
+               progressDialog.dismiss();
 
             }
 
@@ -104,6 +106,7 @@ public class LoginUtil {
             //    Toast.makeText(context,context.getResources().getString(R.string.check_net), Toast.LENGTH_LONG).show();
                 progressDialog.dismiss();
                 ((LoginActivity)context).setOnclick();
+            //  Toast.makeText(context,"请求超时 xxxxxxxxxxxxxxxxxxxx"+new String(bytes),Toast.LENGTH_SHORT).show();
 
             }
         });

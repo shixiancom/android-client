@@ -103,7 +103,6 @@ public class NewsFragment extends AbsListViewBaseFragment
                     PullToRefreshBase<ListView> refreshView) {
 
                 //上啦刷新
-                Log.i("AAAA", "1111-------------------------------------------------------------------");
                 initFirst();
             }
 
@@ -112,7 +111,6 @@ public class NewsFragment extends AbsListViewBaseFragment
                     PullToRefreshBase<ListView> refreshView) {
                 //getNewsList(moreUrl, false);
                 //下拉加载更多
-                Log.i("AAAA","-------------------------------------------------------------------");
                 getNextData();
 
 

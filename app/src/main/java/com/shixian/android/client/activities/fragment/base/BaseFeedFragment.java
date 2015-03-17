@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -303,7 +302,6 @@ public abstract  class BaseFeedFragment extends AbsListViewBaseFragment {
                     PullToRefreshBase<ListView> refreshView) {
 
                 //上啦刷新
-                Log.i("AAAA", "1111-------------------------------------------------------------------");
                 initFirst();
             }
 
@@ -312,7 +310,6 @@ public abstract  class BaseFeedFragment extends AbsListViewBaseFragment {
                     PullToRefreshBase<ListView> refreshView) {
                 //getNewsList(moreUrl, false);
                 //下拉加载更多
-                Log.i("AAAA","-------------------------------------------------------------------");
                 getNextData();
 
 
@@ -439,7 +436,6 @@ public abstract  class BaseFeedFragment extends AbsListViewBaseFragment {
         if(tag instanceof Comment)
         {
 
-            Log.i("AAAA","isComment-------------------------------");
             if(TextUtils.isEmpty(comment.getText()))
             {
                 comment.setText("@"+ ((Comment)tag).user.username+" ");

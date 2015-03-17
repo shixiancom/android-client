@@ -3,7 +3,9 @@ package com.shixian.android.client.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -15,6 +17,7 @@ import com.shixian.android.client.model.User;
 import com.shixian.android.client.sina.AccessTokenKeeper;
 import com.shixian.android.client.sina.Constants;
 import com.shixian.android.client.sina.widget.LoginButton;
+import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
 import com.shixian.android.client.utils.LoginUtil;
 import com.shixian.android.client.utils.SharedPerenceUtil;
@@ -41,9 +44,6 @@ public class LoginActivity extends Activity
 
     private AuthInfo mAuthInfo;
     private AuthListener mLoginListener = new AuthListener();
-
-
-
 
 
 
@@ -89,15 +89,13 @@ public class LoginActivity extends Activity
 
             //这里还要验证token是否可用
             //在这里需要现实进度条给用户提示
-            mProgressDialog.show();
-            LoginUtil.validationToken(LoginActivity.this,mAccessToken,mProgressDialog);
+            ApiUtils.client.addHeader("Cookie",getSharedPreferences("userinfo", Context.MODE_PRIVATE).getString("cookie",""));
+            ApiUtils.client.addHeader("user-agent", "android");
+
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
         }else{
-
-
-
-
             setOnclick();
-
         }
 
 

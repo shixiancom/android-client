@@ -52,7 +52,7 @@ public class SharedPerenceUtil {
      */
     public static void putMyProject(Context context,String json)
     {
-        context.getSharedPreferences("cachedate",context.MODE_PRIVATE).edit().putString("myproject",json);
+        context.getSharedPreferences("cachedate",context.MODE_PRIVATE).edit().putString("myproject",json).commit();
 
     }
 

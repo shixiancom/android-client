@@ -139,8 +139,6 @@ public class IndexFragment extends BaseFeedFragment {
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
-//                Log.i("AAAA", new String(bytes));
-
 
                 Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
                 pullToRefreshListView.onPullDownRefreshComplete();

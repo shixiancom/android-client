@@ -166,14 +166,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             ApiUtils.get("http://dev.shixian.com:3000/androidupdate.json",null, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int position, Header[] headers, byte[] bytes) {
-                    Log.i("AAAAB",new String(bytes));
+
                     Toast.makeText(MainActivity.this,new String(bytes),Toast.LENGTH_SHORT).show();
 
                 }
 
                 @Override
                 public void onFailure(int position, Header[] headers, byte[] bytes, Throwable throwable) {
-                    Log.i("AAAAB",new String(bytes));
+
                     Toast.makeText(MainActivity.this,new String(bytes),Toast.LENGTH_SHORT).show();
 
                 }
@@ -212,7 +212,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     @Override
                     public void run() {
 
-                        //TODO
+
 
                         // settingMsgCount(1);
 
@@ -253,7 +253,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
 
 
-                myProjectjson = new String(bytes);
+                String temp = new String(bytes);
+                if(!TextUtils.isEmpty(temp))
+                {
+                    myProjectjson=temp;
+                }
                 if (!AppContants.errorMsg.equals(myProjectjson)) {
                     projectList.clear();
                     Gson gson = new Gson();
@@ -417,7 +421,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                 //打开重新加载数据
                 //TODO
-                tv_uname.setText(user.username);
+                if(user!=null)
+                    tv_uname.setText(user.username);
 
 
             }

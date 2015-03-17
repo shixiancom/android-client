@@ -52,7 +52,6 @@ public abstract class BaseFragment extends Fragment  {
         super.onResume();
         initDate(savedInstanceState);
         MobclickAgent.onPageStart(getClass().getSimpleName()); //统计页面
-        Log.i("AAAA",getClass().getSimpleName());
     }
 
     public abstract View initView(LayoutInflater inflater);

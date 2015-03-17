@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -133,7 +132,6 @@ public class ProjectFeedFragment extends BaseFeedFragment {
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
-//                Log.i("AAAA", new String(bytes));
 
                 //TODO 错误可能定义的不是太准确  最后一天调整
                 Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
@@ -200,7 +198,6 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                 final String temp = new String(bytes);
                 if (!AppContants.errorMsg.equals(temp)) {
 
-                    Log.i("AAAA","xxcxcxcxcxc");
                     new Thread() {
                         public void run() {
 

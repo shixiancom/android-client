@@ -173,7 +173,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                     PullToRefreshBase<ListView> refreshView) {
 
                 //上啦刷新
-                Log.i("AAAA", "1111-------------------------------------------------------------------");
                 initFirst();
             }
 
@@ -182,7 +181,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                     PullToRefreshBase<ListView> refreshView) {
                 //getNewsList(moreUrl, false);
                 //下拉加载更多
-                Log.i("AAAA","-------------------------------------------------------------------");
                 pullToRefreshListView.onPullUpRefreshComplete();
 
 
@@ -364,7 +362,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
            @Override
            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
-//                Log.i("AAAA", new String(bytes));
 
 
                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
@@ -1026,7 +1023,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
             ApiUtils.post(url, params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int i, Header[] headers, byte[] bytes) {
-                    Log.d("AAAA", new String(bytes));
 
                     Object  object =  mEnterLayout.getTag();
                     Gson gson = new Gson();
@@ -1150,7 +1146,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
         if(tag instanceof Comment)
         {
 
-            Log.i("AAAA","isComment-------------------------------");
             if(TextUtils.isEmpty(comment.getText()))
             {
                 comment.setText("@"+ ((Comment)tag).user.username+" ");
