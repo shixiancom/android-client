@@ -1,8 +1,6 @@
 <manifest
     package="com.shixian.android.client"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="1.1"
-    android:versionName="1.0"
     >
 
    <!--微薄认证所需要的权限-->
@@ -86,6 +84,8 @@
 
         <activity android:name=".activities.SimpleSampleActivity"/>
 
+        <activity android:name=".activities.AddIdeaActivity"/>
+
 
         <!-- 必须注册在微博授权，分享微博时候用到 -->
         <activity android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
@@ -162,6 +162,17 @@
                 <category android:name="com.shixian.android.client" />
             </intent-filter>
         </receiver>
+
+
+        <!-- 友盟自动检查更新 -->
+        <service
+            android:name="com.umeng.update.net.DownloadingService"
+            android:process=":DownloadingService" >
+        </service>
+        <activity
+            android:name="com.umeng.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
 
 
 

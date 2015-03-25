@@ -27,6 +27,7 @@ public abstract class BaseFragment extends Fragment  {
     public void onPause() {
         super.onPause();
         MobclickAgent.onPageEnd(getClass().getSimpleName());
+
     }
 
 
@@ -52,6 +53,7 @@ public abstract class BaseFragment extends Fragment  {
         super.onResume();
         initDate(savedInstanceState);
         MobclickAgent.onPageStart(getClass().getSimpleName()); //统计页面
+
     }
 
     public abstract View initView(LayoutInflater inflater);

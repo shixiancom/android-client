@@ -7,8 +7,8 @@ android {
         applicationId "com.shixian.android.client"
         minSdkVersion 11
         targetSdkVersion 19
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.0.2"
 
         signingConfigs {
             debug {
@@ -40,5 +40,5 @@ dependencies {
     compile files('libs/jpush-sdk-release1.7.3.jar')
     compile files('libs/universal-image-loader-1.9.4-SNAPSHOT.jar')
     compile files('libs/umeng-analytics-v5.4.2.jar')
-
+    compile files('libs/umeng-update-v2.6.0.1.jar')
 }

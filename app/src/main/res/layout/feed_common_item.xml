@@ -120,8 +120,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:adjustViewBounds="true"
-
-
+        android:maxHeight="500dp"
         />
 
     <!-- android:scaleType="centerInside"-->

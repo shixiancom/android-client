@@ -49,6 +49,8 @@ public class NewsFragment extends AbsListViewBaseFragment
     private static final String TAG = "NewsFragment";
 
 
+    private TextView tv_blank;
+
     private List<News> newsList;
     private String firstPageData;
 
@@ -84,7 +86,7 @@ public class NewsFragment extends AbsListViewBaseFragment
     @Override
     public View initView(LayoutInflater inflater) {
 
-        View view=inflater.inflate(R.layout.fragment_index,null,false);
+        View view=inflater.inflate(R.layout.fragment_news,null,false);
 
 
 
@@ -93,6 +95,8 @@ public class NewsFragment extends AbsListViewBaseFragment
         pullToRefreshListView.setScrollLoadEnabled(true);
 
         pullToRefreshListView.getListView().setDividerHeight(0);
+
+        pullToRefreshListView.getFooterLoadingLayout().show(false);
 
         // 设置下拉刷新的listener
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
@@ -121,6 +125,7 @@ public class NewsFragment extends AbsListViewBaseFragment
         newsList = new ArrayList<News>();
 
 
+        tv_blank= (TextView) view.findViewById(R.id.tv_blank);
 
 
         return view;
@@ -129,7 +134,14 @@ public class NewsFragment extends AbsListViewBaseFragment
     private void initCacheData() {
 
         newsList=JsonUtils.parseNews(SharedPerenceUtil.getNews(context)) ;
+        if(newsList==null||newsList.size()==0)
+        {
+            tv_blank.setVisibility(View.VISIBLE);
+        }
 
+        if(newsList!=null&&newsList.size()>0){
+            tv_blank.setVisibility(View.GONE);
+        }
 
         if (adapter == null) {
             adapter = new NewsAdapter();
@@ -137,8 +149,9 @@ public class NewsFragment extends AbsListViewBaseFragment
 
         } else {
             pullToRefreshListView.getListView().setAdapter(adapter);
-
+            adapter.notifyDataSetChanged();
         }
+
 
 
     }
@@ -205,6 +218,16 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     }else{
                                         adapter.notifyDataSetChanged();
                                     }
+
+                                    if(newsList==null||newsList.size()==0)
+                                    {
+                                        tv_blank.setVisibility(View.VISIBLE);
+                                    }
+
+                                    if(newsList!=null&&newsList.size()>0){
+                                        tv_blank.setVisibility(View.GONE);
+                                    }
+
                                 }
                             });
                         }
@@ -215,15 +238,28 @@ public class NewsFragment extends AbsListViewBaseFragment
                     context.dissProgress();
 
 
+
+
+
                 }
 
             }
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT);
+                Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT).show();
                 pullToRefreshListView.onPullDownRefreshComplete();
                 context.dissProgress();
+
+                if(newsList==null||newsList.size()==0)
+                {
+                    tv_blank.setVisibility(View.VISIBLE);
+                }
+
+                if(newsList!=null&&newsList.size()>0){
+                    tv_blank.setVisibility(View.GONE);
+                }
+
             }
         });
     }
@@ -278,7 +314,7 @@ public class NewsFragment extends AbsListViewBaseFragment
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT);
+                Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT).show();
                 pullToRefreshListView.onPullUpRefreshComplete();
                 page-=1;
             }
@@ -354,10 +390,6 @@ public class NewsFragment extends AbsListViewBaseFragment
                         holder.tv_project= (TextView) view.findViewById(R.id.tv_project);
                         holder.tv_time= (TextView) view.findViewById(R.id.tv_time);
                         holder.tv_content= (TextView) view.findViewById(R.id.tv_content);
-                        holder.bt_accept= (Button) view.findViewById(R.id.bt_accept);
-                        holder.tv_add= (TextView) view.findViewById(R.id.tv_add);
-                        holder.tv_add_pri= (TextView) view.findViewById(R.id.tv_addpri);
-                        holder.tv_post_type=(TextView)view.findViewById(R.id.tv_post_type);
 
                     }else{
                         view=convertView;
@@ -366,13 +398,9 @@ public class NewsFragment extends AbsListViewBaseFragment
                     }
 
                     NewsHolder holder= (NewsHolder) view.getTag();
-                    holder.bt_accept.setVisibility(View.GONE);
                     holder.tv_content.setVisibility(View.VISIBLE);
                     holder.tv_time.setText(TimeUtil.getDistanceTime(news.created_at));
                     holder.tv_project.setVisibility(View.VISIBLE);
-                    holder.tv_add.setVisibility(View.VISIBLE);
-                    holder.tv_add_pri.setVisibility(View.GONE);
-                    holder.tv_post_type.setVisibility(View.GONE);
 
                     //头像图片处理
 
@@ -391,128 +419,86 @@ public class NewsFragment extends AbsListViewBaseFragment
                     switch (news.noti_type) {
                         case "invit_follow":
                             holder.tv_content.setVisibility(View.GONE);
-
-                            if (news.project.getTitle().length() > 10) {
-                                holder.tv_project.setText(news.project.getTitle().substring(0, 8) + "...");
-                            } else {
-                                holder.tv_project.setText(news.project.getTitle());
-                            }
+                            holder.tv_project.setText(news.project.getTitle());
                             holder.tv_project.setText(news.project.getTitle());
                             holder.tv_name.setText(news.user.username);
                             holder.tv_type.setText(R.string.please_fllow);
-                            holder.tv_add.setVisibility(View.GONE);
                             break;
                         case "join_accept":
                             holder.tv_content.setVisibility(View.GONE);
 
                             String project;
-                            if (news.project.getTitle().length() > 10) {
-                                project = news.project.getTitle().substring(0, 8) + "...";
-                            } else {
-                                project = news.project.getTitle();
-                            }
+
+                            project = news.project.getTitle();
+
                             holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_join_accept).replace("{project_title}", project)));
                             holder.tv_name.setText(news.user.username);
                             holder.tv_type.setText(R.string.join_accept);
-                            holder.tv_add.setText("请求");
-                            holder.tv_add_pri.setVisibility(View.VISIBLE);
-                            holder.tv_add_pri.setText("的");
                             break;
                         case "join_reject":
 
                             holder.tv_content.setVisibility(View.GONE);
-
-                            if (news.project.getTitle().length() > 10) {
-                                project = news.project.getTitle().substring(0, 8) + "...";
-                            } else {
-                                project = news.project.getTitle();
-                            }
                             holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_join_accept).replace("{project_title}", news.project.getTitle())));
                             holder.tv_name.setText(news.user.username);
                             holder.tv_type.setText(R.string.join_reject);
-                            holder.tv_add.setText("请求");
-                            holder.tv_add_pri.setVisibility(View.VISIBLE);
-                            holder.tv_add_pri.setText("的");
                             break;
                         case "new_comment":
                             holder.tv_content.setVisibility(View.VISIBLE);
 
-                            if (news.project.getTitle().length() > 10) {
-                                project = news.project.getTitle().substring(0, 8) + "...";
-                            } else {
-                                project = news.project.getTitle();
-                            }
+                            project = news.project.getTitle();
+
                             holder.tv_project.setText(project);
                             holder.tv_name.setText(news.user.username);
-                            holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.addcomment)));
+                            holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_reply)));
                             holder.tv_content.setText(news.data.content);
-                            holder.tv_post_type.setVisibility(View.VISIBLE);
-                            holder.tv_post_type.setText("回复");
-                            holder.tv_add.setVisibility(View.GONE);
                             break;
                         case "new_entity":
-                            if (news.project.getTitle().length() > 10) {
-                                project = news.project.getTitle().substring(0, 8) + "...";
-                            } else {
+
                                 project = news.project.getTitle();
-                            }
+
                             switch (news.notifiable_type) {
 
                                 case "Attachment":
                                     holder.tv_content.setVisibility(View.VISIBLE);
 
-                                    holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_attachment).replace("{project_title}", project)));
+                                    holder.tv_project.setText(project);
+
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(R.string.attachment);
                                     holder.tv_content.setText(news.data.content);
-                                    holder.tv_add.setText("文件");
-                                    holder.tv_add_pri.setVisibility(View.VISIBLE);
-                                    holder.tv_add_pri.setText("添加了");
 
                                     break;
                                 case "Homework":
                                     holder.tv_content.setVisibility(View.VISIBLE);
-                                    holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_task).replace("{project_title}", project)));
+                                    holder.tv_project.setText(project);
                                     holder.tv_name.setText(news.user.username);
-                                    holder.tv_type.setText(R.string.attachment);
+                                    holder.tv_type.setText(R.string.new_homework);
                                     holder.tv_content.setText(news.data.content);
-                                    holder.tv_add.setText("任务提交");
-                                    holder.tv_add_pri.setVisibility(View.VISIBLE);
-                                    holder.tv_add_pri.setText("添加了");
 
                                     break;
                                 case "Idea":
                                     holder.tv_content.setVisibility(View.VISIBLE);
-                                    holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_idea).replace("{project_title}", project)));
+                                    holder.tv_project.setText(project);
                                     holder.tv_name.setText(news.user.username);
-                                    holder.tv_type.setText(R.string.attachment);
-                                    holder.tv_add.setText("想法");
+                                    holder.tv_type.setText(R.string.new_idea);
                                     holder.tv_content.setText(news.data.content);
-                                    holder.tv_add_pri.setVisibility(View.VISIBLE);
-                                    holder.tv_add_pri.setText("添加了");
 
                                     break;
 
                                 case "Image":
+                                    holder.tv_project.setText(project);
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_project.setVisibility(View.VISIBLE);
-                                    holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_image).replace("{project_title}", project)));
                                     holder.tv_name.setText(news.user.username);
-                                    holder.tv_type.setText(R.string.attachment);
+                                    holder.tv_type.setText(R.string.new_image);
                                     holder.tv_content.setText(news.data.content);
-                                    holder.tv_add.setText("图片");
-                                    holder.tv_add_pri.setVisibility(View.VISIBLE);
-                                    holder.tv_add_pri.setText("添加了");
                                     break;
                                 case "Plan":
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_project.setVisibility(View.VISIBLE);
-                                    holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_plan).replace("{project_title}", project)));
                                     holder.tv_name.setText(news.user.username);
-                                    holder.tv_type.setText(R.string.attachment);
-                                    holder.tv_add.setText("计划");
-                                    holder.tv_add_pri.setVisibility(View.VISIBLE);
-                                    holder.tv_add_pri.setText("添加了");
+                                    holder.tv_type.setText(R.string.new_plan);
+                                    holder.tv_project.setText(project);
                                     if (news.data != null)
                                         holder.tv_content.setText(news.data.content);
                                     break;
@@ -520,22 +506,16 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_vote).replace("{project_title}", project)));
                                     holder.tv_name.setText(news.user.username);
-                                    holder.tv_type.setText(R.string.attachment);
+                                    holder.tv_type.setText(R.string.new_vote);
                                     holder.tv_content.setText(news.data.content);
-                                    holder.tv_add.setText("投票");
-                                    holder.tv_add_pri.setVisibility(View.VISIBLE);
-                                    holder.tv_add_pri.setText("添加了");
                                     break;
 
                                 case "Task":
                                     holder.tv_content.setVisibility(View.VISIBLE);
-                                    holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_vote).replace("{project_title}", project)));
+                                    holder.tv_project.setText(project);
                                     holder.tv_name.setText(news.user.username);
-                                    holder.tv_type.setText(R.string.attachment);
+                                    holder.tv_type.setText(R.string.new_task1);
                                     holder.tv_content.setText(news.data.content);
-                                    holder.tv_add.setText("任务");
-                                    holder.tv_add_pri.setVisibility(View.VISIBLE);
-                                    holder.tv_add_pri.setText("添加了");
                                     break;
 
 
@@ -549,11 +529,9 @@ public class NewsFragment extends AbsListViewBaseFragment
                             holder.tv_project.setVisibility(View.GONE);
                             holder.tv_name.setText(news.user.username);
                             holder.tv_type.setText("关注了你");
-                            holder.tv_add.setVisibility(View.GONE);
                             break;
 
                         case "new_follow":
-                            holder.tv_add.setVisibility(View.GONE);
                             holder.tv_content.setVisibility(View.GONE);
                             holder.tv_project.setVisibility(View.GONE);
                             holder.tv_name.setText(news.user.username);
@@ -562,30 +540,21 @@ public class NewsFragment extends AbsListViewBaseFragment
                             break;
 
                         case "new_homework":
-                            if (news.project.getTitle().length() > 10) {
-                                project = news.project.getTitle().substring(0, 8) + "...";
-                            } else {
-                                project = news.project.getTitle();
-                            }
+                            project = news.project.getTitle();
                             holder.tv_content.setVisibility(View.VISIBLE);
-                            holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_homework).replace("{project_title}", project)));
+                            holder.tv_project.setText(news.project.getTitle());
                             holder.tv_name.setText(news.user.username);
-                            holder.tv_type.setText(R.string.attachment);
+                            holder.tv_type.setText(R.string.compele_task);
                             holder.tv_content.setText(news.data.content);
-                            holder.tv_add.setText("任务");
-                            holder.tv_add_pri.setVisibility(View.VISIBLE);
-                            holder.tv_add_pri.setText("完成了您分配的");
                             break;
                         case "new_mention":
 
-                            holder.tv_add.setVisibility(View.GONE);
                             switch (news.notifiable_type) {
                                 case "Attachment":
                                     holder.tv_project.setVisibility(View.GONE);
-
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
-                                    holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_mention_attachment)));
+                                    holder.tv_type.setText(R.string.new_mention);
                                     holder.tv_content.setText(news.data.content);
 
 
@@ -595,7 +564,7 @@ public class NewsFragment extends AbsListViewBaseFragment
 
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
-                                    holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_mention_comment)));
+                                    holder.tv_type.setText(R.string.new_mention);
                                     holder.tv_content.setText(news.data.content);
                                     break;
 
@@ -604,8 +573,8 @@ public class NewsFragment extends AbsListViewBaseFragment
 
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
-                                    holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_mention_homework)));
                                     holder.tv_content.setText(news.data.content);
+                                    holder.tv_type.setText(R.string.new_mention);
                                     break;
 
                                 case "Idea":
@@ -613,8 +582,8 @@ public class NewsFragment extends AbsListViewBaseFragment
 
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
-                                    holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_mention_idea)));
                                     holder.tv_content.setText(news.data.content);
+                                    holder.tv_type.setText(R.string.new_mention);
                                     break;
 
                                 case "Image":
@@ -622,8 +591,8 @@ public class NewsFragment extends AbsListViewBaseFragment
 
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
-                                    holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_mention_image)));
                                     holder.tv_content.setText(news.data.content);
+                                    holder.tv_type.setText(R.string.new_mention);
                                     break;
 
                                 case "task":
@@ -631,8 +600,8 @@ public class NewsFragment extends AbsListViewBaseFragment
 
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
-                                    holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_mention_task)));
                                     holder.tv_content.setText(news.data.content);
+                                    holder.tv_type.setText(R.string.new_mention);
                                     break;
 
                             }
@@ -647,11 +616,8 @@ public class NewsFragment extends AbsListViewBaseFragment
                             holder.tv_project.setText(project);
                             holder.tv_content.setVisibility(View.VISIBLE);
                             holder.tv_name.setText(news.user.username);
-                            holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_reply)));
+                            holder.tv_type.setText(R.string.reply_you);
                             holder.tv_content.setText(news.data.content);
-                            holder.tv_post_type.setVisibility(View.VISIBLE);
-                            holder.tv_post_type.setText("回复");
-                            holder.tv_add.setVisibility(View.GONE);
 
 
                             break;
@@ -662,18 +628,11 @@ public class NewsFragment extends AbsListViewBaseFragment
 
                             holder.tv_content.setVisibility(View.VISIBLE);
                             holder.tv_name.setText(news.user.username);
-                            holder.tv_type.setText(Html.fromHtml("在"));
+                            holder.tv_type.setText(R.string.give_task);
 
                             holder.tv_content.setText(news.data.content);
-                            if (news.project.getTitle().length() > 10) {
-                                project = news.project.getTitle().substring(0, 8) + "...";
-                            } else {
-                                project = news.project.getTitle();
-                            }
-                            holder.tv_project.setText(Html.fromHtml(getResources().getString(R.string.project_new_task).replace("{project_title}", project)));
-                            holder.tv_add.setText("任务");
-                            holder.tv_add_pri.setVisibility(View.VISIBLE);
-                            holder.tv_add_pri.setText("给你分配了");
+
+                            holder.tv_project.setText(news.project.getTitle());
                             break;
 
                         case "new_agreement":
@@ -707,13 +666,7 @@ public class NewsFragment extends AbsListViewBaseFragment
 
 
 
-                    //点击事件
-                    if(holder.tv_add.VISIBLE==View.VISIBLE)
-                    {
-
-                        holder.tv_add.setOnClickListener(onClickListener);
-                    }
-                    if(holder.tv_type.VISIBLE==View.VISIBLE)
+                          if(holder.tv_type.VISIBLE==View.VISIBLE)
                     {
                         holder.tv_type.setOnClickListener(onClickListener);
                     }
@@ -723,10 +676,6 @@ public class NewsFragment extends AbsListViewBaseFragment
                         holder.tv_content.setOnClickListener(onClickListener);
                     }
 
-                    if(holder.tv_post_type.VISIBLE==View.VISIBLE)
-                    {
-                        holder.tv_post_type.setOnClickListener(onClickListener);
-                    }
 
 
 
@@ -764,13 +713,6 @@ public class NewsFragment extends AbsListViewBaseFragment
 
 
 
-
-
-
-
-
-
-
             return view;
         }
 
@@ -783,10 +725,6 @@ public class NewsFragment extends AbsListViewBaseFragment
         TextView tv_project;
         TextView tv_time;
         TextView tv_content;
-        Button bt_accept;
-        TextView tv_add;
-        TextView tv_add_pri;
-        TextView tv_post_type;
     }
 
     @Override
@@ -795,6 +733,7 @@ public class NewsFragment extends AbsListViewBaseFragment
         context.setLable(getString(R.string.label_notifications));
         ((MainActivity)context).setCurrentFragment(this);
         ((MainActivity)context).hideMsg();
+        ((MainActivity)context).hideReponse();
 
     }
 

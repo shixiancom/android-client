@@ -41,7 +41,6 @@ public class UserIndexFragment extends BaseFeedFragment {
 
     private String TAG = "UserIndexFragment";
     private User user;
-    private UserIndexFeedAdapte adapter;
 
 
     protected void initCacheData() {
@@ -59,8 +58,10 @@ public class UserIndexFragment extends BaseFeedFragment {
             } else {
                 pullToRefreshListView.getListView().setAdapter(adapter);
 
-
+                adapter.notifyDataSetChanged();
             }
+
+
 
     }
 
@@ -219,7 +220,7 @@ public class UserIndexFragment extends BaseFeedFragment {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT);
+                Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT).show();
                 pullToRefreshListView.onPullDownRefreshComplete();
                 pullToRefreshListView.getFooterLoadingLayout().show(false);
                 context.dissProgress();
@@ -263,7 +264,7 @@ public class UserIndexFragment extends BaseFeedFragment {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT);
+                Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT).show();
             }
 
 
@@ -386,7 +387,7 @@ public class UserIndexFragment extends BaseFeedFragment {
 //                               }
 //                           });
 
-                                Toast.makeText(context, "赞不支持取消功能，我们正在飞速开发", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "暂不支持取消功能，我们正在飞速开发", Toast.LENGTH_SHORT).show();
                             } else {
                                 //关注api
                                 ApiUtils.post(String.format(AppContants.USER_FOLLOW_URL, user.id), null, new AsyncHttpResponseHandler() {
@@ -573,16 +574,12 @@ public class UserIndexFragment extends BaseFeedFragment {
     @Override
     public void onPause() {
         super.onPause();
-        ((DetailActivity) context).hideQuitMenu();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (user.id.equals(Global.USER_ID)) {
-            ((DetailActivity) context).showQuitMenu();
 
-        }
 
 
     }

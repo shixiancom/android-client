@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 
 import com.shixian.android.client.activities.MainActivity;
 
+import java.io.File;
+
 /**
  * Created by s0ng on 2015/2/9.
  * 本地缓存采用缓存第一页 也放在这个类中
@@ -16,9 +18,24 @@ public class SharedPerenceUtil {
 
     public  static void clearAllData(Context context)
     {
-        context.getSharedPreferences("cachedate",context.MODE_PRIVATE).edit().clear();
-        context.getSharedPreferences("userinfo",context.MODE_PRIVATE).edit().clear();
+
+        context.getSharedPreferences("cachedate",context.MODE_PRIVATE).edit().remove("myproject").remove("indexdata").remove("userindexdata").remove("descoryproject").remove("news").commit();
+        context.getSharedPreferences("userinfo",context.MODE_PRIVATE).edit().remove("userjson").remove("myproject").remove("cookie").commit();
+
+
     }
+
+
+    /** * 删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件，将不做处理 * * @param directory */
+    private static void deleteFilesByDirectory(File directory) {
+        if (directory != null && directory.exists() && directory.isDirectory()) {
+            for (File item : directory.listFiles()) {
+                item.delete();
+            }
+        }
+    }
+
+
 
     //用于一些本地缓存操作的存取
 
@@ -76,6 +93,7 @@ public class SharedPerenceUtil {
     {
         return    context.getSharedPreferences("cachedate",context.MODE_PRIVATE).getString("indexdata","");
     }
+
 
 
     public static void putUserIndexFeed(Context context,String json,String userid){

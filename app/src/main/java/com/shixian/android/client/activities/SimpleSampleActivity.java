@@ -81,8 +81,6 @@ public class SimpleSampleActivity extends Activity {
 
         DisplayImageOptions contentOptions = new DisplayImageOptions
                 .Builder()
-                .showImageOnLoading(R.drawable.default_iv)
-                .showImageForEmptyUri(R.drawable.default_iv)
                 .showImageOnFail(R.drawable.default_iv)
                 .cacheInMemory(true)
                 .cacheOnDisk(true)

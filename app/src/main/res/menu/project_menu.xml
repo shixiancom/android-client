@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/add_idea"
+        android:icon="@drawable/action_create"
+        app:showAsAction="ifRoom"
+        android:title="@string/add_idea"
+        />
+
+
+</menu>

@@ -16,10 +16,13 @@
 package com.shixian.android.client.activities.fragment.base;
 
 
+import android.os.Handler;
+import android.os.Message;
 import android.widget.AbsListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView;
+
 
 
 /**
@@ -27,6 +30,25 @@ import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView;
  */
 public abstract class AbsListViewBaseFragment extends BaseFragment {
 
+
+    public static final int REFRESH_PAGE=10086;
+
+    protected Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            switch (msg.what)
+            {
+                case REFRESH_PAGE:
+                {
+                    pullToRefreshListView.refreshDrawableState();
+                }
+            }
+
+
+        }
+    };
 
 
 	protected PullToRefreshListView pullToRefreshListView;

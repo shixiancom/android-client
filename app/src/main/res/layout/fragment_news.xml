@@ -1,10 +1,26 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/white">
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
 
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="NewsFragement"/>
-</RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="您没有未读消息"
+        android:id="@+id/tv_blank"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        />
+
+    <com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView
+
+        android:id="@+id/lv_index"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+    </com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView>
+
+</LinearLayout>

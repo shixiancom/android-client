@@ -148,6 +148,8 @@ public class EnterLayout {
         root.setVisibility(View.VISIBLE);
         this.tag = tag;
 
+        if(tag==null)
+            return;
 
         if (tag instanceof BaseFeed) {
             BaseFeed baseFeed = (BaseFeed) tag;
@@ -231,6 +233,14 @@ public class EnterLayout {
     public interface CameraAndPhoto {
         void photo();
     }
+
+
+    public void setOnClickListener(View.OnFocusChangeListener listener)
+    {
+        View root = mActivity.findViewById(R.id.commonEnterRoot);
+        root.setOnFocusChangeListener(listener);
+    }
+
 
 
 }

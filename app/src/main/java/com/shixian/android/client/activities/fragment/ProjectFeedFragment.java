@@ -1,10 +1,18 @@
 package com.shixian.android.client.activities.fragment;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -14,6 +22,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.R;
+import com.shixian.android.client.activities.AddIdeaActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.OnClickController;
@@ -33,6 +42,10 @@ import org.apache.http.Header;
  * Created by s0ng on 2015/2/12.
  */
 public class ProjectFeedFragment extends BaseFeedFragment {
+
+
+
+    public static final String PROJECT_ID="projectid";
 
     private Project project=new Project();
 
@@ -63,9 +76,10 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
         } else {
             pullToRefreshListView.getListView().setAdapter(adapter);
-
+            adapter.notifyDataSetChanged();
 
         }
+
 
     }
 
@@ -134,7 +148,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
 
                 //TODO 错误可能定义的不是太准确  最后一天调整
-                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
+                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
                 pullToRefreshListView.onPullUpRefreshComplete();
                 page -= 1;
             }
@@ -241,7 +255,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT);
+                Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT).show();
                 pullToRefreshListView.onPullDownRefreshComplete();
                 pullToRefreshListView.onPullUpRefreshComplete();
                 context.dissProgress();
@@ -293,7 +307,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT);
+                Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -388,7 +402,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 //                               }
 //                           });
 
-                                Toast.makeText(context,"赞不支持取消功能，我们正在飞速开发",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context,"暂不支持取消功能，我们正在飞速开发",Toast.LENGTH_SHORT).show();
                             }else{
                                 //关注api
                                 ApiUtils.post(String.format(AppContants.PROJECT_FOLLOW_URL,project.id),null,new AsyncHttpResponseHandler() {
@@ -605,4 +619,51 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
     }
 
+
+    /**
+     * 创建menu 菜单
+     * @param menu
+     * @param inflater
+     */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.project_menu,menu);
+        super.onCreateOptionsMenu(menu, inflater);
+
+
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case R.id.add_idea:
+
+
+                Intent intent=new Intent(context,AddIdeaActivity.class);
+
+
+                if(project.id==0)
+                {
+                    break;
+                }
+                intent.putExtra(PROJECT_ID,project.id+"");
+
+                startActivity(intent);
+                break;
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 }

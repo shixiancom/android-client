@@ -21,6 +21,7 @@
         <!-- toggle style -->
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:textColorPrimary">#FFFFFF</item>
+
     </style>
 
     <style name="PopupMenuStyle" parent="Widget.AppCompat.Light.PopupMenu">
@@ -83,5 +84,20 @@
     </style>
 
 
+
+    <style name="Global">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="EditText" parent="Global">
+        <item name="android:textSize">14sp</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="FormalMultiLineEditText" parent="EditText">
+        <item name="android:gravity">top</item>
+        <item name="android:inputType">textMultiLine|textAutoCorrect|textCapSentences</item>
+    </style>
 
 </resources>

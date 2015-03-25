@@ -135,9 +135,10 @@ public class DiscoryProjectFragment extends BaseFragment {
 
         } else {
             pullToRefreshListView.getListView().setAdapter(adapter);
-
+            adapter.notifyDataSetChanged();
 
         }
+
 
     }
 
@@ -190,7 +191,7 @@ public class DiscoryProjectFragment extends BaseFragment {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
+                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
                 page -= 1;
                 pullToRefreshListView.onPullUpRefreshComplete();
             }
@@ -273,7 +274,7 @@ public class DiscoryProjectFragment extends BaseFragment {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
+                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
                 pullToRefreshListView.onPullDownRefreshComplete();
                 context.dissProgress();
             }

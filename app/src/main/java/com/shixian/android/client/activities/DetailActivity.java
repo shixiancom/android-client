@@ -29,9 +29,10 @@ public class DetailActivity extends BaseActivity {
     private Toolbar toolbar;
     private SmoothProgressBar mProgressBar;
 
-    private MenuItem menuItemQuit;
 
-    private boolean isShowQuitItem=false;
+
+
+
 
 
     @Override
@@ -53,27 +54,6 @@ public class DetailActivity extends BaseActivity {
                 DetailActivity.this.onBackPressed();
             }
         });
-
-
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-//                    case R.id.action_news_search:
-//                        Toast.makeText(MainActivity.this, "Search", Toast.LENGTH_LONG).show();
-//                        break;
-                    case R.id.action_quit:
-                        logout();
-                        break;
-                }
-                return true;
-            }
-        });
-
-
-
-
-
 
         addFragment();
 
@@ -125,17 +105,7 @@ public class DetailActivity extends BaseActivity {
     }
 
 
-    public void logout()
-    {
-        SharedPerenceUtil.clearAllData(this);
-        AccessTokenKeeper.clear(this);
-        Intent intent=new Intent(this,LoginActivity.class);
-        startActivity(intent);
-        Intent broadIntent=new Intent();
-        broadIntent.setAction(AppContants.ACTION_FINISHACTIVITY);
-        sendBroadcast(broadIntent);
 
-    }
 
     @Override
     public void switchFragment(BaseFragment fragment, String key) {
@@ -168,43 +138,12 @@ public class DetailActivity extends BaseActivity {
     }
 
 
-    @Override
-    public boolean onCreatePanelMenu(int featureId, Menu menu) {
-        return super.onCreatePanelMenu(featureId, menu);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.detial_menu,menu);
-
-        menuItemQuit=menu.findItem(R.id.action_quit);
-
-        if(isShowQuitItem)
-        {
-            menuItemQuit.setVisible(true);
-        }else{
-            menuItemQuit.setVisible(false);
-        }
-
-        return super.onCreateOptionsMenu(menu);
-    }
 
 
 
-    public void hideQuitMenu()
-    {
-        isShowQuitItem=false;
-        invalidateOptionsMenu();
 
-    }
 
-    public void showQuitMenu()
-    {
-        isShowQuitItem=true;
-        invalidateOptionsMenu();
 
-    }
 
 
 }

@@ -47,18 +47,7 @@
             android:textSize="13sp"
             />
 
-        <com.shixian.android.client.views.FontTextView
-            android:textColor="#005580"
-            android:id="@+id/tv_post_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/iv_icon"
-            android:layout_toRightOf="@id/tv_type"
-            android:layout_marginLeft="5dp"
-            android:textSize="13sp"
-            android:background="@drawable/text_common_selector"
 
-            />
 
         <com.shixian.android.client.views.FontTextView
             android:maxLength="13"
@@ -71,36 +60,11 @@
             android:layout_toRightOf="@id/iv_icon"
             android:layout_marginBottom="5dp"
             android:background="@drawable/text_common_selector"
-
             />
 
-        <com.shixian.android.client.views.FontTextView
-            android:textColor="#9B9B9B"
-            android:layout_below="@id/tv_name"
-            android:layout_alignTop="@id/tv_project"
-            android:id="@+id/tv_addpri"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tv_project"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/text_common_selector"
-
-            android:layout_marginLeft="3dp"/>
-
-        <com.shixian.android.client.views.FontTextView
-            android:textColor="#005580"
-            android:layout_below="@id/tv_name"
-            android:layout_alignTop="@id/tv_project"
-            android:id="@+id/tv_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tv_addpri"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="3dp"
-            android:background="@drawable/text_common_selector"
 
 
-            />
+
 
         <TextView
            android:layout_alignTop="@id/tv_name"
@@ -131,20 +95,8 @@
         android:textColor="#666666"
         android:layout_marginTop="@dimen/content_top"
         android:layout_marginBottom="10dp"
-            android:background="@drawable/text_common_selector"
+        android:background="@drawable/text_common_selector"
         />
-
-        <Button
-            android:id="@+id/bt_accept"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="已通过"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:background="#20C8AF"
-
-            />
-
 
     </RelativeLayout>
 

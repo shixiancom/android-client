@@ -2,10 +2,10 @@ package com.shixian.android.client.activities.fragment;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -78,6 +78,9 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
 
     private String lable;
+
+    private TextView mCommentText;
+    private BaseFeed mComment;
 
 
     //图片加载有关＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
@@ -192,56 +195,8 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
     }
 
 
-
-
-//    @Override
-//    public View initView(LayoutInflater inflater) {
-//
-//        View view = inflater.inflate(R.layout.fragment_index, null, false);
-//
-//        context.setLable("首页");
-//
-//        pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.lv_index);
-//        // 滚动到底自动加载可用
-//        pullToRefreshListView.setScrollLoadEnabled(true);
-//
-//
-//        // 设置下拉刷新的listener
-//        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
-//
-//            //下拉舒心完成
-//            @Override
-//            public void onPullDownToRefresh(
-//                    PullToRefreshBase<ListView> refreshView) {
-//
-//                //上啦刷新
-//                Log.i("AAAA","1111-------------------------------------------------------------------");
-//                initDate(null);
-//            }
-//
-//            @Override
-//            public void onPullUpToRefresh(
-//                    PullToRefreshBase<ListView> refreshView) {
-//                //getNewsList(moreUrl, false);
-//                //下拉加载更多
-//                Log.i("AAAA", "-------------------------------------------------------------------");
-//                getNextData();
-//
-//
-//
-//            }
-//        });
-//
-//        feedList = new ArrayList<BaseFeed>();
-//
-//
-//        initCacheData();
-//
-//        return view;
-//    }
-//
-//
     protected void initCacheData() {
+
 
         firstPageDate= SharedPerenceUtil.getIndexFeed(context);
         feedEntry = JsonUtils.parseAllItemType(firstPageDate, msgType);
@@ -300,75 +255,75 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
 
 
-       ApiUtils.get(msgType.url, null, new AsyncHttpResponseHandler() {
-           @Override
-           public void onSuccess(int i, Header[] headers, final byte[] bytes) {
-               final String temp = new String(bytes);
-               if (!AppContants.errorMsg.equals(temp)) {
+        ApiUtils.get(msgType.url, null, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, Header[] headers, final byte[] bytes) {
+                final String temp = new String(bytes);
+                if (!AppContants.errorMsg.equals(temp)) {
 
 
-                   new Thread() {
-                       public void run() {
-                           //获取第一页数据
-                           firstPageDate = temp;
-                           //数据格式
-                           CommonUtil.logDebug(TAG, new String(bytes));
+                    new Thread() {
+                        public void run() {
+                            //获取第一页数据
+                            firstPageDate = temp;
+                            //数据格式
+                            CommonUtil.logDebug(TAG, new String(bytes));
 
 
-                           MsgFeedEntry ms = JsonUtils.parseAllItemType(firstPageDate, msgType);
+                            MsgFeedEntry ms = JsonUtils.parseAllItemType(firstPageDate, msgType);
 
-                           feedEntry.baseFeeds = ms.baseFeeds;
-                           feedEntry.firstEntry = ms.firstEntry;
-
-                           //TODO
-                           //  SharedPerenceUtil.putIndexFeed(context,firstPageDate);
-
-
-                           //保存数据到本地
-
-                           context.runOnUiThread(new Runnable() {
-                               @Override
-                               public void run() {
-
-                                   if (adapter == null) {
-                                       adapter = new FeedAdapter();
-
-
-                                       pullToRefreshListView.getRefreshableView().setAdapter(adapter);
-                                   } else {
-                                       adapter.notifyDataSetChanged();
-                                   }
-
-                                   pullToRefreshListView.onPullDownRefreshComplete();
-                                   pullToRefreshListView.onPullUpRefreshComplete();
-                                   context.dissProgress();
-                                   pullToRefreshListView.getListView().setSelection(msgType.position);
-
-                               }
-                           });
-
-
-                       }
-                   }.start();
-
-
-               }else{
-                   pullToRefreshListView.onPullDownRefreshComplete();
-                   pullToRefreshListView.onPullUpRefreshComplete();
-               }
-           }
-
-
-           @Override
-           public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                            feedEntry.baseFeeds = ms.baseFeeds;
+                            feedEntry.firstEntry = ms.firstEntry;
 
 
 
-               Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
-               pullToRefreshListView.onPullDownRefreshComplete();
-               context.dissProgress();
-           }
-       });
+                            //保存数据到本地
+                            context.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    if (adapter == null) {
+                                        adapter = new FeedAdapter();
+
+
+                                        pullToRefreshListView.getRefreshableView().setAdapter(adapter);
+                                    } else {
+                                        adapter.notifyDataSetChanged();
+                                    }
+
+                                    pullToRefreshListView.onPullDownRefreshComplete();
+                                    pullToRefreshListView.onPullUpRefreshComplete();
+                                    context.dissProgress();
+                                    pullToRefreshListView.getListView().setSelection(msgType.position);
+
+
+
+
+                                }
+                            });
+
+
+                        }
+                    }.start();
+
+
+                }else{
+                    pullToRefreshListView.onPullDownRefreshComplete();
+                    pullToRefreshListView.onPullUpRefreshComplete();
+                }
+            }
+
+
+            @Override
+            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+
+
+
+                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
+                pullToRefreshListView.onPullDownRefreshComplete();
+                context.dissProgress();
+            }
+        });
     }
 
 
@@ -383,7 +338,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
         feedEntry=new MsgFeedEntry();
 
         //TODO
-       // initCacheData();
+        // initCacheData();
 
         initNews();
 
@@ -451,8 +406,8 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-           View view=null;
-           final BaseFeedFragment.FeedHolder holder;
+            View view=null;
+            final BaseFeedFragment.FeedHolder holder;
 
             if(convertView==null)
             {
@@ -475,6 +430,8 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                 view=convertView;
                 holder= (FeedHolder) view.getTag();
             }
+
+            view.setBackgroundColor(Color.WHITE);
 
 
             new ContentHandler(holder.tv_content).longClickCopy();
@@ -576,7 +533,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                     holder.tv_type.setText(type);
 
 
-                        holder.tv_proect.setText(project);
+                    holder.tv_proect.setText(project);
 
 
                     holder.tv_name.setText(feedEntry.firstEntry.user.username);
@@ -614,7 +571,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
             }else{
 
 
-                Comment comment= (Comment) feedEntry.baseFeeds.get(position-1);
+                final Comment comment= (Comment) feedEntry.baseFeeds.get(position-1);
                 comment.position=position-1;
                 //初始化一些common信息
                 holder.tv_name.setText(comment.user.username);
@@ -655,7 +612,28 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                 {
                     if(comment.id.equals(msgType.notifiable_id))
                     {
+                        mCommentText=holder.tv_content;
+
                         view.setBackgroundResource(R.color.select_comment_color);
+
+                        if(comment!=null)
+                        {
+                            mEnterLayout.content.setHint("@"+comment.user.username);
+
+                            mEnterLayout.content.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                @Override
+                                public void onFocusChange(View v, boolean hasFocus) {
+                                    if(hasFocus)
+                                    {
+
+                                        popComment(holder.tv_content,comment,pullToRefreshListView.getListView(),0);
+
+                                    }
+                                }
+                            });
+
+                        }
+
 
                     }
                 }
@@ -689,189 +667,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
             }
         });
     }
-
-//   protected void initFeedItemView(FeedHolder holder,BaseFeed baseFeed,int position) {
-//
-//        baseFeed.position=position;
-//
-//        String type="";
-//        String project="";
-//
-//
-//        //开始switch
-//        holder.tv_response.setVisibility(View.VISIBLE);
-//        holder.v_line.setVisibility(View.VISIBLE);
-//        holder.iv_content.setVisibility(View.GONE);
-//
-//        //用户名和头像是同一设置的
-//
-//
-//        //Feed2类型的
-//        if(!baseFeed.feedable_type.equals(AppContants.FEADE_TYPE_COMMON))
-//        {
-//            holder.tv_content.setVisibility(View.VISIBLE);
-//
-//            Feed2 feed= (Feed2) baseFeed;
-//
-//            //设置project
-//            if(feed.data.project!=null&&!TextUtils.isEmpty(feed.data.project.title))
-//                project=feed.data.project.title;
-//            switch (feed.feedable_type) {
-//                case "Idea":
-//                    type = context.getResources().getString(R.string.add_idea);
-//                    holder.tv_content.setText(feed.data.content);
-//                    break;
-//                case "Project":
-//                    type = context.getResources().getString(R.string.add_project);
-//                    project = feed.data.title;
-//                    holder.tv_content.setText(Html.fromHtml(feed.data.description));
-//                    //隐藏回复框
-//                    holder.tv_response.setVisibility(View.GONE);
-//                    break;
-//                case "Plan":
-//                    type = context.getResources().getString(R.string.add_plan);
-//
-//                    holder.tv_content.setText(feed.data.content + "   截至到: " + feed.data.finish_on);
-//                    break;
-//                case "Image":
-//
-//                    type = context.getResources().getString(R.string.add_image);
-//                    holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-//
-//                    String keys[]=feed.data.attachment.url.split("/");
-//                    String key=keys[keys.length-1];
-//
-//                    holder.iv_content.setTag(key);
-//                    holder.iv_content.setVisibility(View.VISIBLE);
-//                    ImageUtil.loadingImage(holder.iv_content, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.attachment.url);
-//
-//                    break;
-//                case "UserProjectRelation":
-//                    type = context.getResources().getString(R.string.join);
-//                    //隐藏回复框
-//                    if(feed.hasChildren) {
-//                        holder.tv_response.setVisibility(View.GONE);
-//                        // holder.tv_content.setVisibility(View.INVISIBLE);
-//                    }else{
-//                        holder.tv_content.setVisibility(View.GONE);
-//                    }
-//                    break;
-//                case "Homework":
-//                    type = context.getResources().getString(R.string.finish_homework);
-//                    holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-//                    break;
-//                case "Task":
-//                    type = context.getResources().getString(R.string.finish_task);
-//                    holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-//                    break;
-//                case "Vote":
-//                    type = context.getResources().getString(R.string.finish_task);
-//
-//                    holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-//                    break;
-//                case "Attachment":
-//                    type = context.getResources().getString(R.string.feed_attachment);
-//                    holder.tv_content.setText(Html.fromHtml(feed.data.content_html));
-//                    break;
-//            }
-//
-//            if(feed.hasChildren) {
-//                holder.v_line.setVisibility(View.GONE);
-//
-//            }else{
-//                holder.tv_response.setVisibility(View.VISIBLE);
-//            }
-//
-//
-//            //头像图片处理
-//            String keys[]=feed.data.user.avatar.small.url.split("/");
-//            String key=keys[keys.length-1];
-//
-////                ImageUtil.loadingImage(holder.iv_icon, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher),callback,key,AppContants.DOMAIN+feed.data.user.avatar.small.url);
-//
-//            Bitmap bm = ImageCache.getInstance().get(key);
-//
-//            if (bm != null) {
-//                holder.iv_icon.setImageBitmap(bm);
-//            } else {
-//                holder.iv_icon.setImageResource(R.drawable.ic_launcher);
-//                holder.iv_icon.setTag(key);
-//                if (callback != null) {
-//                    new ImageDownload(callback).execute(AppContants.DOMAIN+feed.data.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
-//                }
-//            }
-//
-//
-//            holder.tv_type.setText(type);
-//            holder.tv_proect.setText(project);
-//            holder.tv_name.setText(feed.data.user.username);
-//
-//            //设置样式
-////                int textSize=DisplayUtil.sp2px(context,13);
-//            holder.tv_name.setTextSize(13);
-//            holder.tv_time.setTextSize(11);
-//            holder.tv_content.setTextSize(15);
-//
-//            ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
-//            int imageSize=DisplayUtil.dip2px(context,40);
-//            params.height=imageSize;
-//            params.width =imageSize;
-//            holder.iv_icon.setLayoutParams(params);
-//
-//            holder.tv_type.setVisibility(View.VISIBLE);
-//            holder.tv_proect.setVisibility(View.VISIBLE);
-//
-//        }else{
-//            Comment comment= (Comment) baseFeed;
-//            //初始化一些common信息
-//            holder.tv_name.setText(comment.user.username);
-//            holder.tv_time.setText(TimeUtil.getDistanceTime(comment.created_at));
-//            holder.tv_proect.setVisibility(View.GONE);
-//            holder.tv_type.setVisibility(View.GONE);
-//            holder.iv_content.setVisibility(View.GONE);
-//            holder.tv_content.setVisibility(View.VISIBLE);
-//            holder.tv_content.setText(comment.content);
-//
-//
-//
-//            holder.tv_name.setTextSize(13);
-//            holder.tv_time.setTextSize(11);
-//            holder.tv_content.setTextSize(14);
-//
-//            ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
-//            int imageSize=DisplayUtil.dip2px(context,20);
-//            params.height=imageSize;
-//            params.width =imageSize;
-//            holder.iv_icon.setLayoutParams(params);
-//
-//
-//            //头像图片处理
-//            String keys[]=comment.user.avatar.small.url.split("/");
-//            String key=keys[keys.length-1];
-//
-//            Bitmap bm = ImageCache.getInstance().get(key);
-//
-//            if (bm != null) {
-//                holder.iv_icon.setImageBitmap(bm);
-//            } else {
-//                holder.iv_icon.setImageResource(R.drawable.ic_launcher);
-//                holder.iv_icon.setTag(position+key);
-//                if (callback != null) {
-//                    new ImageDownload(callback).execute(AppContants.DOMAIN+comment.user.avatar.small.url, key, ImageDownload.CACHE_TYPE_LRU);
-//                }
-//            }
-//
-//
-//            //隐藏回复框
-//            if(!comment.isLast) {
-//                holder.tv_response.setVisibility(View.GONE);
-//                holder.v_line.setVisibility(View.GONE);
-//            }
-//
-//        }
-//
-//    }
-
 
 
     protected void setFeedOnClickListener(final BaseActivity context, final FeedHolder holder,final BaseFeed baseFeed) {
@@ -980,6 +775,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
             String input = mEnterLayout.getContent();
             if (input.isEmpty()) {
+                sendAble=true;
                 return;
             }
 
@@ -1046,11 +842,13 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                     mEnterLayout.clearContent();
                     hideSoftkeyboard();
                     Toast.makeText(context, R.string.send_ok, Toast.LENGTH_SHORT).show();
+                    sendAble=true;
                 }
 
                 @Override
                 public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
+                    sendAble=true;
                     hideSoftkeyboard();
                     Toast.makeText(context, R.string.send_failed, Toast.LENGTH_SHORT).show();
                 }
@@ -1065,8 +863,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
      */
     protected void hideSoftkeyboard() {
 //        mEnterLayout.restoreSaveStop();
-        mEnterLayout.hide();
-        mEnterLayout.clearContent();
         mEnterLayout.hideKeyboard();
 
     }
@@ -1106,28 +902,14 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                 int listHeight = lv.getHeight();
 
 
+                //说明键盘出来了
+                if(oldListHigh-listHeight>100)
+                {
+                    int scrollResult = needScrollY + oldListHigh - listHeight;
+                    lv.smoothScrollBy(scrollResult, 1);
 
-                if (oldListHigh > listHeight) {
-                    if (cal1 == 0) {
-                        cal1 = 1;
-                        needScrollY = needScrollY + oldListHigh - listHeight;
-
-                    } else if (cal1 == 1) {
-                        int scrollResult = needScrollY + oldListHigh - listHeight;
-                        lv.smoothScrollBy(scrollResult, 1);
-                        needScrollY = 0;
-
-                    }
-
-                    oldListHigh = listHeight;
-                }else if(oldListHigh<listHeight){
-                    //变化大于100 说明软键盘隐藏了 如此这般可否
-                    if(cal1==1&&listHeight-oldListHigh>100)
-                    {
-                        hideSoftkeyboard();
-
-                    }
                 }
+
             }
         });
 
@@ -1137,6 +919,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
 
     protected  void popComment(View v,Object tag,ListView lv,int type) {
+        mEnterLayout.content.setOnFocusChangeListener(null);
         EditText comment = mEnterLayout.content;
 
         String data = (String) v.getTag();
@@ -1146,7 +929,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
         if(tag instanceof Comment)
         {
 
-            if(TextUtils.isEmpty(comment.getText()))
+            if(TextUtils.isEmpty(comment.getText())|| !comment.getText().toString().contains("@"+ ((Comment)tag).user.username+" "))
             {
                 comment.setText("@"+ ((Comment)tag).user.username+" ");
             }
@@ -1186,6 +969,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
 
     public class MsgType{
+
 
         public boolean isComment;
         public String commentable_id;
@@ -1235,9 +1019,24 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
     }
 
 
-     public static class MsgFeedEntry{
-         public List<BaseFeed> baseFeeds;
-         public AllItemType firstEntry;
-     }
+    public static class MsgFeedEntry{
+        public List<BaseFeed> baseFeeds;
+        public AllItemType firstEntry;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mEnterLayout.show(null);
+
+
+
+    }
+
+
+
+
+
+
 
 }

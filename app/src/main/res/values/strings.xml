@@ -20,11 +20,20 @@
     <string name="pull_to_refresh_header_hint_loading">正在刷新</string>
     <string name="pull_to_refresh_header_hint_loadin">正在加载更多</string>
     <string name="please_fllow">邀请您关注</string>
-    <string name="join_accept">通过了您加入</string>
-    <string name="join_reject">拒绝了您加入</string>
-    <string name="addcomment">您的想法添加了</string>
+    <string name="join_accept">通过了请求</string>
+    <string name="join_reject">拒绝了请求</string>
+    <string name="res_idea">评论了想法</string>
+    <string name="new_idea">添加了想法</string>
+    <string name="new_reply">添加了新回复</string>
+    <string name="reply_you">回复了你</string>
+    <string name="give_task">指派了任务</string>
     <string name="project_join_accept"><font color='red'>{project_title}</font></string>
-    <string name="attachment">您参加的项目</string>
+    <string name="attachment">添加了文件</string>
+    <string name="new_homework">添加了任务</string>
+    <string name="new_image">添加了图片</string>
+    <string name="new_plan">添加了计划</string>
+    <string name="new_vote">发起了投票</string>
+    <string name="new_task1">新的任务</string>
     <string name="project_attachment">{project_title}</string>
     <string name="project_task"><font color='#005580'>{project_title}</font> </string>
     <string name="project_idea"><font color='#005580'>{project_title}</font> </string>
@@ -32,14 +41,9 @@
     <string name="project_plan"><font color='#005580'>{project_title}</font> </string>
     <string name="project_vote"><font color='#005580'>{project_title}</font> </string>
     <string name="project_homework"><font color='#005580'>{project_title}</font> </string>
-    <string name="new_mention_attachment"><font color='blue'> 文件 </font> 中提到你</string>
-    <string name="new_mention_comment"><font color='blue'> 回复 </font> 中提到你</string>
-    <string name="new_mention_homework"><font color='blue'> 任务提交 </font> 中提到你</string>
-    <string name="new_mention_idea"><font color='blue'> 想法 </font> 中提到你</string>
-    <string name="new_mention_image"><font color='blue'> 图片 </font> 中提到你</string>
-    <string name="new_mention_task"><font color='blue'> 任务 </font> 中提到你</string>
-    <string name="new_reply">在你的想法添加 </string>
-    <string name="new_task">给你分配一个<font color='blue'> 任务 </font> 在 </string>
+    <string name="new_mention_attachment">提到了你</string>
+    <string name="new_mention"><font color='blue'> 回复 </font> 中提到你</string>
+    <string name="compele_task">完成了任务</string>
     <string name="project_new_task"><font color='blue'>{project_title}</font> 中</string>
 
 
@@ -168,6 +172,12 @@
     <string name="extract_visible_bitmap">Extract visible bitmap</string>
     <string name="menu_lock">Lock</string>
     <string name="menu_unlock">Unlock</string>
+
+
+
+
+    <string name="send">发送</string>
+
 
 
 </resources>

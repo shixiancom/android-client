@@ -6,14 +6,18 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
+import com.shixian.android.client.MyApplication;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
+import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
 
 /**
  * Created by s0ng on 2015/2/22.
  */
 public abstract  class BaseActivity extends UmengActivity {
+
+    private String COOKIE_KEY="COOKIE_KEY";
 
 
     /**
@@ -36,6 +40,7 @@ public abstract  class BaseActivity extends UmengActivity {
 
     protected  FinishActivityReceiver receiver;
 
+
     //写个广播接受着 用于关闭activity
 
 
@@ -43,6 +48,7 @@ public abstract  class BaseActivity extends UmengActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
 
 
         if(null != savedInstanceState)
@@ -95,5 +101,10 @@ public abstract  class BaseActivity extends UmengActivity {
 
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        ApiUtils.client.addHeader("Cookie", ((MyApplication)getApplication()).getCookie());
+        
+    }
 }

@@ -9,7 +9,15 @@ import com.loopj.android.http.RequestParams;
  */
 public class ApiUtils {
 
-    public static AsyncHttpClient client = new AsyncHttpClient();
+    public static AsyncHttpClient client=new AsyncHttpClient();
+
+
+
+
+    public static void init()
+    {
+        client=new AsyncHttpClient();
+    }
 
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler handler) {

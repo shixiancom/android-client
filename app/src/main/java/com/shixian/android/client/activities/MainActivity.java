@@ -15,10 +15,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -37,6 +35,7 @@ import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.fragment.DiscoryProjectFragment;
 import com.shixian.android.client.activities.fragment.IndexFragment;
+import com.shixian.android.client.activities.fragment.MyUserIndexFragment;
 import com.shixian.android.client.activities.fragment.NewsFragment;
 import com.shixian.android.client.activities.fragment.ProjectFeedFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
@@ -50,6 +49,7 @@ import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
 import com.shixian.android.client.utils.DisplayUtil;
 import com.shixian.android.client.utils.SharedPerenceUtil;
+import com.umeng.update.UmengUpdateAgent;
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,7 +61,6 @@ import cn.jpush.android.api.JPushInterface;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
-
 import android.util.TypedValue;
 
 
@@ -71,6 +70,10 @@ import android.util.TypedValue;
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private String TAG = "MainActivity";
+
+
+    //这是那个恶心人的回复框
+    private LinearLayout commonEnterRoot;
 
 
 
@@ -143,6 +146,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);
 
+        UmengUpdateAgent.update(this);
+
         setContentView(R.layout.activity_main);
         initReceiver();
         Global.MAIN = this;
@@ -177,6 +182,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     Toast.makeText(MainActivity.this,new String(bytes),Toast.LENGTH_SHORT).show();
 
                 }
+
+
             });
         }
     }
@@ -231,14 +238,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(MainActivity.this, getString(R.string.check_net), Toast.LENGTH_SHORT);
+                Toast.makeText(MainActivity.this, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
 
     private void initUserProjects() {
-        projectList = new ArrayList<>();
+
+        if(projectList==null)
+            projectList = new ArrayList<>();
 
         myProjectjson = SharedPerenceUtil.getMyProject(this);
 
@@ -314,6 +323,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 //                CommonUtil.logDebug(TAG, new String(bytes));
 
+
                 userInfo = new String(bytes);
                 //出错
                 if (!AppContants.errorMsg.equals(userInfo)) {
@@ -327,7 +337,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     //发送推送需要的信息
                     sendJpushData();
 
-                    tv_uname.setText(user.username);
+                    if(!TextUtils.isEmpty(user.username))
+                     tv_uname.setText(user.username);
 
                     SharedPerenceUtil.putUserInfo(MainActivity.this, userInfo);
 
@@ -384,6 +395,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
+        commonEnterRoot= (LinearLayout) findViewById(R.id.commonEnterRoot);
+
 
         drawable = toolbar.getNavigationIcon();
 
@@ -419,12 +432,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                 super.onDrawerOpened(drawerView);
 
-                //打开重新加载数据
-                //TODO
-                if(user!=null)
-                    tv_uname.setText(user.username);
-
-
             }
 
             @Override
@@ -435,6 +442,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     toastView.setVisibility(View.VISIBLE);
                 }
                 initUserProjects();
+                initUserInfo();
 
             }
         };
@@ -451,9 +459,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         tv_uname = (TextView) findViewById(R.id.tv_uname);
         iv_icon = (ImageView) findViewById(R.id.iv_icon);
-        if (Global.user != null) {
-            if (TextUtils.isEmpty(Global.user.username))
-                tv_uname.setText(Global.user.username);
+        if (!TextUtils.isEmpty(Global.USER_NAME)) {
+              tv_uname.setText(Global.USER_NAME);
+
         }
 
 
@@ -508,7 +516,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         //现实消息
         // showMsg(5);
         iv_msg = (ImageView) findViewById(R.id.iv_msg);
-        //TODO
+
         //  titleImgPoint=new RedPointView(this,toolbar);
         tv_msg_count = (TextView) findViewById(R.id.tv_msg_count);
 
@@ -524,11 +532,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     bundle.putInt("type", IndexOnClickController.USER_FRAGMENT);
 
                     bundle.putSerializable("user", user);
-                    Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                    intent.putExtras(bundle);
 
-                    MainActivity.this.startActivity(intent);
-                    drawerLayout.closeDrawers();
+
+                    MyUserIndexFragment fragment=new MyUserIndexFragment();
+                    fragment.setArguments(bundle);
+
+                    currentFeed=fragment;
+
+                    switchFragment( fragment,null);
                 }
 
             }
@@ -609,6 +620,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 isIndex = false;
 
                 break;
+
+
+
         }
 
     }
@@ -684,7 +698,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         fragmentTransaction.replace(R.id.main_fragment_layout, fragment);
         // fragmentTransaction.replace(R.id.main_fragment_layout, fragment);
 
-        fragmentTransaction.commit();
+        fragmentTransaction.commitAllowingStateLoss();
         drawerLayout.closeDrawers();
 
     }
@@ -950,5 +964,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             hideMsg();
 
         }
+    }
+
+
+
+    public void hideReponse()
+    {
+        commonEnterRoot.setVisibility(View.GONE);
     }
 }

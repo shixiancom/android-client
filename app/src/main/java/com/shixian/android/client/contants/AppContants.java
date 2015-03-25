@@ -15,6 +15,8 @@ public interface AppContants {
      */
     String DOMAIN="http://asset.shixian.com";
 
+    String NOHOST_DOMAIN="http://shixian.com";
+
     /**
      * 获取自身信息url
      */
@@ -76,6 +78,10 @@ public interface AppContants {
     String JPUSH_NEED_URL="http://shixian.com"+"/api/v1/android_tokens";
 
     String DEBUG_JPUSH_NEED_URL="http://172.168.97.167:3000"+"/api/v1/android_tokens";
+
+
+    String ADD_IDEA_URL=NOHOST_DOMAIN+"/api/v1/ideas.json";
+
 
 
 

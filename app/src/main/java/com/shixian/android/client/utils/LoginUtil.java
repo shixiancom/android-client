@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.shixian.android.client.MyApplication;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.LoginActivity;
 import com.shixian.android.client.activities.MainActivity;
@@ -56,11 +57,13 @@ public class LoginUtil {
         RequestParams params = new RequestParams();
         params.add("access_token", mAccessToken.getToken());
 
-        ApiUtils.client.setTimeout(30000);
+        ApiUtils.client.setTimeout(20000);
 
 
         final AsyncHttpClient client = new AsyncHttpClient();
 
+
+        ApiUtils.init();
 
         client.get("http://asset.shixian.com/api/v1/api_login.json", params, new AsyncHttpResponseHandler() {
             @Override
@@ -79,9 +82,15 @@ public class LoginUtil {
                             sp.edit().putString("cookie", headers[j].getValue()).commit();
 
                            // ApiUtils.client.addHeader(headers[j].getName(), headers[j].getValue());
-                            ApiUtils.client.addHeader("Cookie", headers[j].getValue());
-                            ApiUtils.client.addHeader("user-agent", "android");
 
+                            ((MyApplication)context.getApplication()).setCookie(headers[j].getValue());
+
+                            ApiUtils.client.addHeader("Cookie", headers[j].getValue());
+
+                            Log.i("AAAA",headers[j].getValue()+"－－－－－－－－新的cookie");
+
+
+                            ApiUtils.client.addHeader("user-agent", "android");
 
 
                             CommonUtil.logDebug("AAAA", headers[j].getValue());

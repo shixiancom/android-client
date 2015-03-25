@@ -4,6 +4,7 @@ package com.shixian.android.client.activities.fragment;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -44,8 +45,9 @@ public class IndexFragment extends BaseFeedFragment {
 
         } else {
            pullToRefreshListView.getListView().setAdapter(adapter);
-
+            adapter.notifyDataSetChanged();
         }
+
 
     }
 
@@ -140,7 +142,7 @@ public class IndexFragment extends BaseFeedFragment {
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
 
-                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
+                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
                 pullToRefreshListView.onPullDownRefreshComplete();
                 context.dissProgress();
             }
@@ -209,7 +211,7 @@ public class IndexFragment extends BaseFeedFragment {
 //                Log.i("AAAA", new String(bytes));
 
                 //TODO 错误可能定义的不是太准确  最后一天调整
-                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
+                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
                 pullToRefreshListView.onPullUpRefreshComplete();
                 page -= 1;
             }

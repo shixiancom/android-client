@@ -5,13 +5,15 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.loopj.android.http.PersistentCookieStore;
 import com.shixian.android.client.Global;
+import com.shixian.android.client.MyApplication;
 import com.shixian.android.client.R;
 import com.shixian.android.client.model.User;
 import com.shixian.android.client.sina.AccessTokenKeeper;
@@ -87,9 +89,15 @@ public class LoginActivity extends Activity
         //不为null 并且可用
         if(mAccessToken!=null&&mAccessToken.isSessionValid()){
 
+            ApiUtils.init();
+          //  Log.i("AAAA",mAccessToken.getToken()+"本地保存有token的时候--------------------");
             //这里还要验证token是否可用
             //在这里需要现实进度条给用户提示
-            ApiUtils.client.addHeader("Cookie",getSharedPreferences("userinfo", Context.MODE_PRIVATE).getString("cookie",""));
+
+            String cookie=getSharedPreferences("userinfo", Context.MODE_PRIVATE).getString("cookie","");
+            ((MyApplication)getApplication()).setCookie(cookie);
+
+            ApiUtils.client.addHeader("Cookie", cookie);
             ApiUtils.client.addHeader("user-agent", "android");
 
             startActivity(new Intent(this, MainActivity.class));
@@ -114,9 +122,6 @@ public class LoginActivity extends Activity
 
     public void setOnclick() {
 
-
-
-
         loginButton.setWeiboAuthInfo(mAuthInfo, mLoginListener);
     }
 
@@ -133,6 +138,9 @@ public class LoginActivity extends Activity
 
 
             if (mAccessToken.isSessionValid()) {
+
+
+                Log.i("AAAA",mAccessToken.getToken()+"点击登录的时候--------------------");
                 // 保存 Token 到 SharedPreferences
                 AccessTokenKeeper.writeAccessToken(LoginActivity.this, mAccessToken);
                 CommonUtil.logDebug(TAG,mAccessToken.getToken());
@@ -193,7 +201,6 @@ public class LoginActivity extends Activity
      */
     private void initJpush() {
 
-        JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
     }
 
@@ -203,6 +210,7 @@ public class LoginActivity extends Activity
         super.onResume();
         JPushInterface.onResume(this);
         MobclickAgent.onResume(this);
+
 
     }
 

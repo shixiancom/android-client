@@ -1,6 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
+
       tools:context=".MainActivity">
 
     <!--<item-->
@@ -9,13 +10,7 @@
         <!--app:actionViewClass="android.support.v7.widget.SearchView"-->
         <!--app:showAsAction="ifRoom"/>-->
 
-    <group android:id="@+id/group_quit" >
-    <item
-        android:id="@+id/action_quit"
-        android:orderInCategory="100"
-        android:title="退出登陆"
-        />
 
-    </group>
+
 
 </menu>
