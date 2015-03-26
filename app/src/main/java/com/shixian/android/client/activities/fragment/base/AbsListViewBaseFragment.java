@@ -16,11 +16,17 @@
 package com.shixian.android.client.activities.fragment.base;
 
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.AbsListView;
+import android.widget.Toast;
+
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
+import com.shixian.android.client.activities.BaseActivity;
 import com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView;
 
 
@@ -33,22 +39,10 @@ public abstract class AbsListViewBaseFragment extends BaseFragment {
 
     public static final int REFRESH_PAGE=10086;
 
-    protected Handler handler=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-
-            switch (msg.what)
-            {
-                case REFRESH_PAGE:
-                {
-                    pullToRefreshListView.refreshDrawableState();
-                }
-            }
 
 
-        }
-    };
+
+
 
 
 	protected PullToRefreshListView pullToRefreshListView;
@@ -58,7 +52,19 @@ public abstract class AbsListViewBaseFragment extends BaseFragment {
 	protected boolean pauseOnScroll = false;
 	protected boolean pauseOnFling = true;
 
-	@Override
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ((BaseActivity)getActivity()).setToolbarOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pullToRefreshListView.getListView().setSelection(0);
+            }
+        });
+    }
+
+    @Override
 	public void onResume() {
 		super.onResume();
 		applyScrollListener();

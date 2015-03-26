@@ -336,7 +336,7 @@ public abstract  class BaseFeedFragment extends AbsListViewBaseFragment {
     public abstract  void initDate(Bundle savedInstanceState) ;
 
 
-    protected abstract void initFirstData();
+
 
 
 
@@ -846,7 +846,7 @@ public abstract  class BaseFeedFragment extends AbsListViewBaseFragment {
 
     public   void setCurrentPosition(int position){};
 
-
+    protected abstract void initFirstData();
 
 
 

@@ -4,7 +4,7 @@
     <item
         android:id="@+id/action_quit"
         android:orderInCategory="90"
-        android:title="推出登陆"
+        android:title="退出登陆"
         android:showAsAction="ifRoom"
         />
 

@@ -10,12 +10,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import com.shixian.android.client.controller.OnClickController;
 import com.shixian.android.client.engine.CommonEngine;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
+import com.shixian.android.client.model.Image;
 import com.shixian.android.client.model.Project;
 import com.shixian.android.client.model.feeddate.BaseFeed;
 import com.shixian.android.client.utils.ApiUtils;
@@ -44,6 +47,8 @@ import org.apache.http.Header;
 public class ProjectFeedFragment extends BaseFeedFragment {
 
 
+
+    public  static final int RESULT_ADD_IDEA=10087;
 
     public static final String PROJECT_ID="projectid";
 
@@ -652,7 +657,8 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                 }
                 intent.putExtra(PROJECT_ID,project.id+"");
 
-                startActivity(intent);
+                startActivityForResult(intent, RESULT_ADD_IDEA);
+
                 break;
 
         }
@@ -662,8 +668,31 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode==RESULT_ADD_IDEA)
+            if(resultCode==Activity.RESULT_OK)
+            {
+
+                View view=View.inflate(context,R.layout.toastmy,null);
+
+
+                Toast toast = new Toast(context);
+                toast.setGravity(Gravity.CENTER, 12, 40);
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(view);
+
+                toast.show();
+                initFirstData();
+            }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
+
 }

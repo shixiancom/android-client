@@ -21,7 +21,7 @@ public class ProjectEngine {
 
         RequestParams params=new RequestParams();
         params.add("project_id",projectId);
-        params.add("idea_conten",content);
+        params.add("idea_content",content);
 
 
         ApiUtils.post(AppContants.ADD_IDEA_URL,params,handler);

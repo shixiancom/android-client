@@ -85,7 +85,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private boolean onBackQuit = false;
 
     private DrawerLayout drawerLayout;
-    private Toolbar toolbar;
 
     private Drawable drawable;
 

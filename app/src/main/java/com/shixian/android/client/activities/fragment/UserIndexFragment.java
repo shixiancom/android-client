@@ -15,7 +15,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
-import com.shixian.android.client.activities.DetailActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.OnClickController;

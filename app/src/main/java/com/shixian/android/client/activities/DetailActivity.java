@@ -26,7 +26,7 @@ public class DetailActivity extends BaseActivity {
 
 
 
-    private Toolbar toolbar;
+
     private SmoothProgressBar mProgressBar;
 
 

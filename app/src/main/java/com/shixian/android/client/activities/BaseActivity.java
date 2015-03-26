@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.View;
 
-import com.shixian.android.client.MyApplication;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.utils.ApiUtils;
@@ -46,6 +48,8 @@ public abstract  class BaseActivity extends UmengActivity {
 
     protected static final String LABEL="LABLE";
 
+    protected Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -56,6 +60,14 @@ public abstract  class BaseActivity extends UmengActivity {
 
             String label = savedInstanceState.getString(LABEL);
             this.setTitle(label);
+            String cookie=savedInstanceState.getString(COOKIE_KEY);
+
+            if(!TextUtils.isEmpty(cookie))
+            {
+                ApiUtils.client.addHeader("Cookie", cookie);
+
+            }
+
 
         }
 
@@ -94,6 +106,12 @@ public abstract  class BaseActivity extends UmengActivity {
         // Save away the original text, so we still have it if the activity
         // needs to be killed while paused.
 
+        String cookie=getSharedPreferences("userinfo", Context.MODE_PRIVATE).getString("cookie","");
+        if(!TextUtils.isEmpty(cookie))
+        {
+            savedInstanceState.putString(COOKIE_KEY,cookie);
+        }
+
 
         savedInstanceState.putString(LABEL,getTitle().toString());
 
@@ -104,7 +122,17 @@ public abstract  class BaseActivity extends UmengActivity {
     @Override
     public void onResume() {
         super.onResume();
-        ApiUtils.client.addHeader("Cookie", ((MyApplication)getApplication()).getCookie());
-        
+
+    }
+
+    public  Toolbar getToolbar()
+    {
+        return toolbar;
+    }
+
+
+    public void setToolbarOnClickListener(View.OnClickListener onClickListener)
+    {
+        toolbar.setOnClickListener(onClickListener);
     }
 }

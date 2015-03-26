@@ -1,6 +1,7 @@
 package com.shixian.android.client.activities.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.shixian.android.client.R;
+import com.shixian.android.client.activities.BaseActivity;
 import com.shixian.android.client.activities.MainActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
@@ -49,6 +51,16 @@ public class DiscoryProjectFragment extends BaseFragment {
     private int currentFirstPos=0;
 
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((BaseActivity)getActivity()).setToolbarOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pullToRefreshListView.getListView().setSelection(0);
+            }
+        });
+    }
 
     @Override
     public void onResume() {

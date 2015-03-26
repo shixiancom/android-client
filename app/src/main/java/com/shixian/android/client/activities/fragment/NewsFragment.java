@@ -107,8 +107,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                     PullToRefreshBase<ListView> refreshView) {
 
                 //上啦刷新
-                initFirst();
-            }
+                initFirstData();            }
 
             @Override
             public void onPullUpToRefresh(
@@ -179,7 +178,7 @@ public class NewsFragment extends AbsListViewBaseFragment
         }else{
 
             initCacheData();
-            initFirst();
+            initFirstData();
         }
 
     }
@@ -189,7 +188,7 @@ public class NewsFragment extends AbsListViewBaseFragment
         pullToRefreshListView.getListView().setSelection(position);
     }
 
-    private void initFirst() {
+    protected void initFirstData() {
 
         context.showProgress();
         ApiUtils.get(AppContants.NOTIFICATION_URL,null,new AsyncHttpResponseHandler() {
