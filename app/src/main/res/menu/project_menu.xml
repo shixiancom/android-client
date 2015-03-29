@@ -11,4 +11,10 @@
         />
 
 
+    <item
+        android:id="@+id/action_share_webo"
+        android:icon="@drawable/action_create"
+        app:showAsAction="ifRoom"
+        android:title="@string/add_idea"
+        />
 </menu>

@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/time_text_size"
             android:textColor="#888888"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="@dimen/global_right"
             android:layout_gravity="center_vertical"
             />
         

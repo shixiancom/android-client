@@ -7,6 +7,7 @@ import android.util.Log;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.engine.ProjectEngine;
+import com.shixian.android.client.sina.WeiBoUtils;
 import com.shixian.android.client.utils.ApiUtils;
 
 import org.apache.http.Header;
@@ -20,17 +21,17 @@ public class Test extends InstrumentationTestCase {
     public void testAddIdea()
     {
 
-            ProjectEngine.addEngine("17","你好周星驰",new AsyncHttpResponseHandler() {
+            ProjectEngine.addIdea("17", "你好周星驰", new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int position, Header[] headers, byte[] bytes) {
 
-                    Log.i("AAAA",new String(bytes) + "success");
+                    Log.i("AAAA", new String(bytes) + "success");
 
                 }
 
                 @Override
                 public void onFailure(int position, Header[] headers, byte[] bytes, Throwable throwable) {
-                    Log.i("AAAA",new String(bytes)+"+ fo");
+                    Log.i("AAAA", new String(bytes) + "+ fo");
                 }
             });
 
@@ -66,6 +67,11 @@ public class Test extends InstrumentationTestCase {
                 Log.i("AAAA", new String(bytes));
             }
         });
+    }
+
+    public void testSendMessage()
+    {
+        //WeiBoUtils.sendMessage(this,"你谁啊",);
     }
 
 }

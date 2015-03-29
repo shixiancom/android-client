@@ -61,13 +61,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
     private String TAG = "IndexFragment";
 
-
-
-
-
     private String firstPageDate;
-
-
 
     private MsgType msgType;
 
@@ -90,7 +84,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
     protected DisplayImageOptions contentOptions;
     //小头像
     protected DisplayImageOptions commentOptions;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,7 +126,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
     }
 
 
-
     @Override
     public View initView(LayoutInflater inflater) {
 
@@ -152,13 +144,9 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
         pullToRefreshListView.getListView().setDividerHeight(0);
 
-
-
-
 //        commonEnterRoot=context.findViewById(R.id.commonEnterRoot);
 //
 //        settingListView(lv);
-
 
         // 滚动到底自动加载可用
         pullToRefreshListView.setScrollLoadEnabled(true);
@@ -186,8 +174,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                 //下拉加载更多
                 pullToRefreshListView.onPullUpRefreshComplete();
 
-
-
             }
         });
 
@@ -196,7 +182,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
 
     protected void initCacheData() {
-
 
         firstPageDate= SharedPerenceUtil.getIndexFeed(context);
         feedEntry = JsonUtils.parseAllItemType(firstPageDate, msgType);
@@ -215,8 +200,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
     @Override
     public void initDate(Bundle savedInstanceState) {
 
-
-
         if(feedEntry!=null&&feedEntry.firstEntry!=null)
         {
             if (adapter == null) {
@@ -224,15 +207,10 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
             } else {
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
-
-
             }
 
             if (currentFirstPos <= feedEntry.baseFeeds.size())
                 pullToRefreshListView.getListView().setSelection(currentFirstPos);
-
-
-
         }else{
 
             initFirst();
@@ -668,7 +646,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
         });
     }
 
-
     protected void setFeedOnClickListener(final BaseActivity context, final FeedHolder holder,final BaseFeed baseFeed) {
 
         OnClickController controller=new OnClickController(context,baseFeed);
@@ -704,7 +681,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
         }
     }
-
 
     protected void setAllItemCommonClickListener(final BaseActivity context, final FeedHolder holder,final AllItemType allItemType) {
 
@@ -742,7 +718,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
         }
     }
-
 
 
     /**************************************** 回复框相关***************************/
@@ -884,24 +859,18 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
         mEnterLayout = new EnterLayout(context,onClickSendText);
 //        mEnterLayout.content.addTextChangedListener(new TextWatcherAt(this, this, 101));
         mEnterLayout.hide();
-
-
-
         ViewTreeObserver vto = listView.getViewTreeObserver();
 
         /*
         由于 中文数据法会使软键盘高度增高 这真是一件恶心人的事情
         另外无法监听软键盘隐藏事件 无法使输入框和软键盘一起消失
         这也是意见非常恶心人的事情  尝试了有一千次
-
          */
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
 
                 int listHeight = lv.getHeight();
-
-
                 //说明键盘出来了
                 if(oldListHigh-listHeight>100)
                 {
@@ -909,10 +878,8 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                     lv.smoothScrollBy(scrollResult, 1);
 
                 }
-
             }
         });
-
 
     }
 
@@ -937,10 +904,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
         mEnterLayout.show(tag);
         comment.setSelection(comment.getText().length());
-
-
-
-
 
 //            mEnterLayout.restoreLoad(commentObject);
 
@@ -982,18 +945,12 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
         public String url;
 
-
-
-
         public MsgType(News news)
         {
             String type="";
 
             this.notifiable_type=news.notifiable_type;
             this.notifiable_id=news.notifiable_id;
-
-
-
 
             url=String.format(AppContants.MSG_RESOPNSE_URL,notifiable_type.toLowerCase()+"s",notifiable_id);
             if("UserProjectRelation".equals(notifiable_type))
@@ -1012,9 +969,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                 }
             }
 
-
-
-
         }
     }
 
@@ -1029,14 +983,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
         super.onResume();
         mEnterLayout.show(null);
 
-
-
     }
-
-
-
-
-
 
 
 }

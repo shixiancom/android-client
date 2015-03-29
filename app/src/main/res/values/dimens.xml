@@ -13,6 +13,7 @@
     <dimen name="menu_margin_top">8dp</dimen>
     <dimen name="menu_tv_sp">14dp</dimen>
     <dimen name="global_left">16dp</dimen>
+    <dimen name="global_right">16dp</dimen>
     <dimen name="iv_icon_right">8dp</dimen>
     <dimen name="content_top">14dp</dimen>
     <dimen name="main_content_top">5dp</dimen>

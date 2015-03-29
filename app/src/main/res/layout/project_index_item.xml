@@ -1,61 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- 想法xxxxxxxxxx -->
-<com.shixian.android.client.views.PersonItemLinearLayout
+<com.shixian.android.client.views.PersonItemLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:orientation="vertical">
 
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <com.shixian.android.client.views.FontTextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:textSize="18sp"
-           android:layout_marginTop="10dp"
-           android:layout_marginLeft="@dimen/global_left"
-           android:singleLine="true"
-           android:id="@+id/tv_name"
-           android:textColor="#000000"
-            android:ellipsize="end"
-            android:layout_weight="1"
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/global_left"
             android:layout_marginRight="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
             android:background="@drawable/text_common_selector"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#000000"
+            android:textSize="18sp"
 
             />
 
-       <Button
-           android:minWidth="88dp"
-           android:layout_marginTop="10dp"
-           android:layout_width="wrap_content"
-           android:layout_height="36dp"
-           android:singleLine="true"
-           android:id="@+id/bt_follow"
-           android:layout_alignParentRight="true"
-           android:layout_marginRight="10dp"
-           android:layout_centerVertical="true"
-           android:text="@string/follow"
-           android:textColor="@color/white"
-           android:background="@drawable/shape_follow"
-           style="?android:attr/borderlessButtonStyle"
-           android:paddingBottom="0dp"
-           />
-       </LinearLayout>
+        　<FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/bt_follow"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/global_right"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_follow"
+            android:minWidth="88dp"
+            android:paddingBottom="0dp"
+            android:singleLine="true"
+            android:text="@string/follow"
+            android:textColor="@color/white" />
+
+        <Button
+            android:layout_marginRight="@dimen/global_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:id="@+id/bt_shrinkage"
+            android:text="详细内容"
+            android:drawableRight="@drawable/ic_expand_small_holo_light"
+            android:textSize="15sp"
+            android:textColor="#9B9B9B"
+            />
+
+    </FrameLayout>
+    </LinearLayout>
 
     <com.shixian.android.client.views.FontTextView
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="@dimen/global_left"
-        android:layout_marginTop="@dimen/content_top"
         android:id="@+id/tv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:textColor="#666666"
+        android:layout_marginLeft="@dimen/global_left"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="@dimen/content_top"
         android:lineSpacingMultiplier="1.3"
+        android:textColor="#666666"
+        android:textSize="15sp"
 
 
         />
@@ -63,8 +78,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="#E5E5E5"
-        />
+        android:background="#E5E5E5" />
 
 
 </com.shixian.android.client.views.PersonItemLinearLayout>

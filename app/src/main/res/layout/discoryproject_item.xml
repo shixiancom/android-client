@@ -41,7 +41,7 @@
             android:singleLine="true"
             android:id="@+id/bt_fllowen"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="16dp"
+            android:layout_marginRight="@dimen/global_right"
             android:text="关注"
             android:textColor="@color/white"
             android:background="@drawable/shape_follow"

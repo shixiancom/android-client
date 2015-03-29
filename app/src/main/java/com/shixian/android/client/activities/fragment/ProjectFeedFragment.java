@@ -3,6 +3,7 @@ package com.shixian.android.client.activities.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -16,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,6 +28,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.AddIdeaActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
+import com.shixian.android.client.anmi.ExpandAnimation;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.OnClickController;
 import com.shixian.android.client.engine.CommonEngine;
@@ -34,10 +37,14 @@ import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.Image;
 import com.shixian.android.client.model.Project;
 import com.shixian.android.client.model.feeddate.BaseFeed;
+import com.shixian.android.client.sina.Constants;
+import com.shixian.android.client.sina.WeiBoUtils;
 import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
 import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
+import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
+import com.sina.weibo.sdk.api.share.WeiboShareSDK;
 
 import org.apache.http.Header;
 
@@ -52,7 +59,13 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
     public static final String PROJECT_ID="projectid";
 
+    public static final int ANMI_DRUATION=300;
+
     private Project project=new Project();
+
+
+    //动画期间不容许点击  纪录动画是否在执行
+    private boolean anmi_state=true;
 
 
 
@@ -60,6 +73,9 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
     private String TAG="ProjectFeedFragment";
 
+
+    /** 微博微博分享接口实例 */
+    private IWeiboShareAPI mWeiboShareAPI = null;
 
 
 
@@ -86,6 +102,19 @@ public class ProjectFeedFragment extends BaseFeedFragment {
         }
 
 
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // 创建微博分享接口实例
+        mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(context, Constants.APP_KEY);
+
+        // 注册第三方应用到微博客户端中，注册成功后该应用将显示在微博的应用列表中。
+        // 但该附件栏集成分享权限需要合作申请，详情请查看 Demo 提示
+        // NOTE：请务必提前注册，即界面初始化的时候或是应用程序初始化时，进行注册
+        mWeiboShareAPI.registerApp();
     }
 
     @Override
@@ -370,8 +399,14 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                 if(project!=null)
                 {
                     TextView tv_name= (TextView) view.findViewById(R.id.tv_name);
+
+
+
                     final Button bt_follow= (Button) view.findViewById(R.id.bt_follow);
-                    TextView tv_content= (TextView) view.findViewById(R.id.tv_content);
+
+                    final Button bt_shrinkage= (Button) view.findViewById(R.id.bt_shrinkage);
+
+                    final TextView tv_content= (TextView) view.findViewById(R.id.tv_content);
 
                     tv_name.setText(project.title);
                     if(project.description!=null)
@@ -380,11 +415,25 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                     {
                         bt_follow.setBackgroundResource(R.drawable.shape_unfollow);
                         bt_follow.setText(R.string.following);
+                        bt_follow.setVisibility(View.GONE);
+                        bt_shrinkage.setVisibility(View.VISIBLE);
+                        tv_content.setVisibility(View.GONE);
                     }else{
                         bt_follow.setBackgroundResource(R.drawable.shape_follow);
                         bt_follow.setText(R.string.follow);
+                        bt_follow.setVisibility(View.VISIBLE);
+                        bt_shrinkage.setVisibility(View.GONE);
                     }
 
+
+                    bt_shrinkage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            execAnmi(bt_shrinkage,tv_content);
+
+                        }
+                    });
 
                     bt_follow.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -407,7 +456,8 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 //                               }
 //                           });
 
-                                Toast.makeText(context,"暂不支持取消功能，我们正在飞速开发",Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(context,"暂不支持取消功能，我们正在飞速开发",Toast.LENGTH_SHORT).show();
+
                             }else{
                                 //关注api
                                 ApiUtils.post(String.format(AppContants.PROJECT_FOLLOW_URL,project.id),null,new AsyncHttpResponseHandler() {
@@ -417,6 +467,12 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                                         bt_follow.setBackgroundResource(R.drawable.shape_unfollow);
                                         bt_follow.setText(R.string.following);
                                         project.has_followed=true;
+
+                                        bt_follow.setVisibility(View.GONE);
+                                        bt_shrinkage.setVisibility(View.VISIBLE);
+                                        execAnmi(tv_content);
+
+
                                     }
 
                                     @Override
@@ -635,7 +691,6 @@ public class ProjectFeedFragment extends BaseFeedFragment {
         inflater.inflate(R.menu.project_menu,menu);
         super.onCreateOptionsMenu(menu, inflater);
 
-
     }
 
 
@@ -659,6 +714,21 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
                 startActivityForResult(intent, RESULT_ADD_IDEA);
 
+                break;
+
+            case R.id.action_share_webo:
+
+                if(project!=null) {
+                    String text = "#" + project.title + "#      " + project.description;
+                    if (text.length() > 100) {
+                        text = text.substring(0, 96) + "...\n" + "http://shixian.com/projects/" + project.id;
+
+                    }
+                    WeiBoUtils.sendMessage(context, text, mWeiboShareAPI);
+
+                }else{
+                    Toast.makeText(context,"稍后再试",Toast.LENGTH_SHORT).show();
+                }
                 break;
 
         }
@@ -693,6 +763,60 @@ public class ProjectFeedFragment extends BaseFeedFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
+    //执行动画
+    private void execAnmi(Button clickView,View anmiview)
+    {
+
+        if(anmi_state)
+        {
+            ExpandAnimation animation=new ExpandAnimation(anmiview,ANMI_DRUATION);
+            animation.setAnimationListener(animationListener);
+
+            anmiview.startAnimation(animation);
+
+            //view已经展开
+            if(animation.toggle())
+            {
+                Drawable drawable= getResources().getDrawable(R.drawable.ic_collapse_small_holo_light);
+                drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                clickView.setText(R.string.shrinkage_stat2);
+                clickView.setCompoundDrawables(null,null,drawable,null);
+
+            }else{ //view 已经关闭
+                Drawable drawable= getResources().getDrawable(R.drawable.ic_expand_small_holo_light);
+                drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                clickView.setText(R.string.shrinkage_stat1);
+                clickView.setCompoundDrawables(null,null,drawable,null);
+
+            }
+        }
+
+    }
+    private void execAnmi(View anmiview)
+    {
+        ExpandAnimation animation=new ExpandAnimation(anmiview,ANMI_DRUATION);
+        anmiview.startAnimation(animation);
+    }
+
+    private Animation.AnimationListener animationListener=new Animation.AnimationListener() {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            anmi_state=false;
+
+        }
+
+        //执行结束
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            anmi_state=true;
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    };
 
 
 }

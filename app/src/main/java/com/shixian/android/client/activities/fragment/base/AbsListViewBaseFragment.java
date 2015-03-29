@@ -53,6 +53,7 @@ public abstract class AbsListViewBaseFragment extends BaseFragment {
 	protected boolean pauseOnFling = true;
 
 
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
