@@ -1,13 +1,14 @@
 package com.shixian.android.client.controller;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 import com.shixian.android.client.R;
-import com.shixian.android.client.activities.BaseActivity;
-import com.shixian.android.client.activities.fragment.ProjectFeedFragment;
-import com.shixian.android.client.activities.fragment.UserIndexFragment;
+import com.shixian.android.client.activities.base.BaseActivity;
+import com.shixian.android.client.activities.ProjectActivity;
+import com.shixian.android.client.activities.UserActivity;
 import com.shixian.android.client.model.feeddate.AllItemType;
 
 /**
@@ -18,7 +19,7 @@ import com.shixian.android.client.model.feeddate.AllItemType;
 public class OnAllItemTypeClickController implements View.OnClickListener{
 
     private AllItemType allItemType;
-    private BaseActivity context;
+    private Activity context;
 
 
 
@@ -33,6 +34,7 @@ public class OnAllItemTypeClickController implements View.OnClickListener{
     @Override
     public void onClick(View v) {
 
+        Intent intent;
         Bundle bundle=new Bundle();
         switch (v.getId())
         {
@@ -47,17 +49,19 @@ public class OnAllItemTypeClickController implements View.OnClickListener{
                 //跳转到个人主页
                 Toast.makeText(context,"iv_ivcon",Toast.LENGTH_SHORT).show();
                 //跳转到个人主页
-                UserIndexFragment uf=new UserIndexFragment();
+
+                intent=new Intent(context, UserActivity.class);
 
 
-                String userid="";
+                bundle.putSerializable("user", allItemType.user);
 
-                    bundle.putSerializable("user",allItemType.user);
-                    userid=allItemType.user.id;
+                  //  bundle.putSerializable("user",allItemType.user);
 
 
-                uf.setArguments(bundle);
-                context.switchFragment(uf,null);
+                intent.putExtras(bundle);
+
+                context.startActivity(intent);
+
 
 //                Toast.makeText(context,"tv_name",Toast.LENGTH_SHORT).show();
                 break;
@@ -66,11 +70,15 @@ public class OnAllItemTypeClickController implements View.OnClickListener{
             //内容
             case R.id.tv_content:
 
+                intent = new Intent(context, ProjectActivity.class);
                 //点击项目要进入项目界面 我先把项目数据拿到看一看　
-                ProjectFeedFragment feedFragment=new ProjectFeedFragment();
+                intent.putExtra("project_id", allItemType.project.id);
+
                 bundle.putString("project_id",allItemType.project.id);
-                feedFragment.setArguments(bundle);
-                context.switchFragment(feedFragment,null);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+
+//                context.switchFragment(uf,null);
 
 //                Toast.makeText(context,"tv_name",Toast.LENGTH_SHORT).show();
                 break;

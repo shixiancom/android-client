@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.shixian.android.client.R;
-import com.shixian.android.client.activities.BaseActivity;
+import com.shixian.android.client.activities.ProjectActivity;
+import com.shixian.android.client.activities.UserActivity;
+import com.shixian.android.client.activities.base.BaseActivity;
 import com.shixian.android.client.activities.DetailActivity;
 import com.shixian.android.client.model.News;
 
@@ -33,18 +35,19 @@ public class NewsOnClickController implements View.OnClickListener{
     public void onClick(View v) {
 
 
-        Intent intent=new Intent(context, DetailActivity.class);
+        Intent intent;
         switch (v.getId())
         {
             case R.id.iv_icon:
             case R.id.tv_name:
-                String userid;
 
+
+                intent=new Intent(context, UserActivity.class);
                 //跳转到项目主页
                 Bundle bundle=new Bundle();
 
                 bundle.putSerializable("user", news.user);
-                userid = news.user.id;
+
 
                 bundle.putInt("type", IndexOnClickController.USER_FRAGMENT);
                 intent.putExtras(bundle);
@@ -66,6 +69,8 @@ public class NewsOnClickController implements View.OnClickListener{
 
                bundle=new Bundle();
 
+
+                intent=new Intent(context, ProjectActivity.class);
 
 
 

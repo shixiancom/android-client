@@ -3,14 +3,10 @@ package com.shixian.android.client.activities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,12 +16,11 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.R;
-import com.shixian.android.client.activities.fragment.ProjectFeedFragment;
-import com.shixian.android.client.activities.fragment.base.AbsListViewBaseFragment;
+import com.shixian.android.client.activities.base.UmengActivity;
 import com.shixian.android.client.engine.ProjectEngine;
+import com.shixian.android.client.utils.SharedPerenceUtil;
 import com.shixian.android.client.views.DarkAlertDialog;
 import com.shixian.android.client.views.DialgoFragment;
-import com.shixian.android.client.views.LightProgressDialog;
 
 import org.apache.http.Header;
 
@@ -38,40 +33,39 @@ public class AddIdeaActivity  extends UmengActivity {
 
     private static final String TAG="AddIdeaActivity";
 
-    private static final int LESS_TEXT_LENGTH=10;
+    private static final int LESS_TEXT_LENGTH=140;
 
     private String projectid;
 
 
-    private Handler handler=new Handler() ;
 
 
 
 
     private Toolbar toolbar;
 
-    private EditText et_comment;
+    private EditText et_content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_idea);
 
-        projectid=getIntent().getStringExtra(ProjectFeedFragment.PROJECT_ID);
+        projectid=getIntent().getStringExtra(ProjectActivity.PROJECT_ID);
 
 
 
-        et_comment= (EditText) findViewById(R.id.et_comment);
+        et_content= (EditText) findViewById(R.id.et_comment);
+
+        et_content.setText(SharedPerenceUtil.getEditIdea(this,projectid));
 
 
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("发表想法");
-        toolbar.setSubtitle("(至少输入"+LESS_TEXT_LENGTH+"个字)");
-        toolbar.setSubtitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
-        et_comment.addTextChangedListener(new TextWatcher() {
+        et_content.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -86,12 +80,7 @@ public class AddIdeaActivity  extends UmengActivity {
             public void afterTextChanged(Editable s)
             {
                 int distance=LESS_TEXT_LENGTH-s.toString().length();
-                if(distance<=0)
-                {
-                    toolbar.setSubtitle(null);
-                }else{
-                    toolbar.setSubtitle("(还差"+distance+"个字)");
-                }
+
             }
         });
 
@@ -120,7 +109,7 @@ public class AddIdeaActivity  extends UmengActivity {
             case R.id.action_send:
 
 
-                if(et_comment.getText().toString().length()<LESS_TEXT_LENGTH)
+                if(et_content.getText().toString().length()<LESS_TEXT_LENGTH)
                 {
                     Toast.makeText(this,"你输入的字数少于"+LESS_TEXT_LENGTH+" 不能发送",Toast.LENGTH_SHORT).show();
                     break;
@@ -137,7 +126,7 @@ public class AddIdeaActivity  extends UmengActivity {
 
 
 
-                ProjectEngine.addIdea(projectid,et_comment.getText().toString(),new AsyncHttpResponseHandler() {
+                ProjectEngine.addIdea(AddIdeaActivity.this,projectid,et_content.getText().toString(),new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int position, Header[] headers, byte[] bytes) {
 
@@ -160,8 +149,9 @@ public class AddIdeaActivity  extends UmengActivity {
                             //handler.sendEmptyMessage();
 
 
-                            setResult(Activity.RESULT_OK);
 
+                            setResult(Activity.RESULT_OK);
+                            SharedPerenceUtil.putEditHasEdit(AddIdeaActivity.this,false,projectid);
                             finish();
 
                         }
@@ -188,17 +178,20 @@ public class AddIdeaActivity  extends UmengActivity {
     @Override
     public void onBackPressed() {
 
-        if(et_comment.getText().toString().isEmpty())
+        if(et_content.getText().toString().isEmpty())
         {
             finish();
+            SharedPerenceUtil.clearIdeaEdit(this,projectid);
         }else{
 
            final  DialgoFragment dialgoFragment=new DialgoFragment("您要放弃发表？","发表想法","确定","取消",new DialogInterface.OnClickListener() {
                @Override
                public void onClick(DialogInterface dialog, int which) {
+
+                   SharedPerenceUtil.putEditIdea(AddIdeaActivity.this, projectid, et_content.getText().toString());
+                   setResult(ProjectActivity.RESULT_NOSEND);
                    finish();
                }},null);
-
 
 
             dialgoFragment.show(getFragmentManager(), "loginDialog");

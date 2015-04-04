@@ -124,6 +124,34 @@
         />
 
     <!-- android:scaleType="centerInside"-->
+        <RelativeLayout
+            android:id="@+id/rl_agree"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+
+<!--真他妈无语了 开始说用TextView 做好了又让改 ImageView-->
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/global_right"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:id="@+id/iv_agree"
+                android:src="@drawable/like"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_agreecount"
+                android:text="0"
+                android:textSize="14sp"
+                android:textColor="#9B9B9B"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/iv_agree"
+                />
+
+        </RelativeLayout>
 
     <TextView
         android:gravity="center_vertical"
@@ -139,9 +167,6 @@
 
         />
 
-
-
-
     </LinearLayout>
 
     <View
@@ -152,8 +177,6 @@
         android:layout_marginRight="@dimen/global_left"
         android:background="#E5E5E5"
         android:layout_marginTop="@dimen/main_content_top"
-
-
         />
 
 </LinearLayout>

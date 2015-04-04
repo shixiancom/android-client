@@ -1,5 +1,6 @@
 package com.shixian.android.client.activities;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -32,12 +33,13 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.shixian.android.client.Global;
+import com.shixian.android.client.MyApplication;
 import com.shixian.android.client.R;
+import com.shixian.android.client.activities.base.BaseActivity;
 import com.shixian.android.client.activities.fragment.DiscoryProjectFragment;
 import com.shixian.android.client.activities.fragment.IndexFragment;
 import com.shixian.android.client.activities.fragment.MyUserIndexFragment;
 import com.shixian.android.client.activities.fragment.NewsFragment;
-import com.shixian.android.client.activities.fragment.ProjectFeedFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
@@ -57,6 +59,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
 import cn.jpush.android.api.JPushInterface;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils;
@@ -70,6 +73,8 @@ import android.util.TypedValue;
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private String TAG = "MainActivity";
+
+
 
 
     //这是那个恶心人的回复框
@@ -118,6 +123,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout ll_descory;
     private LinearLayout ll_index;
     private RelativeLayout ll_msg;
+    private LinearLayout ll_addproject;
+    private LinearLayout ll_spotlight;
 
     //用于记录 当前属于哪个
     private BaseFragment currentFeed;
@@ -130,6 +137,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private TextView toastView;
 
+    private TextView tv_caogao;
+
     /**
      * Toast 的Params
      */
@@ -138,6 +147,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private WindowManager windowManager;
 
     private SwicthFrageReveiver swicthFrageReveiver;
+
+    public static  final int REFREST_CODE=10088;
+
+
+
 
 
     @Override
@@ -167,7 +181,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
             //检查更新
-            ApiUtils.get("http://dev.shixian.com:3000/androidupdate.json",null, new AsyncHttpResponseHandler() {
+            ApiUtils.get(MainActivity.this,"http://dev.shixian.com:3000/androidupdate.json",null, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int position, Header[] headers, byte[] bytes) {
 
@@ -206,10 +220,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initUserProjects();
 
 
+
+
     }
 
     public void initMsgStatus() {
-        ApiUtils.get(AppContants.MSG_STATUS_URL, null, new AsyncHttpResponseHandler() {
+        ApiUtils.get(MainActivity.this,AppContants.MSG_STATUS_URL, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, final byte[] bytes) {
                 Gson gson = new Gson();
@@ -251,7 +267,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         myProjectjson = SharedPerenceUtil.getMyProject(this);
 
         //获取用户项目
-        ApiUtils.get(AppContants.URL_MY_PROJECT_INFO, null, new AsyncHttpResponseHandler() {
+        ApiUtils.get(MainActivity.this,AppContants.URL_MY_PROJECT_INFO, null, new AsyncHttpResponseHandler() {
             @Override
             public void onFinish() {
                 super.onFinish();
@@ -316,7 +332,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void initUserInfo() {
         userInfo = SharedPerenceUtil.getUserInfo(this);
 
-        CommonEngine.getMyUserInfo(new AsyncHttpResponseHandler() {
+        CommonEngine.getMyUserInfo(MainActivity.this,new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
 
@@ -342,7 +358,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     SharedPerenceUtil.putUserInfo(MainActivity.this, userInfo);
 
                     //异步下载图片(头像)
-                    ApiUtils.get(AppContants.DOMAIN + user.avatar.small.url, null, new AsyncHttpResponseHandler() {
+                    ApiUtils.get(MainActivity.this,AppContants.DOMAIN + user.avatar.small.url, null, new AsyncHttpResponseHandler() {
                         @Override
                         public void onSuccess(int i, Header[] headers, final byte[] bytes) {
                             Bitmap icon = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -429,6 +445,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     toastView.setVisibility(View.GONE);
                 }
 
+                if(((MyApplication)getApplication()).getHasCaogao())
+                {
+                    tv_caogao.setVisibility(View.VISIBLE);
+                }else{
+                    tv_caogao.setVisibility(View.GONE);
+                }
+
+
                 super.onDrawerOpened(drawerView);
 
             }
@@ -475,14 +499,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                 SimpleProject project = projectList.get(position);
                 if (project != null) {
-                    //跳转到项目页面
-                    Bundle bundle = new Bundle();
-                    ProjectFeedFragment feedFragment = new ProjectFeedFragment();
-                    bundle.putString("project_id", project.getId() + "");
-
-                    bundle.putInt("type", IndexOnClickController.PROJECT_FRAGMENT);
-                    Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                    intent.putExtras(bundle);
+                    Intent intent = new Intent(MainActivity.this, ProjectActivity.class);
+                    intent.putExtra("project_id", project.getId() + "");
                     MainActivity.this.startActivity(intent);
 
                 }
@@ -496,10 +514,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         ll_descory = (LinearLayout) findViewById(R.id.ll_descory);
         ll_msg = (RelativeLayout) findViewById(R.id.ll_msg);
         ll_index = (LinearLayout) findViewById(R.id.ll_index);
+        ll_addproject= (LinearLayout) findViewById(R.id.ll_addproject);
+        ll_spotlight= (LinearLayout) findViewById(R.id.ll_spotlight);
+
 
         ll_descory.setOnClickListener(this);
         ll_msg.setOnClickListener(this);
         ll_index.setOnClickListener(this);
+        ll_addproject.setOnClickListener(this);
+        ll_spotlight.setOnClickListener(this);
 
 
         //设置左侧抽屉的宽度等于屏幕宽度减去Toolbar的高度
@@ -546,6 +569,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         tv_uname.setOnClickListener(userOnClickListener);
         iv_icon.setOnClickListener(userOnClickListener);
+
+
+
+        tv_caogao= (TextView) findViewById(R.id.tv_caogao);
+        if(((MyApplication)getApplication()).getHasCaogao())
+        {
+            tv_caogao.setVisibility(View.VISIBLE);
+        }else{
+            tv_caogao.setVisibility(View.GONE);
+        }
 
 
     }
@@ -619,8 +652,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 isIndex = false;
 
                 break;
+            case R.id.ll_addproject:
+                //这里有一个问题 要不要发表完成要不要刷新界面 我 目前让它刷新
+                Intent intent=new Intent(this,NewProjectActivity.class);
 
+                startActivityForResult(intent,REFREST_CODE);
 
+                break;
+
+            //本周启动
+            case R.id.ll_spotlight:
+
+                if (currentFeed instanceof NewsFragment) {
+                    currentFeed.setCurrentPosition(0);
+                    drawerLayout.closeDrawers();
+                    return;
+                }
+
+                switchFragment(new NewsFragment(), "ll_msg");
+                isIndex = false;
+                break;
 
         }
 
@@ -889,7 +940,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         params.put("device", CommonUtil.getImei(this, ""));
 
 
-        ApiUtils.post(AppContants.JPUSH_NEED_URL, params, new AsyncHttpResponseHandler() {
+        ApiUtils.post(MainActivity.this,AppContants.JPUSH_NEED_URL, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int position, Header[] headers, byte[] bytes) {
 
@@ -971,4 +1022,31 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     {
         commonEnterRoot.setVisibility(View.GONE);
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode==MainActivity.REFREST_CODE)
+            if(resultCode== Activity.RESULT_OK)
+            {
+
+                View view=View.inflate(this,R.layout.toastmy,null);
+
+
+                Toast toast = new Toast(this);
+                toast.setGravity(Gravity.CENTER, 12, 40);
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(view);
+
+                toast.show();
+                if(currentFeed.needRefresh())
+                    currentFeed.initFirstData();
+            }
+    }
+
+
+
+
 }

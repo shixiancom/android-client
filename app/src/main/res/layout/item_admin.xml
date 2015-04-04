@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#E5E5E5"
+        />
+<LinearLayout
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="48dp">
+
+
+    <com.shixian.android.client.views.FontTextView
+        android:layout_marginLeft="@dimen/global_left"
+        android:id="@+id/tv_admin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="负责人"
+        android:layout_weight="1"
+        android:layout_marginRight="@dimen/global_left"
+        android:layout_gravity="center_vertical"
+
+        />
+
+
+    <ImageView
+        android:layout_gravity="center_vertical"
+        android:visibility="gone"
+        android:layout_marginRight="@dimen/global_right"
+        android:src="@drawable/ic_check_grey600_24dp"
+        android:id="@+id/iv_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+</LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#E5E5E5"
+        />
+
+</LinearLayout>

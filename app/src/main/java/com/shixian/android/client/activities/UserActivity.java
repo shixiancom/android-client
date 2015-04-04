@@ -1,8 +1,8 @@
-package com.shixian.android.client.activities.fragment;
-
+package com.shixian.android.client.activities;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,10 +15,12 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
+import com.shixian.android.client.activities.base.BaseFeedActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
-import com.shixian.android.client.controller.OnClickController;
+import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.engine.CommonEngine;
+import com.shixian.android.client.handler.feed.BaseFeedHandler;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.User;
@@ -31,21 +33,20 @@ import com.shixian.android.client.utils.SharedPerenceUtil;
 import org.apache.http.Header;
 
 /**
- * Created by s0ng on 2015/2/12.
- * 个人主页
+ * Created by tangtang on 15/4/2.
  */
-
-public class UserIndexFragment extends BaseFeedFragment {
+public class UserActivity extends BaseFeedActivity {
 
 
     private String TAG = "UserIndexFragment";
+
     private User user;
 
 
     protected void initCacheData() {
-        firstPageDate = SharedPerenceUtil.getUserIndexFeed(context, user.id);
+        firstPageDate = SharedPerenceUtil.getUserIndexFeed(this, user.username);
 
-        String userInfo = SharedPerenceUtil.getUserIndexInfo(context, user.id);
+        String userInfo = SharedPerenceUtil.getUserIndexInfo(this, user.username);
         if (!TextUtils.isEmpty(userInfo))
             user = new Gson().fromJson(userInfo, User.class);
         feedList = JsonUtils.ParseFeeds(firstPageDate);
@@ -61,24 +62,28 @@ public class UserIndexFragment extends BaseFeedFragment {
             }
 
 
-
     }
 
     @Override
     protected void initFirst() {
+
+       user= (User) getIntent().getSerializableExtra("user");
+       // user = (User) getArguments().get("user");
+        initCacheData();
+
         initFirstData();
     }
 
     @Override
     protected void initLable() {
-        context.setLable(getString(R.string.label_profile));
+        this.setLable(getString(R.string.label_profile));
     }
 
 
     @Override
     protected void getNextData() {
         page += 1;
-        CommonEngine.getFeedData(AppContants.USER_FEED_INDEX_URL.replace("{user_name}", user.username), page, new AsyncHttpResponseHandler() {
+        CommonEngine.getFeedData(UserActivity.this,AppContants.USER_FEED_INDEX_URL.replace("{user_name}", user.username), page, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, final byte[] bytes) {
                 final String temp = new String(bytes);
@@ -96,7 +101,7 @@ public class UserIndexFragment extends BaseFeedFragment {
 
 
                             //保存数据到本地
-                            context.runOnUiThread(new Runnable() {
+                            UserActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (adapter == null) {
@@ -123,7 +128,7 @@ public class UserIndexFragment extends BaseFeedFragment {
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
 
-                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
+                Toast.makeText(UserActivity.this, getString(R.string.check_net), Toast.LENGTH_SHORT);
                 pullToRefreshListView.onPullUpRefreshComplete();
                 page -= 1;
             }
@@ -147,16 +152,14 @@ public class UserIndexFragment extends BaseFeedFragment {
 
         } else {
 
-            initFirstData();
+            initFirst();
         }
 
     }
 
     @Override
-    protected void initFirstData() {
+    public void initFirstData() {
 
-        user = (User) getArguments().get("user");
-        initCacheData();
 
         initUserInfo();
 
@@ -166,6 +169,8 @@ public class UserIndexFragment extends BaseFeedFragment {
     }
 
 
+
+
     /**
      * 初始化用户信息
      */
@@ -173,8 +178,8 @@ public class UserIndexFragment extends BaseFeedFragment {
         //如果是自身 说明是我的主页 我的信息都已经在登陆的时候拿到了 所以就不需要获取了 否则获取用户信息
         page = 1;
 
-        context.showProgress();
-        CommonEngine.getFeedData(AppContants.USER_FEED_INDEX_URL.replace("{user_name}", user.username), page, new AsyncHttpResponseHandler() {
+        this.showProgress();
+        CommonEngine.getFeedData(UserActivity.this,AppContants.USER_FEED_INDEX_URL.replace("{user_name}", user.username), page, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
 
@@ -187,9 +192,9 @@ public class UserIndexFragment extends BaseFeedFragment {
                             feedList = JsonUtils.ParseFeeds(firstPageDate);
                             pullToRefreshListView.onPullDownRefreshComplete();
 
-                            SharedPerenceUtil.putUserIndexFeed(context, firstPageDate, user.id);
+                            SharedPerenceUtil.putUserIndexFeed(UserActivity.this, firstPageDate, user.username);
 
-                            context.runOnUiThread(new Runnable() {
+                            UserActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (adapter == null) {
@@ -202,7 +207,7 @@ public class UserIndexFragment extends BaseFeedFragment {
 
                                     pullToRefreshListView.onPullDownRefreshComplete();
                                     pullToRefreshListView.getFooterLoadingLayout().show(false);
-                                    context.dissProgress();
+                                    UserActivity.this.dissProgress();
                                 }
                             });
 
@@ -219,10 +224,10 @@ public class UserIndexFragment extends BaseFeedFragment {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserActivity.this, R.string.check_net, Toast.LENGTH_SHORT).show();
                 pullToRefreshListView.onPullDownRefreshComplete();
                 pullToRefreshListView.getFooterLoadingLayout().show(false);
-                context.dissProgress();
+                UserActivity.this.dissProgress();
             }
 
 
@@ -235,8 +240,8 @@ public class UserIndexFragment extends BaseFeedFragment {
     private void initUserInfo() {
 
 
-        String url = AppContants.USER_INFO_INDEX_URL.replace("{user_id}", user.id);
-        ApiUtils.get(url, null, new AsyncHttpResponseHandler() {
+        String url = AppContants.USER_INFO_INDEX_URL.replace("{username}", user.username);
+        ApiUtils.get(UserActivity.this,url, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                 String userinfo = new String(bytes);
@@ -247,10 +252,10 @@ public class UserIndexFragment extends BaseFeedFragment {
                 if (!AppContants.errorMsg.equals(userinfo)) {
                     Gson gson = new Gson();
                     User user = gson.fromJson(userinfo, User.class);
-                    UserIndexFragment.this.user = user;
+                    UserActivity.this.user = user;
 
                     //保存userinfo
-                    SharedPerenceUtil.putUserIndexInfo(context, userinfo, user.id + "");
+                    SharedPerenceUtil.putUserIndexInfo(UserActivity.this, userinfo, user.username + "");
 
                     if (adapter == null) {
                         adapter = new UserIndexFeedAdapte();
@@ -263,7 +268,7 @@ public class UserIndexFragment extends BaseFeedFragment {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserActivity.this, R.string.check_net, Toast.LENGTH_SHORT).show();
             }
 
 
@@ -318,7 +323,7 @@ public class UserIndexFragment extends BaseFeedFragment {
             switch (itemType) {
                 case TYPE_USERITEM:
                     //return 第一项 就是那个啥
-                    view = View.inflate(context, R.layout.person_index_item, null);
+                    view = View.inflate(UserActivity.this, R.layout.person_index_item, null);
 
 
                     TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
@@ -335,13 +340,14 @@ public class UserIndexFragment extends BaseFeedFragment {
                     TextView tv_fllowing = (TextView) view.findViewById(R.id.tv_fllowing);
 
 
-                    //下载头像
-                    String keys[] = user.avatar.small.url.split("/");
-                    String key = keys[keys.length - 1];
+                    if(user.avatar!=null) {
+                        //下载头像
+                        String keys[] = user.avatar.small.url.split("/");
+                        String key = keys[keys.length - 1];
 
 
-                    ImageLoader.getInstance().displayImage(AppContants.DOMAIN + user.avatar.small.url, iv_icon, feedOptions, animateFirstListener);
-
+                        ImageLoader.getInstance().displayImage(AppContants.DOMAIN + user.avatar.small.url, iv_icon, feedOptions, animateFirstListener);
+                    }
 
                     if (user.has_followed) {
                         bt_follow.setBackgroundResource(R.drawable.shape_unfollow);
@@ -386,13 +392,13 @@ public class UserIndexFragment extends BaseFeedFragment {
 //                               }
 //                           });
 
-                                Toast.makeText(context, "暂不支持取消功能，我们正在飞速开发", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(UserActivity.this, "暂不支持取消功能，我们正在飞速开发", Toast.LENGTH_SHORT).show();
                             } else {
                                 //关注api
-                                ApiUtils.post(String.format(AppContants.USER_FOLLOW_URL, user.id), null, new AsyncHttpResponseHandler() {
+                                ApiUtils.post(UserActivity.this,String.format(AppContants.USER_FOLLOW_URL, user.id), null, new AsyncHttpResponseHandler() {
                                     @Override
                                     public void onSuccess(int i, Header[] headers, byte[] bytes) {
-                                        Toast.makeText(context, "关注成功", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(UserActivity.this, "关注成功", Toast.LENGTH_SHORT).show();
                                         bt_follow.setBackgroundResource(R.drawable.shape_unfollow);
                                         bt_follow.setText(R.string.following);
                                         user.has_followed = true;
@@ -400,7 +406,7 @@ public class UserIndexFragment extends BaseFeedFragment {
 
                                     @Override
                                     public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                                        Toast.makeText(context, "关注失败，稍后再试", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(UserActivity.this, "关注失败，稍后再试", Toast.LENGTH_SHORT).show();
 
                                     }
                                 });
@@ -409,8 +415,7 @@ public class UserIndexFragment extends BaseFeedFragment {
                         }
                     });
 
-                    if (user.id.equals(Global.USER_ID))
-                    {
+                    if (user.id.equals(Global.USER_ID)) {
                         bt_follow.setVisibility(View.GONE);
                     }
 
@@ -419,30 +424,32 @@ public class UserIndexFragment extends BaseFeedFragment {
                 case BaseFeed.TYPE_FEED:
 
 
-                    view = initFeedItemView2(convertView);
-                    FeedHolder feedHolder = (FeedHolder) view.getTag();
+                    view = BaseFeedHandler.initFeedItemView2(UserActivity.this,convertView);
+                    BaseFeedFragment.FeedHolder feedHolder = (BaseFeedFragment.FeedHolder) view.getTag();
 
 /******************************************************************/
                     Feed2 feed = (Feed2) feedList.get(position - 1);
                     feed.position = position - 1;
-                    initFeedItemViewData(feed, feedHolder, animateFirstListener);
+                    BaseFeedHandler.initFeedItemViewData(UserActivity.this,feed, feedHolder, animateFirstListener);
 /**************************************************/
                     initFeedItemOnClick(feed, feedHolder);
+
+                    BaseFeedHandler.setFeedCommonClick(UserActivity.this,feed, feedHolder);
 
 
                     break;
 
                 case BaseFeed.TYPE_COMMENT:
 
-                    view = initCommentItem(convertView);
+                    view = BaseFeedHandler.initCommentItem(UserActivity.this,convertView);
 
 
-                    CommentHolder commentHolder = (CommentHolder) view.getTag();
+                    BaseFeedFragment.CommentHolder commentHolder = (BaseFeedFragment.CommentHolder) view.getTag();
 
 
 /**************************************************************/
                     Comment comment = (Comment) feedList.get(position - 1);
-                    initCommentItemData(comment, commentHolder, animateFirstListener);
+                    BaseFeedHandler.initCommentItemData(comment, commentHolder, animateFirstListener);
 
 
 /******************************************/
@@ -456,9 +463,9 @@ public class UserIndexFragment extends BaseFeedFragment {
         }
     }
 
-    protected void initCommentItemOnClick(final Comment comment, CommentHolder commentHolder) {
+    protected void initCommentItemOnClick(final Comment comment, BaseFeedFragment.CommentHolder commentHolder) {
 
-        OnClickController controller = new OnClickController(context, comment);
+        IndexOnClickController controller = new IndexOnClickController(UserActivity.this, comment);
 
         String couserid = comment.user.id;
 
@@ -508,9 +515,9 @@ public class UserIndexFragment extends BaseFeedFragment {
     }
 
 
-    protected void initFeedItemOnClick(final Feed2 feed, final FeedHolder feedHolder) {
+    protected void initFeedItemOnClick(final Feed2 feed, final BaseFeedFragment.FeedHolder feedHolder) {
 
-        OnClickController feedcontroller = new OnClickController(context, feed);
+        IndexOnClickController feedcontroller = new IndexOnClickController(UserActivity.this, feed);
 
 
         String userid = feed.data.user.id;
@@ -529,6 +536,7 @@ public class UserIndexFragment extends BaseFeedFragment {
         if (feedHolder.tv_content.getVisibility() == View.VISIBLE) {
 
             feedHolder.tv_content.setOnClickListener(feedcontroller);
+            feedHolder.tv_content.setMovementMethod(LinkMovementMethod.getInstance());
 
         }
 
@@ -538,7 +546,7 @@ public class UserIndexFragment extends BaseFeedFragment {
                 feedHolder.iv_content.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(context, R.string.cant_downlowb, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UserActivity.this, R.string.cant_downlowb, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -578,8 +586,5 @@ public class UserIndexFragment extends BaseFeedFragment {
     @Override
     public void onResume() {
         super.onResume();
-
-
-
     }
 }

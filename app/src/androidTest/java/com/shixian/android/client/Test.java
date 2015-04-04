@@ -3,14 +3,20 @@ package com.shixian.android.client;
 import android.content.Context;
 import android.test.InstrumentationTestCase;
 import android.util.Log;
+import android.widget.TextClock;
+import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.engine.ProjectEngine;
+import com.shixian.android.client.handler.content.ContentHandler;
 import com.shixian.android.client.sina.WeiBoUtils;
 import com.shixian.android.client.utils.ApiUtils;
 
 import org.apache.http.Header;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by tangtang on 15/3/24.
@@ -72,6 +78,27 @@ public class Test extends InstrumentationTestCase {
     public void testSendMessage()
     {
         //WeiBoUtils.sendMessage(this,"你谁啊",);
+    }
+
+//    public void testFormat()
+//    {
+//        ContentHandler.formatColorContent(new TextView(getInstrumentation().getContext()),"你好nwww.baidu.com这好的http://www.shixian.com?action=xxx");
+//    }
+
+
+    public void testPattern()
+    {
+        Pattern URLPATTERN = Pattern
+                .compile("(^(http://|ftp://|https://|www){0,1}[^\u4e00-\u9fa5\\s]*?\\.(com|net|cn|me|tw|fr)[^\u4e00-\u9fa5\\s]*)|^@(.)*\\s");
+
+        String text="@nihao ";
+        Matcher matcher=URLPATTERN.matcher(text);
+
+        while (matcher.find())
+        {
+            Log.i("AAAA",text);
+        }
+
     }
 
 }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+
+
+
+    <EditText
+        android:layout_margin="10dp"
+        android:id="@+id/et_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/title"
+        android:background="@null"
+        android:textColor="#000000"
+        android:maxEms="20"
+        >
+        <requestFocus/>
+        </EditText>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#E5E5E5"
+        />
+
+
+
+
+
+
+    <EditText
+        android:id="@+id/et_content"
+        style="@style/FormalMultiLineEditText"
+        android:background="@null"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="10dp"
+        android:hint="至少200字"
+        android:textColor="#000000"
+        android:scrollbars="horizontal|vertical" />
+
+
+
+</LinearLayout>

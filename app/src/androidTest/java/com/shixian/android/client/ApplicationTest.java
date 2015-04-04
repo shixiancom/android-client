@@ -19,16 +19,16 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 
     public void testCommonEngine()
     {
-        CommonEngine.getMyUserInfo(new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int i, Header[] headers, byte[] bytes) {
-                Log.e("AAAA",new String(bytes));
-            }
-
-            @Override
-            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-
-            }
-        });
+//        CommonEngine.getMyUserInfo(gnew AsyncHttpResponseHandler() {
+//            @Override
+//            public void onSuccess(int i, Header[] headers, byte[] bytes) {
+//                Log.e("AAAA",new String(bytes));
+//            }
+//
+//            @Override
+//            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+//
+//            }
+//        });
     }
 }

@@ -2,11 +2,12 @@ package com.shixian.android.client.activities.fragment;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.MainActivity;
@@ -14,9 +15,11 @@ import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.engine.CommonEngine;
+import com.shixian.android.client.handler.feed.BaseFeedHandler;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.feeddate.BaseFeed;
+import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
 import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
@@ -33,6 +36,8 @@ public class IndexFragment extends BaseFeedFragment {
 
 
     private String firstPageDate;
+
+
 
 
     protected void initCacheData() {
@@ -85,7 +90,7 @@ public class IndexFragment extends BaseFeedFragment {
 
         page = 1;
         context.showProgress();
-        CommonEngine.getFeedData(AppContants.INDEX_URL, page, new AsyncHttpResponseHandler() {
+        CommonEngine.getFeedData(context,AppContants.INDEX_URL, page, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, final byte[] bytes) {
                 final String temp = new String(bytes);
@@ -141,12 +146,19 @@ public class IndexFragment extends BaseFeedFragment {
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
+              AsyncHttpClient client= ApiUtils.client;
+
 
                 Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
                 pullToRefreshListView.onPullDownRefreshComplete();
                 context.dissProgress();
             }
         });
+    }
+
+    @Override
+    public boolean needRefresh() {
+        return true;
     }
 
 
@@ -156,7 +168,7 @@ public class IndexFragment extends BaseFeedFragment {
     public void getNextData() {
         ((MainActivity)context).initMsgStatus();
         page += 1;
-        CommonEngine.getFeedData(AppContants.INDEX_URL, page, new AsyncHttpResponseHandler() {
+        CommonEngine.getFeedData(context,AppContants.INDEX_URL, page, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, final byte[] bytes) {
 
@@ -287,35 +299,32 @@ public class IndexFragment extends BaseFeedFragment {
             int itemType = getItemViewType(position);
             switch (itemType) {
                 case BaseFeed.TYPE_FEED:
-                    view=initFeedItemView2(convertView);
+                    view=BaseFeedHandler.initFeedItemView2(context, convertView);
                     FeedHolder feedHolder= (FeedHolder) view.getTag();
 
 /******************************************************************/
                     Feed2 feed = (Feed2) feedList.get(position );
                     feed.position=position;
-                    initFeedItemViewData(feed,feedHolder,animateFirstListener);
+                    BaseFeedHandler.initFeedItemViewData(context, feed, feedHolder, animateFirstListener);
 /**************************************************/
-                    initFeedItemOnClick(feed,feedHolder);
-
+                    initFeedItemOnClick(feed, feedHolder);
+                    BaseFeedHandler.setFeedCommonClick(context,feed,feedHolder);
+                  // setFeedCommonClick(feed,feedHolder);
                     break;
 
                 case BaseFeed.TYPE_COMMENT:
-
-                    view= initCommentItem(convertView);
-
-
-
+                    view= BaseFeedHandler.initCommentItem(context, convertView);
                     CommentHolder commentHolder = (CommentHolder) view.getTag();
 
 
 /**************************************************************/
                     Comment comment = (Comment) feedList.get(position);
-                    initCommentItemData(comment,commentHolder,animateFirstListener);
+                    BaseFeedHandler.initCommentItemData(comment, commentHolder, animateFirstListener);
 
 
 /******************************************/
 
-                    initCommentItemOnClick(comment,commentHolder);
+                    initCommentItemOnClick(comment, commentHolder);
                     break;
             }
 
@@ -352,7 +361,6 @@ public class IndexFragment extends BaseFeedFragment {
             }
 
         }
-
 
         if (feedHolder.tv_response.getVisibility() == View.VISIBLE) {
             feedHolder.tv_response.setOnClickListener(new View.OnClickListener() {
@@ -426,4 +434,8 @@ public class IndexFragment extends BaseFeedFragment {
         ((MainActivity)context).setCurrentFragment(this);
 
     }
+
+
+
+
 }

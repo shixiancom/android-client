@@ -1,6 +1,5 @@
 package com.shixian.android.client.utils;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -12,7 +11,6 @@ import com.shixian.android.client.model.News;
 import com.shixian.android.client.model.Project;
 import com.shixian.android.client.model.feeddate.AllItemType;
 import com.shixian.android.client.model.feeddate.BaseFeed;
-import com.sina.weibo.sdk.api.share.Base;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,10 +67,12 @@ public class JsonUtils {
                 JSONObject jobj = jsonArrayrray.getJSONObject(j);
                 Feed2 feed = gson.fromJson(jobj.toString(), Feed2.class);
 
-                if(!"Agreement".equals(feed.feedable_type)) {
-                    feeds.add(feed);
-                    feed.type=BaseFeed.TYPE_FEED;
-                }
+//                if(!"Agreement".equals(feed.feedable_type)) {
+//                    feeds.add(feed);
+//                    feed.type=BaseFeed.TYPE_FEED;
+//                }
+                feeds.add(feed);
+                feed.type=BaseFeed.TYPE_FEED;
 
                 if("Project".equals(feed.feedable_type))
                 {

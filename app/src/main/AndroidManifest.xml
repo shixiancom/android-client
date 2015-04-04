@@ -79,12 +79,38 @@
         </activity>
         
         <activity android:name=".activities.DetailActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/BlankTheme"
+            />
+
+        <activity android:name=".activities.ProjectActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BlankTheme"
+            />
+
+        <activity android:name=".activities.UserActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BlankTheme"
+            />
 
 
-        <activity android:name=".activities.SimpleSampleActivity"/>
+        <activity android:name=".activities.SimpleSampleActivity"
+            android:theme="@style/BlankTheme"
+            />
 
-        <activity android:name=".activities.AddIdeaActivity"/>
+        <activity android:name=".activities.AddIdeaActivity"
+            android:theme="@style/BlankTheme"
+            />
+
+        <activity android:name=".activities.NewProjectActivity"
+            android:theme="@style/BlankTheme"
+            />
+
+        <activity
+            android:name=".activities.WebActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BlankTheme"
+            />
 
 
         <!-- 必须注册在微博授权，分享微博时候用到 -->

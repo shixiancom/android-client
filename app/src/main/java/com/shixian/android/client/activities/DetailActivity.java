@@ -1,40 +1,27 @@
 package com.shixian.android.client.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import com.shixian.android.client.R;
+import com.shixian.android.client.activities.base.HasSwipeActivityBaseActivity;
 import com.shixian.android.client.activities.fragment.MsgDetialFragment;
-import com.shixian.android.client.activities.fragment.ProjectFeedFragment;
-import com.shixian.android.client.activities.fragment.UserIndexFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
-import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
-import com.shixian.android.client.sina.AccessTokenKeeper;
-import com.shixian.android.client.utils.SharedPerenceUtil;
+
 import java.util.Random;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 
-public class DetailActivity extends BaseActivity {
 
-
-
+/**
+ * 用于MsgFragment的容器
+ */
+public class DetailActivity extends HasSwipeActivityBaseActivity {
 
     private SmoothProgressBar mProgressBar;
-
-
-
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,23 +59,6 @@ public class DetailActivity extends BaseActivity {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
          switch(getIntent().getIntExtra("type",0))
          {
-
-             case IndexOnClickController.USER_FRAGMENT:
-                 UserIndexFragment uf=new UserIndexFragment();
-                 uf.setArguments(getIntent().getExtras());
-
-
-                 fragmentTransaction.replace(R.id.main_fragment_layout, uf);
-                 fragmentTransaction.commit();
-                 break;
-
-             case IndexOnClickController.PROJECT_FRAGMENT:
-                 //点击项目要进入项目界面 我先把项目数据拿到看一看　
-                 ProjectFeedFragment feedFragment = new ProjectFeedFragment();
-                 feedFragment.setArguments(getIntent().getExtras());
-                 fragmentTransaction.replace(R.id.main_fragment_layout,feedFragment);
-                 fragmentTransaction.commit();
-                 break;
 
              case IndexOnClickController.TYPE_MSG_DETILA:
 

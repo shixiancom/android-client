@@ -63,7 +63,7 @@ public class LoginUtil {
         final AsyncHttpClient client = new AsyncHttpClient();
 
 
-        ApiUtils.init();
+        ApiUtils.init(context);
 
         client.get("http://asset.shixian.com/api/v1/api_login.json", params, new AsyncHttpResponseHandler() {
             @Override
@@ -83,7 +83,6 @@ public class LoginUtil {
 
                            // ApiUtils.client.addHeader(headers[j].getName(), headers[j].getValue());
 
-                            ((MyApplication)context.getApplication()).setCookie(headers[j].getValue());
 
                             ApiUtils.client.addHeader("Cookie", headers[j].getValue());
 

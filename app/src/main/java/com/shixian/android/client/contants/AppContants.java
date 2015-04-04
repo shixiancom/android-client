@@ -34,7 +34,7 @@ public interface AppContants {
     /**
      * 用户信息
      */
-    String USER_INFO_INDEX_URL=DOMAIN+"/api/v1/users/{user_id}.json";
+    String USER_INFO_INDEX_URL=DOMAIN+"/api/v1/users/{username}.json";
 
     String USER_FEED_INDEX_URL=DOMAIN+"" +
             "/api/v1/users/{user_name}/feeds.json";
@@ -77,10 +77,17 @@ public interface AppContants {
    //jpush需要的url
     String JPUSH_NEED_URL="http://shixian.com"+"/api/v1/android_tokens";
 
-    String DEBUG_JPUSH_NEED_URL="http://172.168.97.167:3000"+"/api/v1/android_tokens";
+    //String DEBUG_JPUSH_NEED_URL="http://172.168.97.167:3000"+"/api/v1/android_tokens";
 
 
     String ADD_IDEA_URL=NOHOST_DOMAIN+"/api/v1/ideas.json";
+
+    String ADD_PROJECT_URL=NOHOST_DOMAIN+"/api/v1/projects";
+
+
+    String AGREE_URL=NOHOST_DOMAIN+"/api/v1/feeds/agreement";
+
+    String DISAGREE_URL=NOHOST_DOMAIN+"/api/v1/feeds/disagreement";
 
 
 

@@ -1,40 +1,38 @@
-package com.shixian.android.client.activities.fragment;
-
+package com.shixian.android.client.activities;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
+import android.os.PersistableBundle;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.R;
-import com.shixian.android.client.activities.AddIdeaActivity;
+import com.shixian.android.client.activities.base.BaseFeedActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.anmi.ExpandAnimation;
 import com.shixian.android.client.contants.AppContants;
-import com.shixian.android.client.controller.OnClickController;
+import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.engine.CommonEngine;
+import com.shixian.android.client.handler.content.ContentHandler;
+import com.shixian.android.client.handler.feed.BaseFeedHandler;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
-import com.shixian.android.client.model.Image;
 import com.shixian.android.client.model.Project;
 import com.shixian.android.client.model.feeddate.BaseFeed;
 import com.shixian.android.client.sina.Constants;
@@ -45,13 +43,12 @@ import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
 import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
 import com.sina.weibo.sdk.api.share.WeiboShareSDK;
-
 import org.apache.http.Header;
 
 /**
- * Created by s0ng on 2015/2/12.
+ * Created by tangtang on 15/4/2.
  */
-public class ProjectFeedFragment extends BaseFeedFragment {
+public class ProjectActivity extends BaseFeedActivity {
 
 
 
@@ -60,6 +57,10 @@ public class ProjectFeedFragment extends BaseFeedFragment {
     public static final String PROJECT_ID="projectid";
 
     public static final int ANMI_DRUATION=300;
+
+    public static final int RESULT_NOSEND=1000;
+
+
 
     private Project project=new Project();
 
@@ -73,19 +74,22 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
     private String TAG="ProjectFeedFragment";
 
+    private TextView tv_caogao;
+
 
     /** 微博微博分享接口实例 */
     private IWeiboShareAPI mWeiboShareAPI = null;
 
 
 
+    private boolean hasCaogao=false;
 
 
     protected void initCacheData() {
 
-        firstPageDate= SharedPerenceUtil.getProjectIndexFeed(context, project.id);
+        firstPageDate= SharedPerenceUtil.getProjectIndexFeed(this, project.id);
 
-        String projectInfo=SharedPerenceUtil.getProjectIndexInfo(context, project.id + "");
+        String projectInfo=SharedPerenceUtil.getProjectIndexInfo(this, project.id + "");
 
         if(!TextUtils.isEmpty(projectInfo))
             project=new Gson().fromJson(projectInfo, Project.class);
@@ -106,33 +110,40 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         // 创建微博分享接口实例
-        mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(context, Constants.APP_KEY);
+        mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this, Constants.APP_KEY);
 
         // 注册第三方应用到微博客户端中，注册成功后该应用将显示在微博的应用列表中。
         // 但该附件栏集成分享权限需要合作申请，详情请查看 Demo 提示
         // NOTE：请务必提前注册，即界面初始化的时候或是应用程序初始化时，进行注册
         mWeiboShareAPI.registerApp();
+
+
     }
+
+
+
+
 
     @Override
     protected void initFirst() {
-        project.id= Integer.parseInt((String) getArguments().get("project_id"));
+        project.id= Integer.parseInt((String) getIntent().getStringExtra("project_id"));
 
+        initCacheData();
         initFirstData();
     }
 
     @Override
     protected void initLable() {
-        context.setLable(getString(R.string.label_project));
+        toolbar.setTitle(getString(R.string.label_project));
     }
 
     @Override
     protected void getNextData() {
         page += 1;
-        CommonEngine.getFeedData(AppContants.PROJECT_FEED_URL.replace("{project_id}",project.id+"" ), page, new AsyncHttpResponseHandler() {
+        CommonEngine.getFeedData(ProjectActivity.this,AppContants.PROJECT_FEED_URL.replace("{project_id}", project.id + ""), page, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, final byte[] bytes) {
                 final String temp = new String(bytes);
@@ -152,7 +163,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                             //TODO 第一页的缓存
 
                             //保存数据到本地
-                            context.runOnUiThread(new Runnable() {
+                            ProjectActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (adapter == null) {
@@ -171,7 +182,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                     }.start();
 
 
-                }else{
+                } else {
                     pullToRefreshListView.onPullDownRefreshComplete();
                 }
             }
@@ -182,7 +193,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
 
                 //TODO 错误可能定义的不是太准确  最后一天调整
-                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProjectActivity.this, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
                 pullToRefreshListView.onPullUpRefreshComplete();
                 page -= 1;
             }
@@ -221,25 +232,26 @@ public class ProjectFeedFragment extends BaseFeedFragment {
     }
 
     @Override
-    protected void initFirstData() {
+    public void initFirstData() {
         //开始搞
-        initCacheData();
 
+     //   initCacheData();
 
         initProjectInfo();
 
         initProjectFeed();
 
-
-
     }
+
+
+
 
     private void initProjectFeed() {
 
         page=1;
-        context.showProgress();
+        this.showProgress();
 
-        CommonEngine.getFeedData(AppContants.PROJECT_FEED_URL.replace("{project_id}",project.id+"" ), page, new AsyncHttpResponseHandler() {
+        CommonEngine.getFeedData(ProjectActivity.this,AppContants.PROJECT_FEED_URL.replace("{project_id}",project.id+"" ), page, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
 
@@ -254,9 +266,9 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
 
 
-                             SharedPerenceUtil.putProjectIndexFeed(context, temp, project.id);
+                            SharedPerenceUtil.putProjectIndexFeed( ProjectActivity.this, temp, project.id);
 
-                            context.runOnUiThread(new Runnable() {
+                            ProjectActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (adapter == null) {
@@ -269,10 +281,9 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                                     pullToRefreshListView.onPullDownRefreshComplete();
 
 
-
                                     pullToRefreshListView.getFooterLoadingLayout().show(false);
 
-                                    context.dissProgress();
+                                    ProjectActivity.this.dissProgress();
                                 }
                             });
 
@@ -289,10 +300,10 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT).show();
+                Toast.makeText( ProjectActivity.this, R.string.check_net, Toast.LENGTH_SHORT).show();
                 pullToRefreshListView.onPullDownRefreshComplete();
                 pullToRefreshListView.onPullUpRefreshComplete();
-                context.dissProgress();
+                ProjectActivity.this.dissProgress();
             }
 
 
@@ -304,23 +315,23 @@ public class ProjectFeedFragment extends BaseFeedFragment {
     private void initProjectInfo() {
 
 
-        ApiUtils.get(AppContants.PROJECT_INFO_URL.replace("{project_id}",project.id+""),null,new AsyncHttpResponseHandler() {
+        ApiUtils.get(ProjectActivity.this,AppContants.PROJECT_INFO_URL.replace("{project_id}", project.id + ""), null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
 
                 //
-                final String temp=new String(bytes);
-                if(!AppContants.errorMsg.equals(temp))
+                final String temp = new String(bytes);
+                if (!AppContants.errorMsg.equals(temp))
                     new Thread() {
                         public void run() {
                             project_info = temp;
                             Gson gson = new Gson();
                             project = gson.fromJson(project_info, Project.class);
 
-                            SharedPerenceUtil.putProjectIndexInfo(context, temp, project.id);
+                            SharedPerenceUtil.putProjectIndexInfo( ProjectActivity.this, temp, project.id);
 
 
-                            context.runOnUiThread(new Runnable() {
+                            ProjectActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (adapter == null) {
@@ -338,10 +349,9 @@ public class ProjectFeedFragment extends BaseFeedFragment {
             }
 
 
-
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT).show();
+                Toast.makeText( ProjectActivity.this, R.string.check_net, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -349,7 +359,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
 
     public static final int TYPE_PROJECT=2;
-    class ProjectFeedAdapter extends BaseFeedAdapter{
+    class ProjectFeedAdapter extends BaseFeedAdapter {
 
         @Override
         public int getCount() {
@@ -394,54 +404,85 @@ public class ProjectFeedFragment extends BaseFeedFragment {
             switch (itemType) {
                 case TYPE_PROJECT:
 
-                view=View.inflate(context,R.layout.project_index_item,null);
+                    view=View.inflate( ProjectActivity.this,R.layout.project_index_item,null);
 
-                if(project!=null)
-                {
-                    TextView tv_name= (TextView) view.findViewById(R.id.tv_name);
-
-
-
-                    final Button bt_follow= (Button) view.findViewById(R.id.bt_follow);
-
-                    final Button bt_shrinkage= (Button) view.findViewById(R.id.bt_shrinkage);
-
-                    final TextView tv_content= (TextView) view.findViewById(R.id.tv_content);
-
-                    tv_name.setText(project.title);
-                    if(project.description!=null)
-                        tv_content.setText(Html.fromHtml(project.description));
-                    if(project.has_followed)
+                    if(project!=null)
                     {
-                        bt_follow.setBackgroundResource(R.drawable.shape_unfollow);
-                        bt_follow.setText(R.string.following);
-                        bt_follow.setVisibility(View.GONE);
-                        bt_shrinkage.setVisibility(View.VISIBLE);
-                        tv_content.setVisibility(View.GONE);
-                    }else{
-                        bt_follow.setBackgroundResource(R.drawable.shape_follow);
-                        bt_follow.setText(R.string.follow);
-                        bt_follow.setVisibility(View.VISIBLE);
-                        bt_shrinkage.setVisibility(View.GONE);
-                    }
+                        TextView tv_name= (TextView) view.findViewById(R.id.tv_name);
 
+                        final Button bt_follow= (Button) view.findViewById(R.id.bt_follow);
 
-                    bt_shrinkage.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                        final Button bt_shrinkage= (Button) view.findViewById(R.id.bt_shrinkage);
 
-                            execAnmi(bt_shrinkage,tv_content);
+                        final TextView tv_content= (TextView) view.findViewById(R.id.tv_content);
+
+                        tv_name.setText(project.title);
+                        if(project.description!=null)
+                        {
+                            ContentHandler contentHandler= new ContentHandler(tv_content).longClickCopy();
+                            contentHandler.formatColorContent(tv_content,project.description);
 
                         }
-                    });
 
-                    bt_follow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if(project.has_followed)
-                            {
-                                //取消关注api
-                                //关注api
+                        if(project.has_followed)
+                        {
+                            bt_follow.setBackgroundResource(R.drawable.shape_unfollow);
+                            bt_follow.setText(R.string.following);
+                            bt_follow.setVisibility(View.GONE);
+                            bt_shrinkage.setVisibility(View.VISIBLE);
+                            tv_content.setVisibility(View.GONE);
+                        }else{
+                            bt_follow.setBackgroundResource(R.drawable.shape_follow);
+                            bt_follow.setText(R.string.follow);
+                            bt_follow.setVisibility(View.VISIBLE);
+                            bt_shrinkage.setVisibility(View.GONE);
+                        }
+
+                        tv_caogao= (TextView) view.findViewById(R.id.tv_caogao);
+                        if(hasCaogao)
+                        {
+                            tv_caogao.setVisibility(View.VISIBLE);
+                        }else{
+                            tv_caogao.findViewById(R.id.tv_caogao).setVisibility(View.GONE);
+                        }
+
+                       LinearLayout ll_addidea= (LinearLayout) view.findViewById(R.id.ll_addidea);
+
+                        ll_addidea.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent=new Intent(ProjectActivity.this,AddIdeaActivity.class);
+
+
+                                if(project.id==0)
+                                {
+                                    return;
+                                }
+                                intent.putExtra(PROJECT_ID,project.id+"");
+
+                                startActivityForResult(intent, RESULT_ADD_IDEA);
+
+                            }
+                        });
+
+
+
+                        bt_shrinkage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                execAnmi(bt_shrinkage,tv_content);
+
+                            }
+                        });
+
+                        bt_follow.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(project.has_followed)
+                                {
+                                    //取消关注api
+                                    //关注api
 //                           ApiUtils.post(String.format(AppContants.USER_UNFOLLOW_URL,user.id),null,new AsyncHttpResponseHandler() {
 //                               @Override
 //                               public void onSuccess(int i, Header[] headers, byte[] bytes) {
@@ -456,51 +497,53 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 //                               }
 //                           });
 
-                                //Toast.makeText(context,"暂不支持取消功能，我们正在飞速开发",Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(context,"暂不支持取消功能，我们正在飞速开发",Toast.LENGTH_SHORT).show();
 
-                            }else{
-                                //关注api
-                                ApiUtils.post(String.format(AppContants.PROJECT_FOLLOW_URL,project.id),null,new AsyncHttpResponseHandler() {
-                                    @Override
-                                    public void onSuccess(int i, Header[] headers, byte[] bytes) {
-                                        Toast.makeText(context,"关注成功",Toast.LENGTH_SHORT).show();
-                                        bt_follow.setBackgroundResource(R.drawable.shape_unfollow);
-                                        bt_follow.setText(R.string.following);
-                                        project.has_followed=true;
+                                }else{
+                                    //关注api
+                                    ApiUtils.post(ProjectActivity.this,String.format(AppContants.PROJECT_FOLLOW_URL,project.id),null,new AsyncHttpResponseHandler() {
+                                        @Override
+                                        public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                                            Toast.makeText( ProjectActivity.this,"关注成功",Toast.LENGTH_SHORT).show();
+                                            bt_follow.setBackgroundResource(R.drawable.shape_unfollow);
+                                            bt_follow.setText(R.string.following);
+                                            project.has_followed=true;
 
-                                        bt_follow.setVisibility(View.GONE);
-                                        bt_shrinkage.setVisibility(View.VISIBLE);
-                                        execAnmi(tv_content);
+                                            bt_follow.setVisibility(View.GONE);
+                                            bt_shrinkage.setVisibility(View.VISIBLE);
+                                            execAnmi(tv_content);
 
 
-                                    }
+                                        }
 
-                                    @Override
-                                    public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                                        Toast.makeText(context,"关注失败，稍后再试",Toast.LENGTH_SHORT).show();
+                                        @Override
+                                        public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                                            Toast.makeText( ProjectActivity.this,"关注失败，稍后再试",Toast.LENGTH_SHORT).show();
 
-                                    }
-                                });
+                                        }
+                                    });
+                                }
                             }
-                        }
-                    });
+                        });
 
-                }
+                    }
                     break;
 
                 case BaseFeed.TYPE_FEED:
 
 
 
-                    view=initFeedItemView2(convertView);
-                    FeedHolder feedHolder= (FeedHolder) view.getTag();
+                    view= BaseFeedHandler.initFeedItemView2(ProjectActivity.this, convertView);
+                    BaseFeedFragment.FeedHolder feedHolder= (BaseFeedFragment.FeedHolder) view.getTag();
 
 /******************************************************************/
                     Feed2 feed = (Feed2) feedList.get(position - 1);
                     feed.position=position-1;
-                    initFeedItemViewData(feed,feedHolder,animateFirstListener);
+                    BaseFeedHandler.initFeedItemViewData(ProjectActivity.this, feed, feedHolder, animateFirstListener);
 /**************************************************/
                     initFeedItemOnClick(feed,feedHolder);
+
+                    BaseFeedHandler.setFeedCommonClick(ProjectActivity.this, feed, feedHolder);
 
 
 
@@ -508,16 +551,16 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
                 case BaseFeed.TYPE_COMMENT:
 
-                    view= initCommentItem(convertView);
+                    view= BaseFeedHandler.initCommentItem(ProjectActivity.this, convertView);
 
 
 
-                    CommentHolder commentHolder = (CommentHolder) view.getTag();
+                    BaseFeedFragment.CommentHolder commentHolder = (BaseFeedFragment.CommentHolder) view.getTag();
 
 
 /**************************************************************/
                     Comment comment = (Comment) feedList.get(position - 1);
-                    initCommentItemData(comment,commentHolder,animateFirstListener);
+                    BaseFeedHandler.initCommentItemData(comment, commentHolder, animateFirstListener);
 
 
 /******************************************/
@@ -539,12 +582,12 @@ public class ProjectFeedFragment extends BaseFeedFragment {
 
     /***********************Adapter 点击事件 **************************/
     /***********************Adapter 点击事件 **************************/
-    private void initFeedItemOnClick(final Feed2 feed,final FeedHolder feedHolder) {
+    private void initFeedItemOnClick(final Feed2 feed,final BaseFeedFragment.FeedHolder feedHolder) {
 
         //设置点击事件
 
 
-        OnClickController controller = new OnClickController(context, feed);
+        IndexOnClickController controller = new IndexOnClickController(this, feed);
 
 
 
@@ -582,7 +625,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                 feedHolder.iv_content.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(context,R.string.cant_downlowb,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProjectActivity.this,R.string.cant_downlowb,Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -610,12 +653,12 @@ public class ProjectFeedFragment extends BaseFeedFragment {
     }
 
 
-    private void initCommentItemOnClick(final Comment comment, CommentHolder commentHolder) {
+    private void initCommentItemOnClick(final Comment comment,BaseFeedFragment.CommentHolder commentHolder) {
 
         //设置点击事件
 
 
-        OnClickController controller = new OnClickController(context, comment);
+        IndexOnClickController controller = new IndexOnClickController(this, comment);
 
 
 
@@ -642,13 +685,13 @@ public class ProjectFeedFragment extends BaseFeedFragment {
         if(commentHolder.tv_content.getVisibility()==View.VISIBLE)
         {
 
-                //点击跳出回复框 带@的
+            //点击跳出回复框 带@的
             commentHolder.tv_content.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        popComment(v,comment,listView,0);
-                    }
-                });
+                @Override
+                public void onClick(View v) {
+                    popComment(v,comment,listView,0);
+                }
+            });
 
         }
 
@@ -667,7 +710,7 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                     //是否要在feed中增加一条纪录该feed所有的评论数  还是有其他更好的方法  增加评论数到不难
                     //但是这肯定不是优雅的做法  由于一开始没有好好的构思 现在可能考虑投机取巧的方法去解决
 
-                        popComment(v,comment.parent,listView,1);
+                    popComment(v,comment.parent,listView,1);
 
 
                 }
@@ -681,40 +724,35 @@ public class ProjectFeedFragment extends BaseFeedFragment {
     }
 
 
+
+
+
     /**
      * 创建menu 菜单
      * @param menu
-     * @param inflater
+     *
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.project_menu,menu);
-        super.onCreateOptionsMenu(menu, inflater);
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.project_menu,menu);
+        return super.onCreateOptionsMenu(menu);
 
     }
 
 
+    @Override
+    public void onPostCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onPostCreate(savedInstanceState, persistentState);
+        hasCaogao=SharedPerenceUtil.hasIdeaEdit(this,project.id+"");
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId())
         {
-            case R.id.add_idea:
 
-
-                Intent intent=new Intent(context,AddIdeaActivity.class);
-
-
-                if(project.id==0)
-                {
-                    break;
-                }
-                intent.putExtra(PROJECT_ID,project.id+"");
-
-                startActivityForResult(intent, RESULT_ADD_IDEA);
-
-                break;
 
             case R.id.action_share_webo:
 
@@ -724,10 +762,10 @@ public class ProjectFeedFragment extends BaseFeedFragment {
                         text = text.substring(0, 96) + "...\n" + "http://shixian.com/projects/" + project.id;
 
                     }
-                    WeiBoUtils.sendMessage(context, text, mWeiboShareAPI);
+                    WeiBoUtils.sendMessage(this, text, mWeiboShareAPI);
 
                 }else{
-                    Toast.makeText(context,"稍后再试",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,"稍后再试",Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -742,27 +780,30 @@ public class ProjectFeedFragment extends BaseFeedFragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode==RESULT_ADD_IDEA)
-            if(resultCode==Activity.RESULT_OK)
+            if(resultCode== Activity.RESULT_OK)
             {
 
-                View view=View.inflate(context,R.layout.toastmy,null);
+                View view=View.inflate(this,R.layout.toastmy,null);
 
 
-                Toast toast = new Toast(context);
+                Toast toast = new Toast(this);
                 toast.setGravity(Gravity.CENTER, 12, 40);
                 toast.setDuration(Toast.LENGTH_LONG);
                 toast.setView(view);
 
                 toast.show();
                 initFirstData();
+            }else  if(resultCode==RESULT_NOSEND)
+            {
+                hasCaogao=true;
+                if(tv_caogao!=null)
+                {
+                    tv_caogao.setVisibility(View.VISIBLE);
+                }
             }
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
+
 
     //执行动画
     private void execAnmi(Button clickView,View anmiview)
@@ -819,4 +860,14 @@ public class ProjectFeedFragment extends BaseFeedFragment {
     };
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
+        ViewGroup viewGroup= (ViewGroup) ((ViewGroup)getWindow().getDecorView()).getChildAt(0);
+        Log.i("AAAA","root"+viewGroup.getClass().getSimpleName());
+        Log.i("AAAA","root"+viewGroup.getChildAt(0).getClass().getSimpleName());
+        Log.i("AAAA","root"+viewGroup.getChildAt(1).getClass().getSimpleName());
+    }
 }

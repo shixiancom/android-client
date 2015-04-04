@@ -3,6 +3,7 @@ package com.shixian.android.client.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.shixian.android.client.activities.AddIdeaActivity;
 import com.shixian.android.client.activities.MainActivity;
 
 import java.io.File;
@@ -24,6 +25,80 @@ public class SharedPerenceUtil {
 
 
     }
+
+    public static void clearIdeaEdit(Context context, String projectid) {
+        context.getSharedPreferences("editidea", Context.MODE_PRIVATE).edit().remove("content"+projectid).commit();
+    }
+
+    public static void putEditHasEdit(Context context,boolean has,String projectid)
+    {
+        context.getSharedPreferences("editidea",Context.MODE_PRIVATE).edit().putBoolean("hascontent+projectid",has).commit();
+    }
+
+    public static void putEditIdea(Context context,String projectid,String content)
+    {
+        context.getSharedPreferences("editidea", Context.MODE_PRIVATE).edit().putString("content"+projectid,content).putBoolean("hascontent+projectid",true).commit();
+    }
+
+    public static String getEditIdea(Context context,String projectid)
+    {
+
+      return   context.getSharedPreferences("editidea", Context.MODE_PRIVATE).getString("content" + projectid, "");
+    }
+
+    public static boolean hasIdeaEdit(Context context,String projectid)
+    {
+       return  context.getSharedPreferences("editidea",Context.MODE_PRIVATE).getBoolean("hascontent+projectid",false);
+    }
+
+    public static void putNewProject(Context context,String title ,String content)
+    {
+        context.getSharedPreferences("newproject",Context.MODE_PRIVATE).edit().putString("title",title).putString("content",content).putBoolean("hascontent",true).commit();
+
+    }
+
+    public static void putNewProject(Context context,String title ,String content,int fuzeren)
+    {
+        context.getSharedPreferences("newproject",Context.MODE_PRIVATE).edit().putString("title",title).putString("content",content).putBoolean("hascontent",true).putInt("fuzeren",fuzeren).commit();
+
+    }
+
+    public static void putNewFuzeren(Context context,int fuzeren)
+    {
+        context.getSharedPreferences("newproject",Context.MODE_PRIVATE).edit().putInt("fuzeren",fuzeren).commit();
+    }
+
+    public static String getNewProjectTitle(Context context)
+    {
+       return context.getSharedPreferences("newproject",Context.MODE_PRIVATE).getString("title","");
+
+    }
+
+    public static String getNewProjectContent(Context context)
+    {
+        return  context.getSharedPreferences("newproject",Context.MODE_PRIVATE).getString("content","");
+
+    }
+
+    public  static int getNewFuzeren(Context context)
+    {
+        return context.getSharedPreferences("newproject",Context.MODE_PRIVATE).getInt("fuzeren",0);
+
+    }
+
+    public static  void clearNewProject(Context context)
+    {
+        context.getSharedPreferences("newproject",Context.MODE_PRIVATE).edit().clear().commit();
+
+
+    }
+
+    public static boolean hasNewProject(Context context)
+    {
+        return context.getSharedPreferences("newproject",Context.MODE_PRIVATE).getBoolean("hascontent",false);
+    }
+
+
 
 
     /** * 删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件，将不做处理 * * @param directory */
@@ -173,6 +248,7 @@ public class SharedPerenceUtil {
         context.getSharedPreferences("config", Context.MODE_PRIVATE).edit().putBoolean("update",isNeed).commit();
 
     }
+
 
 }
 

@@ -5,9 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.shixian.android.client.R;
-import com.shixian.android.client.activities.BaseActivity;
-import com.shixian.android.client.activities.DetailActivity;
-import com.shixian.android.client.activities.fragment.ProjectFeedFragment;
+import com.shixian.android.client.activities.base.BaseActivity;
+import com.shixian.android.client.activities.ProjectActivity;
 import com.shixian.android.client.model.Project;
 
 /**
@@ -33,11 +32,11 @@ public class DiscoryOnClickColler implements View.OnClickListener {
             case R.id.tv_content:
                 //点击项目要进入项目界面 我先把项目数据拿到看一看　
                 Bundle bundle = new Bundle();
-                ProjectFeedFragment feedFragment = new ProjectFeedFragment();
+
                 bundle.putString("project_id", project.id + "");
 
 
-                Intent intent = new Intent(context, DetailActivity.class);
+                Intent intent = new Intent(context, ProjectActivity.class);
 
                 bundle.putInt("type", PROJECT_FRAGMENT);
 

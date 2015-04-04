@@ -1,7 +1,10 @@
 package com.shixian.android.client.utils;
 
+import android.content.Context;
+
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 
 /**
@@ -14,25 +17,34 @@ public class ApiUtils {
 
 
 
-    public static void init()
+    public static AsyncHttpClient init(Context context)
     {
-        client=new AsyncHttpClient();
+
+        if(client==null) {
+            client = new AsyncHttpClient();
+            PersistentCookieStore cookieStore=new PersistentCookieStore(context);
+            client.setCookieStore(cookieStore);
+        }
+
+        return client;
+
     }
 
 
-    public static void get(String url, RequestParams params, AsyncHttpResponseHandler handler) {
-           client.get(url, params, handler);
+    public static void get(Context context,String url, RequestParams params, AsyncHttpResponseHandler handler) {
+
+           init(context).get(url, params, handler);
     }
 
-    public static void post(String url, RequestParams params, AsyncHttpResponseHandler handler) {
-        client.post(url, params, handler);
+    public static void post(Context context,String url, RequestParams params, AsyncHttpResponseHandler handler) {
+        init(context).post(url, params, handler);
     }
 
-    public static void delete(String url, AsyncHttpResponseHandler handler) {
-        client.delete(url, handler);
+    public static void delete(Context context,String url, AsyncHttpResponseHandler handler) {
+        init(context).delete(url, handler);
     }
 
-    public static void put(String url, RequestParams params, AsyncHttpResponseHandler handler) {
-        client.put(url, params, handler);
+    public static void put(Context context,String url, RequestParams params, AsyncHttpResponseHandler handler) {
+        init(context).put(url, params, handler);
     }
 }

@@ -6,9 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 import com.shixian.android.client.R;
-import com.shixian.android.client.activities.BaseActivity;
-import com.shixian.android.client.activities.DetailActivity;
-import com.shixian.android.client.activities.MainActivity;
+import com.shixian.android.client.activities.ProjectActivity;
+import com.shixian.android.client.activities.UserActivity;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
@@ -29,13 +28,13 @@ public class IndexOnClickController implements View.OnClickListener {
 
 
     private BaseFeed mFeed;
-    private BaseActivity context;
+    private Activity context;
 
 
     //穿过来的feed
     public IndexOnClickController(Activity context, BaseFeed mFeed) {
         this.mFeed = mFeed;
-        this.context = (MainActivity) context;
+        this.context =context;
     }
 
 
@@ -43,7 +42,7 @@ public class IndexOnClickController implements View.OnClickListener {
     public void onClick(View v) {
 
         Bundle bundle = new Bundle();
-        Intent intent = new Intent(context, DetailActivity.class);
+        Intent intent ;
         switch (v.getId()) {
 
             //头像
@@ -54,15 +53,16 @@ public class IndexOnClickController implements View.OnClickListener {
             case R.id.tv_name:
 
                 //跳转到个人主页
-                String userid = "";
+                intent= new Intent(context, UserActivity.class);
                 if (mFeed.feedable_type.equals(AppContants.FEADE_TYPE_COMMON)) {
                     Comment comment = (Comment) mFeed;
                     bundle.putSerializable("user", comment.user);
-                    userid = comment.user.id;
+
+
                 } else {
                     Feed2 feed = (Feed2) mFeed;
                     bundle.putSerializable("user", feed.data.user);
-                    userid = feed.data.user.id;
+
                 }
 
                 bundle.putInt("type", USER_FRAGMENT);
@@ -82,18 +82,8 @@ public class IndexOnClickController implements View.OnClickListener {
 
 
                 //跳转到项目主页
-                if (mFeed.feedable_type.equals(AppContants.FEADE_TYPE_COMMON)) {
-                    Comment comment = (Comment) mFeed;
-                    bundle.putSerializable("user", comment.user);
-                    userid = comment.user.id;
-                } else {
-                    Feed2 feed = (Feed2) mFeed;
-                    bundle.putSerializable("user", feed.data.user);
-                    userid = feed.data.user.id;
-                }
-
-                bundle.putInt("type", PROJECT_FRAGMENT);
-                bundle.putString("project_id", mFeed.project_id);
+                intent = new Intent(context, ProjectActivity.class);
+                intent.putExtra("project_id", mFeed.project_id);
 
                 intent.putExtras(bundle);
 

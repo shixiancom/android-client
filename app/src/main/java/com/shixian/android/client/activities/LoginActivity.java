@@ -89,13 +89,12 @@ public class LoginActivity extends Activity
         //不为null 并且可用
         if(mAccessToken!=null&&mAccessToken.isSessionValid()){
 
-            ApiUtils.init();
+            ApiUtils.init(LoginActivity.this);
           //  Log.i("AAAA",mAccessToken.getToken()+"本地保存有token的时候--------------------");
             //这里还要验证token是否可用
             //在这里需要现实进度条给用户提示
 
             String cookie=getSharedPreferences("userinfo", Context.MODE_PRIVATE).getString("cookie","");
-            ((MyApplication)getApplication()).setCookie(cookie);
 
             ApiUtils.client.addHeader("Cookie", cookie);
             ApiUtils.client.addHeader("user-agent", "android");

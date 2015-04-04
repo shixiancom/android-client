@@ -16,6 +16,7 @@ public class AllItemType extends  BaseFeedItem{
     public String file_name;
     public String comments_count;
     public String type;
+    public String entity_type;
 
 
     public static class Attachment {

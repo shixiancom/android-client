@@ -1,12 +1,17 @@
 <resources>
 
 
+    <style name="BlankTheme" parent="AppTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
 
     <style name="AppTheme" parent="AppTheme.Base">
 
     </style>
 
     <style name="AppTheme.Base" parent="Theme.AppCompat.Light">
+        <!--<item name="android:windowBackground">@android:color/transparent</item>-->
         <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <!-- Status bar color-->
@@ -14,7 +19,7 @@
         <!-- Actionbar color -->
         <item name="colorPrimary">@color/common_main_color</item>
         <!-- Window color-->
-        <item name="android:windowBackground">@android:color/white</item>
+
         <!-- Overflow color -->
         <item name="colorControlNormal">@android:color/white</item>
         <!--<item name="android:textColorSecondary">@android:color/white</item>-->

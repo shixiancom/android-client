@@ -10,7 +10,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_margin="10dp"
-        android:hint="发表想法"
+        android:hint="不能少于140个字"
         android:textColor="#000000"
         android:scrollbars="horizontal|vertical" >
 

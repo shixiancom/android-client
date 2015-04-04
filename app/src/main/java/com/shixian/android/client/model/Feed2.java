@@ -17,6 +17,10 @@ public  class Feed2 extends BaseFeed{
 
     public int lastChildPosition;
 
+    public boolean agreement_status;
+
+    public String  agreement_count;
+
 
 
 }

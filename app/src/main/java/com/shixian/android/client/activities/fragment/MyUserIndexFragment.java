@@ -1,9 +1,11 @@
 package com.shixian.android.client.activities.fragment;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,11 +22,13 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.LoginActivity;
+import com.shixian.android.client.activities.MainActivity;
+import com.shixian.android.client.activities.base.BaseFeedActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
-import com.shixian.android.client.controller.OnClickController;
 import com.shixian.android.client.engine.CommonEngine;
+import com.shixian.android.client.handler.feed.BaseFeedHandler;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.User;
@@ -85,7 +89,7 @@ public class MyUserIndexFragment extends BaseFeedFragment {
     @Override
     protected void getNextData() {
         page += 1;
-        CommonEngine.getFeedData(AppContants.USER_FEED_INDEX_URL.replace("{user_name}", user.username), page, new AsyncHttpResponseHandler() {
+        CommonEngine.getFeedData(context,AppContants.USER_FEED_INDEX_URL.replace("{user_name}", user.username), page, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, final byte[] bytes) {
                 final String temp = new String(bytes);
@@ -160,7 +164,7 @@ public class MyUserIndexFragment extends BaseFeedFragment {
     }
 
     @Override
-    protected void initFirstData() {
+    public void initFirstData() {
 
         user = (User) getArguments().get("user");
         initCacheData();
@@ -172,6 +176,11 @@ public class MyUserIndexFragment extends BaseFeedFragment {
 
     }
 
+    @Override
+    public boolean needRefresh() {
+        return true;
+    }
+
 
     /**
      * 初始化用户信息
@@ -181,7 +190,7 @@ public class MyUserIndexFragment extends BaseFeedFragment {
         page = 1;
 
         context.showProgress();
-        CommonEngine.getFeedData(AppContants.USER_FEED_INDEX_URL.replace("{user_name}", user.username), page, new AsyncHttpResponseHandler() {
+        CommonEngine.getFeedData(context,AppContants.USER_FEED_INDEX_URL.replace("{user_name}", user.username), page, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
 
@@ -242,8 +251,8 @@ public class MyUserIndexFragment extends BaseFeedFragment {
     private void initUserInfo() {
 
 
-        String url = AppContants.USER_INFO_INDEX_URL.replace("{user_id}", user.id);
-        ApiUtils.get(url, null, new AsyncHttpResponseHandler() {
+        String url = AppContants.USER_INFO_INDEX_URL.replace("{username}", user.username);
+        ApiUtils.get(context,url, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                 String userinfo = new String(bytes);
@@ -347,7 +356,7 @@ public class MyUserIndexFragment extends BaseFeedFragment {
                     String key = keys[keys.length - 1];
 
 
-                    ImageLoader.getInstance().displayImage(AppContants.DOMAIN + user.avatar.small.url, iv_icon, feedOptions, animateFirstListener);
+                    ImageLoader.getInstance().displayImage(AppContants.DOMAIN + user.avatar.small.url, iv_icon, BaseFeedHandler.feedOptions, animateFirstListener);
 
 
                     if (user.has_followed) {
@@ -396,7 +405,7 @@ public class MyUserIndexFragment extends BaseFeedFragment {
                                 Toast.makeText(context, "暂不支持取消功能，我们正在飞速开发", Toast.LENGTH_SHORT).show();
                             } else {
                                 //关注api
-                                ApiUtils.post(String.format(AppContants.USER_FOLLOW_URL, user.id), null, new AsyncHttpResponseHandler() {
+                                ApiUtils.post(context,String.format(AppContants.USER_FOLLOW_URL, user.id), null, new AsyncHttpResponseHandler() {
                                     @Override
                                     public void onSuccess(int i, Header[] headers, byte[] bytes) {
                                         Toast.makeText(context, "关注成功", Toast.LENGTH_SHORT).show();
@@ -426,22 +435,23 @@ public class MyUserIndexFragment extends BaseFeedFragment {
                 case BaseFeed.TYPE_FEED:
 
 
-                    view = initFeedItemView2(convertView);
+                    view = BaseFeedHandler.initFeedItemView2(context, convertView);
                     FeedHolder feedHolder = (FeedHolder) view.getTag();
 
 /******************************************************************/
                     Feed2 feed = (Feed2) feedList.get(position - 1);
                     feed.position = position - 1;
-                    initFeedItemViewData(feed, feedHolder, animateFirstListener);
+                    BaseFeedHandler.initFeedItemViewData(context, feed, feedHolder, animateFirstListener);
 /**************************************************/
                     initFeedItemOnClick(feed, feedHolder);
 
+                    BaseFeedHandler.setFeedCommonClick(context,feed,feedHolder);
 
                     break;
 
                 case BaseFeed.TYPE_COMMENT:
 
-                    view = initCommentItem(convertView);
+                    view = BaseFeedHandler.initCommentItem(context, convertView);
 
 
                     CommentHolder commentHolder = (CommentHolder) view.getTag();
@@ -449,7 +459,7 @@ public class MyUserIndexFragment extends BaseFeedFragment {
 
 /**************************************************************/
                     Comment comment = (Comment) feedList.get(position - 1);
-                    initCommentItemData(comment, commentHolder, animateFirstListener);
+                    BaseFeedHandler.initCommentItemData(comment, commentHolder, animateFirstListener);
 
 
 /******************************************/
@@ -585,6 +595,8 @@ public class MyUserIndexFragment extends BaseFeedFragment {
     @Override
     public void onResume() {
         super.onResume();
+        ((MainActivity)context).initMsgStatus();
+        ((MainActivity)context).setCurrentFragment(this);
 
 
 
@@ -627,4 +639,7 @@ public class MyUserIndexFragment extends BaseFeedFragment {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
 }

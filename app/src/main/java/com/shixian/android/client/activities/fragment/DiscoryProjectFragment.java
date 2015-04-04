@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.shixian.android.client.R;
-import com.shixian.android.client.activities.BaseActivity;
+import com.shixian.android.client.activities.base.BaseActivity;
 import com.shixian.android.client.activities.MainActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
@@ -50,6 +50,7 @@ public class DiscoryProjectFragment extends BaseFragment {
 
     private int currentFirstPos=0;
 
+    public  static final int RESULT_ADD_IDEA=10087;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -160,7 +161,7 @@ public class DiscoryProjectFragment extends BaseFragment {
         page += 1;
         RequestParams params = new RequestParams();
         params.add("page", page + "");
-        ApiUtils.get(AppContants.DESCORY_PROJECT_URL, params, new AsyncHttpResponseHandler() {
+        ApiUtils.get(context,AppContants.DESCORY_PROJECT_URL, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                 final String temp = new String(bytes);
@@ -233,12 +234,12 @@ public class DiscoryProjectFragment extends BaseFragment {
 
     }
 
-    private void initFirstData() {
+    public void initFirstData() {
         context.showProgress();
 
         ((MainActivity)context).initMsgStatus();
 
-        ApiUtils.get(AppContants.DESCORY_PROJECT_URL, null, new AsyncHttpResponseHandler() {
+        ApiUtils.get(context,AppContants.DESCORY_PROJECT_URL, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                 final String temp = new String(bytes);
@@ -294,6 +295,11 @@ public class DiscoryProjectFragment extends BaseFragment {
     }
 
     @Override
+    public boolean needRefresh() {
+        return true;
+    }
+
+    @Override
     public void onDestroyView() {
         currentFirstPos=pullToRefreshListView.getListView().getFirstVisiblePosition();
         super.onDestroyView();
@@ -342,8 +348,8 @@ public class DiscoryProjectFragment extends BaseFragment {
 
             final Project project = projectList.get(position);
             holder.tv_title.setText(project.title);
-            if (!TextUtils.isEmpty(project.description))
-                holder.tv_content.setText(Html.fromHtml(project.description));
+//            if (!TextUtils.isEmpty(project.description))
+//                holder.tv_content.setText(Html.fromHtml(project.description));
 
             if(project.has_followed)
             {
@@ -363,7 +369,12 @@ public class DiscoryProjectFragment extends BaseFragment {
             //设置监听事件
             DiscoryOnClickColler onClickColler=new DiscoryOnClickColler(context,project);
             holder.tv_content .setOnClickListener(onClickColler);
-            new ContentHandler(holder.tv_content).longClickCopy();
+            ContentHandler contentHandler=new ContentHandler(holder.tv_content).longClickCopy();
+
+
+            if (!TextUtils.isEmpty(project.description))
+                contentHandler.formatColorContent(holder.tv_content,project.description);
+
 
             holder.tv_title.setOnClickListener(onClickColler);
             holder.bt_fllowen.setOnClickListener(new View.OnClickListener() {
@@ -390,7 +401,7 @@ public class DiscoryProjectFragment extends BaseFragment {
                         Toast.makeText(context,"暂不支持取消功能，我们正在开发",Toast.LENGTH_SHORT).show();
                     }else{
                         //关注api
-                        ApiUtils.post(String.format(AppContants.PROJECT_FOLLOW_URL,project.id),null,new AsyncHttpResponseHandler() {
+                        ApiUtils.post(context,String.format(AppContants.PROJECT_FOLLOW_URL,project.id),null,new AsyncHttpResponseHandler() {
                             @Override
                             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                                 Toast.makeText(context,"关注成功",Toast.LENGTH_SHORT).show();

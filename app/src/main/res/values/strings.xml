@@ -152,6 +152,9 @@
 
     <string name="login_up">注册</string>
 
+    <string name="agree">已赞同</string>
+    <string name="disagree">取消赞同</string>
+
 
 
     <!--phoneview-->
@@ -176,10 +179,18 @@
 
 
 
-    <string name="send">发送</string>
+    <string name="send">提交</string>
     <string name="share_weibo">分享</string>
     <string name="shrinkage_stat1">详细内容</string>
     <string name="shrinkage_stat2">收起内容</string>
+    <string name="add_prject">创建项目</string>
+    <string name="caogao">(草稿)</string>
+    <string name="title">标题</string>
+    <string name="commit">提交</string>
+    <string name="write_addidea">添加想法</string>
+
+
+
 
 
 

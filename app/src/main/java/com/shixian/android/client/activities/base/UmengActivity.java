@@ -1,4 +1,4 @@
-package com.shixian.android.client.activities;
+package com.shixian.android.client.activities.base;
 
 import android.support.v7.app.ActionBarActivity;
 

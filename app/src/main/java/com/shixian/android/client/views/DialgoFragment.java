@@ -1,5 +1,6 @@
 package com.shixian.android.client.views;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -9,14 +10,16 @@ import android.os.Bundle;
 /**
  * Created by tangtang on 15/3/26.
  */
+@SuppressLint("ValidFragment")
 public class DialgoFragment extends DialogFragment {
 
-    private  final String message;
-    private final String title;
-    private final String negativeButton;
-    private final String positiveButton;
-    private final DialogInterface.OnClickListener negativeButtonListener;
-    private final DialogInterface.OnClickListener positiveButtonListener;
+    private   String message;
+    private String title;
+    private  String negativeButton;
+    private  String positiveButton;
+    private  DialogInterface.OnClickListener negativeButtonListener;
+    private  DialogInterface.OnClickListener positiveButtonListener;
+
 
 
 
@@ -31,6 +34,8 @@ public class DialgoFragment extends DialogFragment {
         this.positiveButtonListener=positiveButtonListener;
 
     }
+
+
 
 
     @Override

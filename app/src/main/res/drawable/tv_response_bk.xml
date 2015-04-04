@@ -5,6 +5,8 @@
         android:width="1px"
         android:color="#E5E5E5" />
 
+
+
     <corners android:radius="3dip"
         />
 
