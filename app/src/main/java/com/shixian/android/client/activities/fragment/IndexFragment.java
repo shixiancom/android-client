@@ -2,7 +2,6 @@ package com.shixian.android.client.activities.fragment;
 
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -64,13 +63,11 @@ public class IndexFragment extends BaseFeedFragment {
                 adapter = new FeedAdapter();
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
             } else {
-                pullToRefreshListView.getRefreshableView().setAdapter(adapter);
+             //   pullToRefreshListView.getRefreshableView().setAdapter(adapter);
                 //adapter.notifyDataSetChanged();
 
             }
 
-            if (currentFirstPos <= feedList.size())
-                pullToRefreshListView.getListView().setSelection(currentFirstPos);
 
 
         } else {
@@ -148,10 +145,16 @@ public class IndexFragment extends BaseFeedFragment {
 
               AsyncHttpClient client= ApiUtils.client;
 
+                if(new String(bytes)!=null)
+                {
+                    Toast.makeText(context,new String(bytes),Toast.LENGTH_SHORT).show();
+                }else
 
                 Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
                 pullToRefreshListView.onPullDownRefreshComplete();
                 context.dissProgress();
+
+
             }
         });
     }
@@ -238,10 +241,7 @@ public class IndexFragment extends BaseFeedFragment {
 
     }
 
-    public  void setCurrentPosition(int position)
-    {
-        listView.setSelection(position);
-    }
+
 
     /**
      * **************************************************************************************

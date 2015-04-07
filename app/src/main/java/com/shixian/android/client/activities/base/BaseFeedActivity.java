@@ -72,7 +72,6 @@ public abstract class BaseFeedActivity extends SwipeActivity {
 
     protected PullToRefreshListView pullToRefreshListView;
 
-    protected int currentFirstPos=0;
 
     protected boolean pauseOnScroll = false;
     protected boolean pauseOnFling = true;
@@ -154,7 +153,6 @@ public abstract class BaseFeedActivity extends SwipeActivity {
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
             super.onScrollStateChanged(view, scrollState);
-            currentFirstPos=pullToRefreshListView.getListView().getFirstVisiblePosition();
 
         }
     }
@@ -547,11 +545,7 @@ public abstract class BaseFeedActivity extends SwipeActivity {
 
 
 
-    @Override
-    public void onPause() {
-        currentFirstPos = pullToRefreshListView.getListView().getFirstVisiblePosition();
-        super.onPause();
-    }
+
 
 
     public void setFeedCommonClick(Feed2 feed,BaseFeedFragment.FeedHolder feedHolder)

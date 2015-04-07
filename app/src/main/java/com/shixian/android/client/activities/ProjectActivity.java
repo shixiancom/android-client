@@ -216,8 +216,6 @@ public class ProjectActivity extends BaseFeedActivity {
 
             }
 
-            if(currentFirstPos<=feedList.size())
-                pullToRefreshListView.getListView().setSelection(currentFirstPos);
 
 
         }else{

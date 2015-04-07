@@ -1,6 +1,8 @@
 package com.shixian.android.client.utils;
 
+import android.app.Application;
 import android.content.Context;
+import android.view.Display;
 
 
 public class DisplayUtil {
@@ -44,6 +46,15 @@ public class DisplayUtil {
     public static int sp2px(Context context, float spValue) {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
+    }
+
+    public static String getResolution(Application context)
+    {
+        float sWidthPix =context.getResources().getDisplayMetrics().widthPixels;
+        float sHeightPix=context.getResources().getDisplayMetrics().heightPixels;
+
+
+       return sWidthPix*sHeightPix+"";
     }
 }
 

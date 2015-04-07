@@ -209,21 +209,16 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                 adapter = new FeedAdapter();
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
             } else {
-                pullToRefreshListView.getRefreshableView().setAdapter(adapter);
             }
 
-            if (currentFirstPos <= feedEntry.baseFeeds.size())
-                pullToRefreshListView.getListView().setSelection(currentFirstPos);
+
         }else{
 
             initFirst();
         }
     }
 
-    @Override
-    public void setCurrentPosition(int position) {
-        pullToRefreshListView.getListView().setSelection(position);
-    }
+
 
     /*********************************************获取数据*******************************/
     /**

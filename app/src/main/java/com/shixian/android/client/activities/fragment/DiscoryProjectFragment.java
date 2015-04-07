@@ -48,7 +48,7 @@ public class DiscoryProjectFragment extends BaseFragment {
     private ProjectAdapter adapter;
     private int page = 1;
 
-    private int currentFirstPos=0;
+
 
     public  static final int RESULT_ADD_IDEA=10087;
 
@@ -114,17 +114,6 @@ public class DiscoryProjectFragment extends BaseFragment {
 
         projectList = new ArrayList<Project>();
 
-        pullToRefreshListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                currentFirstPos=pullToRefreshListView.getListView().getFirstVisiblePosition();
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        });
 
 
 
@@ -220,11 +209,8 @@ public class DiscoryProjectFragment extends BaseFragment {
                 adapter = new ProjectAdapter();
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
             } else {
-                pullToRefreshListView.getRefreshableView().setAdapter(adapter);
-                adapter.notifyDataSetChanged();
+
             }
-            if(currentFirstPos<=projectList.size())
-                pullToRefreshListView.getListView().setSelection(currentFirstPos);
 
         }else{
             initCacheData();
@@ -301,15 +287,10 @@ public class DiscoryProjectFragment extends BaseFragment {
 
     @Override
     public void onDestroyView() {
-        currentFirstPos=pullToRefreshListView.getListView().getFirstVisiblePosition();
         super.onDestroyView();
 
     }
 
-    @Override
-    public void setCurrentPosition(int position) {
-        pullToRefreshListView.getListView().setSelection(position);
-    }
 
     class ProjectAdapter extends BaseAdapter {
 

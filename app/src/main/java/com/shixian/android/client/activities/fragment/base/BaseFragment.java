@@ -65,7 +65,7 @@ public abstract class BaseFragment extends Fragment  {
     }
 
 
-    public   void setCurrentPosition(int position){};
+
 
 
     /**

@@ -147,8 +147,6 @@ public class UserActivity extends BaseFeedActivity {
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
-            if (currentFirstPos <= feedList.size())
-                pullToRefreshListView.getListView().setSelection(currentFirstPos);
 
         } else {
 

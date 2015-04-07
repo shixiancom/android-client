@@ -1,10 +1,15 @@
 package com.shixian.android.client;
 
 import android.app.Application;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.shixian.android.client.utils.CommonUtil;
+import com.shixian.android.client.utils.DisplayUtil;
 import com.shixian.android.client.utils.SharedPerenceUtil;
 
 
@@ -17,34 +22,36 @@ public class MyApplication extends Application {
     //发表项目是否有草稿
     private boolean hasCaogao;
 
-    private String sx_plat="android";
-    private sx_platname=""
+    public static final  String sx_plat="android";
+    public static final  String sx_platname= Build.MODEL;
+    public static String sx_appversion;
+    public static final String sx_osversion=android.os.Build.VERSION.RELEASE;
+    public static  String sx_resolution;
+    public static String sx_udid;
 
-    "sx_plat"="ios" 平台，ios or android
-    "sx_platname"="iPhone5,1" 设备名称
-    "sx_appversion"="1.0.1" app版本
-    "sx_osversion"="7.0.1" 系统版本
-    "sx_udid"="xxxx-xxxx-x-xx" 设备唯一标识
-    "sx_uid"="2" 如果没有可不传
-    "sx_resolution" 分辨率
-    "sx_apikey"  用微博apikey
-    "sx_ts"	时间戳
-    "sx_sign" 参数签名
+
+
+
+
 
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        sx_resolution=DisplayUtil.getResolution(this);
+        try {
+            sx_appversion=getPackageManager().getPackageInfo("com.shixian.android.client", PackageManager.GET_META_DATA).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            sx_appversion="1.0.2";
+        }
+        sx_udid=CommonUtil.getImei(this,"");
 
         setHasCaogao(SharedPerenceUtil.hasNewProject(this));
         //File cacheDir = StorageUtils.getOwnCacheDirectory(getApplicationContext(), "shixian");
         //创建默认的ImageLoader配置参数
         ImageLoaderConfiguration configuration = ImageLoaderConfiguration
                 .createDefault(this);
-
-
-
 
         //Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(configuration);

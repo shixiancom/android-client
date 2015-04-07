@@ -406,7 +406,6 @@ public abstract class BaseFeedFragment extends AbsListViewBaseFragment {
 
     @Override
     public void onDestroyView() {
-        currentFirstPos = pullToRefreshListView.getListView().getFirstVisiblePosition();
         super.onDestroyView();
 
     }
@@ -473,8 +472,6 @@ public abstract class BaseFeedFragment extends AbsListViewBaseFragment {
 
     }
 
-    public void setCurrentPosition(int position) {
-    }
 
 
 

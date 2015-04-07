@@ -21,10 +21,7 @@ public class SpotlightFragment extends BaseFragment {
 
     }
 
-    @Override
-    public void setCurrentPosition(int position) {
 
-    }
 
     @Override
     public void initFirstData() {

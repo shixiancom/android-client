@@ -117,6 +117,7 @@ public class LoginActivity extends Activity
             }
         }, 1000);*/
 
+
     }
 
     public void setOnclick() {

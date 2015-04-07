@@ -623,7 +623,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.ll_descory:
 
                 if (currentFeed instanceof DiscoryProjectFragment) {
-                    currentFeed.setCurrentPosition(0);
                     drawerLayout.closeDrawers();
                     return;
                 }
@@ -634,7 +633,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.ll_index:
                 isIndex = true;
                 if (currentFeed instanceof IndexFragment) {
-                    currentFeed.setCurrentPosition(0);
                     drawerLayout.closeDrawers();
                     return;
                 }
@@ -643,7 +641,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.ll_msg:
                 if (currentFeed instanceof NewsFragment) {
-                    currentFeed.setCurrentPosition(0);
                     drawerLayout.closeDrawers();
                     return;
                 }
@@ -664,7 +661,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.ll_spotlight:
 
                 if (currentFeed instanceof NewsFragment) {
-                    currentFeed.setCurrentPosition(0);
                     drawerLayout.closeDrawers();
                     return;
                 }
@@ -1004,7 +1000,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
             if (currentFeed instanceof NewsFragment) {
-                currentFeed.setCurrentPosition(0);
                 drawerLayout.closeDrawers();
                 return;
             }

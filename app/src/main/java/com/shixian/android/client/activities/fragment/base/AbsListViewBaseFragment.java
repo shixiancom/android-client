@@ -39,7 +39,6 @@ public abstract class AbsListViewBaseFragment extends BaseFragment {
 
 	protected PullToRefreshListView pullToRefreshListView;
 
-    protected int currentFirstPos=0;
 
 	protected boolean pauseOnScroll = false;
 	protected boolean pauseOnFling = true;
@@ -79,7 +78,6 @@ public abstract class AbsListViewBaseFragment extends BaseFragment {
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
             super.onScrollStateChanged(view, scrollState);
-            currentFirstPos=pullToRefreshListView.getListView().getFirstVisiblePosition();
 
         }
     }

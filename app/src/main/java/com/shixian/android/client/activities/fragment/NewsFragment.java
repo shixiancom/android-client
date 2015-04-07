@@ -165,12 +165,9 @@ public class NewsFragment extends AbsListViewBaseFragment
 
                 pullToRefreshListView.getRefreshableView().setAdapter(adapter);
             } else {
-                pullToRefreshListView.getRefreshableView().setAdapter(adapter);
 
             }
 
-            if (currentFirstPos <= newsList.size())
-                pullToRefreshListView.getListView().setSelection(currentFirstPos);
 
 
         }else{
@@ -181,10 +178,7 @@ public class NewsFragment extends AbsListViewBaseFragment
 
     }
 
-    @Override
-    public void setCurrentPosition(int position) {
-        pullToRefreshListView.getListView().setSelection(position);
-    }
+
 
     public void initFirstData() {
 
@@ -445,9 +439,6 @@ public class NewsFragment extends AbsListViewBaseFragment
                             break;
                         case "new_comment":
                             holder.tv_content.setVisibility(View.VISIBLE);
-
-                            project = news.project.getTitle();
-
                             holder.tv_project.setText(news.project.getTitle());
                             holder.tv_name.setText(news.user.username);
                             holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_reply)));
