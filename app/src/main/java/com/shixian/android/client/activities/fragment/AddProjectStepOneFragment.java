@@ -61,8 +61,8 @@ public class AddProjectStepOneFragment extends UmengFragment implements Fragment
 
     public void initDate(Bundle savedInstanceState) {
 
-        et_title.setText(SharedPerenceUtil.getNewProjectTitle(getActivity()));
-        et_content.setText(SharedPerenceUtil.getNewProjectContent(getActivity()));
+        et_title.setText(SharedPerenceUtil.getNewProjectTitle(getActivity().getApplicationContext()));
+        et_content.setText(SharedPerenceUtil.getNewProjectContent(getActivity().getApplicationContext()));
 
     }
 
@@ -151,7 +151,7 @@ public class AddProjectStepOneFragment extends UmengFragment implements Fragment
         if(et_title.getText().toString().trim().isEmpty()&&et_content.getText().toString().trim().isEmpty())
         {
             getActivity().finish();
-            SharedPerenceUtil.clearNewProject(getActivity());
+            SharedPerenceUtil.clearNewProject(getActivity().getApplicationContext());
             ((MyApplication)getActivity().getApplication()).setHasCaogao(false);
         }else{
 
@@ -160,7 +160,7 @@ public class AddProjectStepOneFragment extends UmengFragment implements Fragment
                 public void onClick(DialogInterface dialog, int which) {
                     //这里做一些保存草稿的操作
 
-                    SharedPerenceUtil.putNewProject(getActivity(),et_title.getText().toString(),et_content.getText().toString());
+                    SharedPerenceUtil.putNewProject(getActivity().getApplicationContext(),et_title.getText().toString(),et_content.getText().toString());
                     ((MyApplication)getActivity().getApplication()).setHasCaogao(true);
                     getActivity().finish();
                 }},null);

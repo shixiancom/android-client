@@ -1,7 +1,6 @@
 package com.shixian.android.client.activities.fragment;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -102,7 +100,7 @@ public class AddProjectStepTwoFragment extends UmengFragment implements Fragment
         title=bundle.getString("title");
         description=bundle.getString("description");
 
-        currentSelect= SharedPerenceUtil.getNewFuzeren(getActivity());
+        currentSelect= SharedPerenceUtil.getNewFuzeren(getActivity().getApplicationContext());
         adapter=new AdminAdapter();
         lv_admin.setAdapter(adapter);
 
@@ -143,7 +141,7 @@ public class AddProjectStepTwoFragment extends UmengFragment implements Fragment
                     @Override
                     public void onSuccess(int position, Header[] headers, byte[] bytes) {
 
-                        SharedPerenceUtil.clearNewProject(getActivity());
+                        SharedPerenceUtil.clearNewProject(getActivity().getApplicationContext());
                         ((MyApplication)getActivity().getApplication()).setHasCaogao(false);
                         activity.setResult(Activity.RESULT_OK);
                         getActivity().finish();
@@ -194,7 +192,7 @@ public class AddProjectStepTwoFragment extends UmengFragment implements Fragment
     public void onBackPressed() {
 
         //返回处理
-        SharedPerenceUtil.putNewFuzeren(activity,currentSelect);
+        SharedPerenceUtil.putNewFuzeren(activity.getApplicationContext(),currentSelect);
         getActivity().getSupportFragmentManager().popBackStack();
 
 

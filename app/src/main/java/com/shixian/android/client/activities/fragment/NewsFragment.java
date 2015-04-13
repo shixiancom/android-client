@@ -130,7 +130,7 @@ public class NewsFragment extends AbsListViewBaseFragment
 
     private void initCacheData() {
 
-        newsList=JsonUtils.parseNews(SharedPerenceUtil.getNews(context)) ;
+        newsList=JsonUtils.parseNews(SharedPerenceUtil.getNews(context.getApplicationContext())) ;
         if(newsList==null||newsList.size()==0)
         {
             tv_blank.setVisibility(View.VISIBLE);
@@ -198,7 +198,6 @@ public class NewsFragment extends AbsListViewBaseFragment
                             newsList= JsonUtils.parseNews(temp);
 
 
-                            SharedPerenceUtil.putNews(context,temp);
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -219,8 +218,15 @@ public class NewsFragment extends AbsListViewBaseFragment
                                         tv_blank.setVisibility(View.GONE);
                                     }
 
+                                    ((MainActivity)context).hideMsg();
+
+
+
                                 }
                             });
+
+                            SharedPerenceUtil.putNews(context.getApplicationContext(),temp);
+
                         }
                     }.start();
                     page=1;
@@ -413,6 +419,30 @@ public class NewsFragment extends AbsListViewBaseFragment
 
 
                     switch (news.noti_type) {
+                        //赞同
+
+                        case "new_agreement":
+                            String catagory="";
+                            switch (news.data.notifiable_type){
+                                case "idea":
+                                    catagory="的想法";
+
+                                   break;
+                                case "attachment":
+                                    catagory="的文件";
+                                    break;
+                                case "image":
+                                    catagory="的图片";
+                                    break;
+                            }
+
+                            holder.tv_content.setText(news.data.content);
+                            holder.tv_project.setText(news.project.getTitle());
+                            holder.tv_name.setText(news.user.username);
+                            holder.tv_type.setText(getResources().getString(R.string.agreement_you)+catagory);
+
+                            break;
+
                         case "invit_follow":
                             holder.tv_content.setVisibility(View.GONE);
                             holder.tv_project.setText(news.project.getTitle());
@@ -638,9 +668,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                             holder.tv_project.setText(news.project.getTitle());
                             break;
 
-                        case "new_agreement":
 
-                            break;
                     }
 
 
@@ -740,5 +768,9 @@ public class NewsFragment extends AbsListViewBaseFragment
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
 
+    }
 }

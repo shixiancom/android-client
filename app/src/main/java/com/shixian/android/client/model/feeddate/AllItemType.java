@@ -16,7 +16,7 @@ public class AllItemType extends  BaseFeedItem{
     public String file_name;
     public String comments_count;
     public String type;
-    public String entity_type;
+    public String feedable_type;
 
 
     public static class Attachment {
@@ -29,5 +29,14 @@ public class AllItemType extends  BaseFeedItem{
             public String url;
         }
     }
+
+//    public  Extra extra;
+//
+//    public  static class Extra{
+//        public  String content;
+//        public Attachment attachment;
+//        public String file_name;
+//    }
+
 
 }

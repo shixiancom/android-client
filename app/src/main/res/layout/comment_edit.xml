@@ -12,6 +12,7 @@
         android:layout_margin="10dp"
         android:hint="不能少于140个字"
         android:textColor="#000000"
+        android:lineSpacingMultiplier="1.3"
         android:scrollbars="horizontal|vertical" >
 
         <requestFocus/>

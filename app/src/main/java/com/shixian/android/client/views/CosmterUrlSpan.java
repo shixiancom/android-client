@@ -43,31 +43,27 @@ public class CosmterUrlSpan extends URLSpan {
         }
 
 
-
         if (uriString.startsWith("@")) {
 
-            String username=uriString.substring(1).trim();
-            //两种方式 如果当前是mainactivity则开启新的activity 否则就切换所以该对象需要持有一个content
-            //这可能是个蹩脚的设计 但是以后可以将activity分为两大类  一类就是跟mainactivity一样需要进行弹出 新
-            //activity 另一类就是这样 切换
+            String username = uriString.substring(1).trim();
 
-               User user=new User();
-                Bundle bundle=new Bundle();
-                user.username=username;
-                bundle.putSerializable("user", user);
+            User user = new User();
+            Bundle bundle = new Bundle();
+            user.username = username;
+            bundle.putSerializable("user", user);
 
-                bundle.putInt("type", IndexOnClickController.USER_FRAGMENT);
-                intent.putExtras(bundle);
-                intent.setClass(context,UserActivity.class);
-                context.startActivity(intent);
+            bundle.putInt("type", IndexOnClickController.USER_FRAGMENT);
+            intent.putExtras(bundle);
+            intent.setClass(context, UserActivity.class);
+            context.startActivity(intent);
 
-                return true;
+            return true;
 
         }
 
 
         final String imageSting = "(http|https):.*?.[.]{1}(gif|jpg|png|bmp)";
-        Pattern  pattern = Pattern.compile(imageSting);
+        Pattern pattern = Pattern.compile(imageSting);
         Matcher matcher = pattern.matcher(uriString);
         if (matcher.find()) {
             //    intent.setClass(context, ImagePagerActivity_.class);
@@ -89,7 +85,6 @@ public class CosmterUrlSpan extends URLSpan {
 
         try {
             if (defaultIntent) {
-//                Toast.makeText(context, "" + uriString.toString(), Toast.LENGTH_LONG).show();
                 intent = new Intent(context, WebActivity.class);
 
                 if (newTask) {
@@ -118,9 +113,6 @@ public class CosmterUrlSpan extends URLSpan {
     public void onClick(View widget) {
         openActivityByUri(widget.getContext(), getURL(), false);
     }
-
-
-
 
 
 }

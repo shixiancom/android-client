@@ -2,12 +2,10 @@ package com.shixian.android.client.activities.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -127,7 +125,7 @@ public class DiscoryProjectFragment extends BaseFragment {
     }
 
     private void initCacheData() {
-        firstPageDate= SharedPerenceUtil.getProjectDiscoryProject(context);
+        firstPageDate= SharedPerenceUtil.getProjectDiscoryProject(context.getApplicationContext());
 
         projectList= JsonUtils.ParsesProject(firstPageDate);
 
@@ -244,12 +242,6 @@ public class DiscoryProjectFragment extends BaseFragment {
 
                             page = 1;
 
-
-                            SharedPerenceUtil.putProjectDiscoryProject(context,temp);
-
-                            //保存数据到本地
-
-
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -263,6 +255,10 @@ public class DiscoryProjectFragment extends BaseFragment {
 
                                 }
                             });
+
+                            //保存数据到本地
+                            SharedPerenceUtil.putProjectDiscoryProject(context.getApplicationContext(),temp);
+
 
                         }
                     }.start();

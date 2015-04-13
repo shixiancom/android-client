@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+  >
+
+<LinearLayout
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/spotlight_shape"
+
+    >
+
+    <LinearLayout
+        android:focusable="true"
+        android:clickable="true"
+        android:id="@+id/ll_project"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <com.shixian.android.client.views.FontTextView
+        android:singleLine="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_title"
+        android:layout_marginLeft="@dimen/global_left"
+        android:layout_marginRight="@dimen/global_right"
+        android:layout_marginTop="16dp"
+        android:ellipsize="end"
+        android:textSize="20sp"
+
+        />
+
+    <com.shixian.android.client.views.FontTextView
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_content"
+        android:layout_marginLeft="@dimen/global_left"
+        android:layout_marginRight="@dimen/global_right"
+        android:maxLines="12"
+        android:lineSpacingMultiplier="1.3"
+        android:ellipsize="end"
+        />
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#E5E5E5"
+        android:layout_marginTop="@dimen/main_content_top"
+        />
+
+    <com.shixian.android.client.views.FontTextView
+        android:layout_marginLeft="@dimen/global_left"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="空缺职位"
+        android:textColor="#A2A2A2"
+        android:textSize="14sp"
+
+        />
+
+    <FrameLayout
+        android:id="@+id/fl_compzone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+
+    <GridLayout
+        android:rowCount="5"
+        android:columnCount="4"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/gl_compoters"
+        />
+
+        <com.shixian.android.client.views.FontTextView
+            android:visibility="gone"
+            android:id="@+id/tv_zero"
+            android:layout_marginTop="8dp"
+            android:text="暂无"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/global_right"
+            android:layout_marginLeft="@dimen/global_left"
+            />
+    </FrameLayout>
+
+
+
+
+</LinearLayout>
+
+<View
+android:layout_width="match_parent"
+android:layout_height="20dp"
+android:background="@color/gray_bk"/>
+
+</LinearLayout>

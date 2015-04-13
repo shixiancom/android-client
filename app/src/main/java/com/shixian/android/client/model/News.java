@@ -24,11 +24,14 @@ public class News  implements Serializable {
 
 
 
+
     public static  class  NewsData implements Serializable{
         public  String content;
         public String content_html;
         public String commentable_id;
         public String commentable_type;
+        public String notifiable_type;
+        public String id;
 
     }
 }

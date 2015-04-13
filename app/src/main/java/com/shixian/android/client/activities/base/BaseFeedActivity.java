@@ -552,7 +552,7 @@ public abstract class BaseFeedActivity extends SwipeActivity {
     {
         if(feedHolder.rl_agree.getVisibility()==View.VISIBLE)
         {
-            feedHolder.iv_agree.setOnClickListener(new ArgeeOnClickController(BaseFeedActivity.this,feed.agreement_status,feed.feedable_type, feed.feedable_id,feedHolder.tv_agreecount));
+            feedHolder.iv_agree.setOnClickListener(new ArgeeOnClickController(BaseFeedActivity.this,feed,feedHolder.tv_agreecount));
         }
     }
 

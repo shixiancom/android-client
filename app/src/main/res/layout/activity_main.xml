@@ -42,6 +42,7 @@
                 android:layout_weight="1"
                 >
             </FrameLayout>
+
             <include layout="@layout/common_enter_emoji" />
 
 
@@ -58,20 +59,19 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/rl_title"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="56dp"
                 android:background="#0079B5">
 
                 <com.shixian.android.client.views.RoundCornerImageView
                     android:scaleType="centerCrop"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentBottom="true"
                     android:background="@android:color/transparent"
                     android:layout_marginLeft="16dp"
                     android:id="@+id/iv_icon"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="8dp"
 
                     />
 
@@ -175,7 +175,7 @@
                     android:layout_marginLeft="@dimen/menu_tv_margin_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="本周启动"
+                    android:text="在线组队"
 
                     />
             </LinearLayout>
@@ -199,44 +199,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="发现"
-
                     />
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_addproject"
-                android:gravity="center_vertical"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/menu_item_height"
-                >
-                <ImageView
-                    android:src="@drawable/ic_create_grey600_24dp"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginLeft="@dimen/menu_ic_margin_left"
-                    />
-
-                <TextView
-
-                    android:textSize="@dimen/menu_tv_sp"
-                    android:layout_marginLeft="@dimen/menu_tv_margin_left"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/add_project"
-                    />
-
-                <TextView
-                    android:id="@+id/tv_caogao"
-                    android:textSize="12sp"
-                    android:layout_marginLeft="@dimen/menu_tv_margin_left"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/caogao"
-                    android:visibility="gone"
-                    />
-
-            </LinearLayout>
-
 
 
             <View

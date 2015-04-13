@@ -44,9 +44,9 @@ public class UserActivity extends BaseFeedActivity {
 
 
     protected void initCacheData() {
-        firstPageDate = SharedPerenceUtil.getUserIndexFeed(this, user.username);
+        firstPageDate = SharedPerenceUtil.getUserIndexFeed(this.getApplicationContext(), user.username);
 
-        String userInfo = SharedPerenceUtil.getUserIndexInfo(this, user.username);
+        String userInfo = SharedPerenceUtil.getUserIndexInfo(this.getApplicationContext(), user.username);
         if (!TextUtils.isEmpty(userInfo))
             user = new Gson().fromJson(userInfo, User.class);
         feedList = JsonUtils.ParseFeeds(firstPageDate);
@@ -190,7 +190,6 @@ public class UserActivity extends BaseFeedActivity {
                             feedList = JsonUtils.ParseFeeds(firstPageDate);
                             pullToRefreshListView.onPullDownRefreshComplete();
 
-                            SharedPerenceUtil.putUserIndexFeed(UserActivity.this, firstPageDate, user.username);
 
                             UserActivity.this.runOnUiThread(new Runnable() {
                                 @Override
@@ -209,6 +208,7 @@ public class UserActivity extends BaseFeedActivity {
                                 }
                             });
 
+                            SharedPerenceUtil.putUserIndexFeed(UserActivity.this.getApplicationContext(), firstPageDate, user.username);
 
                         }
                     }.start();
@@ -252,8 +252,6 @@ public class UserActivity extends BaseFeedActivity {
                     User user = gson.fromJson(userinfo, User.class);
                     UserActivity.this.user = user;
 
-                    //保存userinfo
-                    SharedPerenceUtil.putUserIndexInfo(UserActivity.this, userinfo, user.username + "");
 
                     if (adapter == null) {
                         adapter = new UserIndexFeedAdapte();
@@ -261,6 +259,9 @@ public class UserActivity extends BaseFeedActivity {
                     } else {
                         adapter.notifyDataSetChanged();
                     }
+                    //保存userinfo
+                    SharedPerenceUtil.putUserIndexInfo(UserActivity.this.getApplicationContext(), userinfo, user.username + "");
+
                 }
             }
 

@@ -20,14 +20,12 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.contants.AppContants;
-import com.shixian.android.client.controller.ArgeeOnClickController;
 import com.shixian.android.client.enter.EnterLayout;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
@@ -332,6 +330,7 @@ public abstract class BaseFeedFragment extends AbsListViewBaseFragment {
                     //变化大于100 说明软键盘隐藏了 如此这般可否
                     if (cal1 == 1 && listHeight - oldListHigh > 100) {
                         hideSoftkeyboard();
+                        cal1=0;
 
                     }
                 }

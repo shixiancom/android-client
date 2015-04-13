@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import com.shixian.android.client.activities.AddIdeaActivity;
 import com.shixian.android.client.activities.MainActivity;
+import com.shixian.android.client.activities.base.BaseActivity;
 
 import java.io.File;
 
@@ -20,8 +21,8 @@ public class SharedPerenceUtil {
     public  static void clearAllData(Context context)
     {
 
-        context.getSharedPreferences("cachedate",context.MODE_PRIVATE).edit().remove("myproject").remove("indexdata").remove("userindexdata").remove("descoryproject").remove("news").commit();
-        context.getSharedPreferences("userinfo",context.MODE_PRIVATE).edit().remove("userjson").remove("myproject").remove("cookie").commit();
+        context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).edit().remove("myproject").remove("indexdata").remove("userindexdata").remove("descoryproject").remove("news").commit();
+        context.getSharedPreferences("userinfo",Context.MODE_PRIVATE).edit().remove("userjson").remove("myproject").remove("cookie").commit();
 
 
     }
@@ -32,12 +33,12 @@ public class SharedPerenceUtil {
 
     public static void putEditHasEdit(Context context,boolean has,String projectid)
     {
-        context.getSharedPreferences("editidea",Context.MODE_PRIVATE).edit().putBoolean("hascontent+projectid",has).commit();
+        context.getSharedPreferences("editidea",Context.MODE_PRIVATE).edit().putBoolean("hascontent"+projectid,has).commit();
     }
 
     public static void putEditIdea(Context context,String projectid,String content)
     {
-        context.getSharedPreferences("editidea", Context.MODE_PRIVATE).edit().putString("content"+projectid,content).putBoolean("hascontent+projectid",true).commit();
+        context.getSharedPreferences("editidea", Context.MODE_PRIVATE).edit().putString("content"+projectid,content).putBoolean("hascontent"+projectid,true).commit();
     }
 
     public static String getEditIdea(Context context,String projectid)
@@ -48,7 +49,7 @@ public class SharedPerenceUtil {
 
     public static boolean hasIdeaEdit(Context context,String projectid)
     {
-       return  context.getSharedPreferences("editidea",Context.MODE_PRIVATE).getBoolean("hascontent+projectid",false);
+       return  context.getSharedPreferences("editidea",Context.MODE_PRIVATE).getBoolean("hascontent"+projectid,false);
     }
 
     public static void putNewProject(Context context,String title ,String content)
@@ -121,13 +122,13 @@ public class SharedPerenceUtil {
      */
     public static void putUserInfo(Context context,String userinfo)
     {
-        context.getSharedPreferences("userinfo",context.MODE_PRIVATE).edit().putString("userjson",userinfo);
+        context.getSharedPreferences("userinfo",Context.MODE_PRIVATE).edit().putString("userjson",userinfo);
 
     }
 
     public static String getUserInfo(Context context)
     {
-        return context.getSharedPreferences("userinfo",context.MODE_PRIVATE).getString("userjson","");
+        return context.getSharedPreferences("userinfo",Context.MODE_PRIVATE).getString("userjson","");
     }
 
 
@@ -136,7 +137,7 @@ public class SharedPerenceUtil {
      */
     public static String getMyProject(Context context)
     {
-        return context.getSharedPreferences("cachedate",context.MODE_PRIVATE).getString("myproject","");
+        return context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).getString("myproject","");
     }
 
     /**
@@ -144,7 +145,7 @@ public class SharedPerenceUtil {
      */
     public static void putMyProject(Context context,String json)
     {
-        context.getSharedPreferences("cachedate",context.MODE_PRIVATE).edit().putString("myproject",json).commit();
+        context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).edit().putString("myproject",json).commit();
 
     }
 
@@ -156,7 +157,7 @@ public class SharedPerenceUtil {
      */
     public static void putIndexFeed(Context context,String json)
     {
-        context.getSharedPreferences("cachedate",context.MODE_PRIVATE).edit().putString("indexdata",json).commit();
+        context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).edit().putString("indexdata",json).commit();
     }
 
     /**
@@ -166,13 +167,13 @@ public class SharedPerenceUtil {
      */
     public static String getIndexFeed(Context context)
     {
-        return    context.getSharedPreferences("cachedate",context.MODE_PRIVATE).getString("indexdata","");
+        return    context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).getString("indexdata","");
     }
 
 
 
     public static void putUserIndexFeed(Context context,String json,String userid){
-        context.getSharedPreferences("cachedate",context.MODE_PRIVATE).edit().putString("userindexdata"+userid,json).commit();
+        context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).edit().putString("userindexdata"+userid,json).commit();
     }
 
     /**
@@ -181,7 +182,7 @@ public class SharedPerenceUtil {
      * @return
      */
     public static String getUserIndexFeed(Context context,String userid) {
-        return    context.getSharedPreferences("cachedate",context.MODE_PRIVATE).getString("userindexdata"+userid,"");
+        return    context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).getString("userindexdata"+userid,"");
     }
 
 
@@ -191,7 +192,7 @@ public class SharedPerenceUtil {
      * @param json
      */
     public static void putUserIndexInfo(Context context,String json,String userid){
-        context.getSharedPreferences("cachedate",context.MODE_PRIVATE).edit().putString("userifo"+userid,json).commit();
+        context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).edit().putString("userifo"+userid,json).commit();
     }
 
     /**
@@ -200,41 +201,41 @@ public class SharedPerenceUtil {
      * @return
      */
     public static String getUserIndexInfo(Context context,String userid) {
-        return    context.getSharedPreferences("cachedate",context.MODE_PRIVATE).getString("userifo"+userid,"");
+        return    context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).getString("userifo"+userid,"");
     }
 
     public static String getProjectIndexFeed(Context context, int id) {
-        return context.getSharedPreferences("cachedate",context.MODE_PRIVATE).getString("projectFeed"+id,"");
+        return context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).getString("projectFeed"+id,"");
     }
 
     public static String getProjectIndexInfo(Context context, String id) {
 
-        return context.getSharedPreferences("cachedate",context.MODE_PRIVATE).getString("projectIndexinfo"+id,"");
+        return context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).getString("projectIndexinfo"+id,"");
     }
 
     public static void putProjectIndexFeed(Context context, String json,int id) {
-         context.getSharedPreferences("cachedate",context.MODE_PRIVATE).edit().putString("projectFeed"+id,json).commit();
+         context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).edit().putString("projectFeed"+id,json).commit();
     }
 
     public static void putProjectIndexInfo(Context context,String json, int id) {
-        context.getSharedPreferences("cachedate",context.MODE_PRIVATE).edit().putString("projectIndexinfo"+id,json).commit();
+        context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).edit().putString("projectIndexinfo"+id,json).commit();
     }
 
     public static String getProjectDiscoryProject(Context context) {
-        return context.getSharedPreferences("cachedate",context.MODE_PRIVATE).getString("descoryproject","");
+        return context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).getString("descoryproject","");
     }
 
     public static void putProjectDiscoryProject(Context context, String json) {
-        context.getSharedPreferences("cachedate",context.MODE_PRIVATE).edit().putString("descoryproject",json).commit();
+        context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).edit().putString("descoryproject",json).commit();
     }
 
     public static String getNews(Context context) {
 
-        return context.getSharedPreferences("cachedate",context.MODE_PRIVATE).getString("news","");
+        return context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).getString("news","");
     }
 
     public static void putNews(Context context, String temp) {
-        context.getSharedPreferences("cachedate",context.MODE_PRIVATE).edit().putString("news",temp).commit();
+        context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).edit().putString("news",temp).commit();
     }
 
 
@@ -250,5 +251,15 @@ public class SharedPerenceUtil {
     }
 
 
+    public static String getBoots(Context context) {
+
+     return    context.getSharedPreferences("boot",Context.MODE_PRIVATE).getString("xxx","");
+
+    }
+
+    public  static void putBoots(Context context,String value)
+    {
+        context.getSharedPreferences("boot",Context.MODE_PRIVATE).edit().putString("xxx",value).commit();
+    }
 }
 

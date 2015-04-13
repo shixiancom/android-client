@@ -87,9 +87,9 @@ public class ProjectActivity extends BaseFeedActivity {
 
     protected void initCacheData() {
 
-        firstPageDate= SharedPerenceUtil.getProjectIndexFeed(this, project.id);
+        firstPageDate= SharedPerenceUtil.getProjectIndexFeed(this.getApplicationContext(), project.id);
 
-        String projectInfo=SharedPerenceUtil.getProjectIndexInfo(this, project.id + "");
+        String projectInfo=SharedPerenceUtil.getProjectIndexInfo(this.getApplicationContext(), project.id + "");
 
         if(!TextUtils.isEmpty(projectInfo))
             project=new Gson().fromJson(projectInfo, Project.class);
@@ -129,7 +129,7 @@ public class ProjectActivity extends BaseFeedActivity {
 
     @Override
     protected void initFirst() {
-        project.id= Integer.parseInt((String) getIntent().getStringExtra("project_id"));
+        project.id= Integer.parseInt(getIntent().getStringExtra("project_id"));
 
         initCacheData();
         initFirstData();
@@ -223,10 +223,6 @@ public class ProjectActivity extends BaseFeedActivity {
             initFirst();
         }
 
-
-
-
-
     }
 
     @Override
@@ -264,7 +260,6 @@ public class ProjectActivity extends BaseFeedActivity {
 
 
 
-                            SharedPerenceUtil.putProjectIndexFeed( ProjectActivity.this, temp, project.id);
 
                             ProjectActivity.this.runOnUiThread(new Runnable() {
                                 @Override
@@ -284,6 +279,8 @@ public class ProjectActivity extends BaseFeedActivity {
                                     ProjectActivity.this.dissProgress();
                                 }
                             });
+                            SharedPerenceUtil.putProjectIndexFeed( ProjectActivity.this.getApplicationContext(), temp, project.id);
+
 
 
                         }
@@ -326,7 +323,6 @@ public class ProjectActivity extends BaseFeedActivity {
                             Gson gson = new Gson();
                             project = gson.fromJson(project_info, Project.class);
 
-                            SharedPerenceUtil.putProjectIndexInfo( ProjectActivity.this, temp, project.id);
 
 
                             ProjectActivity.this.runOnUiThread(new Runnable() {
@@ -340,6 +336,8 @@ public class ProjectActivity extends BaseFeedActivity {
                                     }
                                 }
                             });
+                            SharedPerenceUtil.putProjectIndexInfo( ProjectActivity.this.getApplicationContext(), temp, project.id);
+
 
                         }
                     }.start();
@@ -738,11 +736,19 @@ public class ProjectActivity extends BaseFeedActivity {
 
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        hasCaogao=SharedPerenceUtil.hasIdeaEdit(this.getApplicationContext(),project.id+"");
+        System.out.print("asdasd");
+    }
 
     @Override
     public void onPostCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onPostCreate(savedInstanceState, persistentState);
-        hasCaogao=SharedPerenceUtil.hasIdeaEdit(this,project.id+"");
+        hasCaogao=SharedPerenceUtil.hasIdeaEdit(this.getApplicationContext(),project.id+"");
+
+        System.out.print("asdasd");
     }
 
     @Override

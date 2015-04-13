@@ -19,6 +19,7 @@
     <string name="pull_to_refresh_header_hint_ready">释放刷新</string>
     <string name="pull_to_refresh_header_hint_loading">正在刷新</string>
     <string name="pull_to_refresh_header_hint_loadin">正在加载更多</string>
+    <string name="agreement_you">赞同了你</string>
     <string name="please_fllow">邀请您关注</string>
     <string name="join_accept">通过了请求</string>
     <string name="join_reject">拒绝了请求</string>

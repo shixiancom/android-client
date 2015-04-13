@@ -17,5 +17,7 @@
     <dimen name="content_top">14dp</dimen>
     <dimen name="main_content_top">5dp</dimen>
 
+    <dimen name="card_global_margin">8dp</dimen>
+
 
 </resources>

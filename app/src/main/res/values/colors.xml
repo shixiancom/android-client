@@ -11,4 +11,8 @@
     <color name="blue">#ff87cefa</color>
 
     <color name="olive">#000000</color>
+
+    <color name="gray_textcolor">#9B9B9B</color>
+
+    <color name="gray_bk">#FAFAFA</color>
 </resources>

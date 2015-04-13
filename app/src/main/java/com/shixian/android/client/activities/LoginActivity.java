@@ -187,7 +187,7 @@ public class LoginActivity extends Activity
 
     @Override
     protected void onDestroy() {
-        String userJson= SharedPerenceUtil.getUserInfo(this);
+        String userJson= SharedPerenceUtil.getUserInfo(this.getApplicationContext());
         if("".equals(userJson))
         {
             Global.user= new Gson().fromJson(userJson,User.class);

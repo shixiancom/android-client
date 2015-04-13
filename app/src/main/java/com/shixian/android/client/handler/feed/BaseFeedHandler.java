@@ -17,6 +17,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.SimpleSampleActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
@@ -80,6 +81,7 @@ public class BaseFeedHandler {
         feedHolder.rl_agree.setVisibility(View.GONE);
 
         ContentHandler contentHandler=new ContentHandler(feedHolder.tv_content).longClickCopy();
+
 
 
         //设置project
@@ -157,22 +159,32 @@ public class BaseFeedHandler {
                 break;
 
             case "Agreement":
-
-                switch (feed.data.entity_type){
+                feedHolder.rl_agree.setVisibility(View.VISIBLE);
+                switch (feed.data.feedable_type){
                     case "idea":
                         type="赞同了想法";
+                        contentHandler.formatColorContent(feedHolder.tv_content,feed.data.content);
+                        feedHolder.tv_agreecount.setText(feed.agreement_count);
                         break;
 
                     case "attachment":
                         type="赞同了文件";
+                        feedHolder.tv_content.setText(feed.data.content+"\n"+"  "+feed.data.file_name);
+                        feedHolder.iv_content.setVisibility(View.VISIBLE);
+                        feedHolder.iv_content.setImageResource(R.drawable.file);
 
                         break;
                     case "image":
                         type="赞同了图片";
-                        feedHolder.tv_content.setVisibility(View.VISIBLE);
+                        contentHandler.formatColorContent(feedHolder.tv_content,feed.data.content);
+                        feedHolder.iv_content.setVisibility(View.VISIBLE);
+                        ImageLoader.getInstance().displayImage(AppContants.DOMAIN + feed.data.attachment.thumb.url, feedHolder.iv_content, contentOptions, animateFirstListener);
+                        ivContentOnClickListener(context,feedHolder,feed.data.attachment.url);
                         break;
 
                 }
+
+
                 feedHolder.tv_content.setVisibility(View.VISIBLE);
                 if(feed.data.content!=null)
                 contentHandler.formatColorContent(feedHolder.tv_content,feed.data.content);
@@ -191,7 +203,10 @@ public class BaseFeedHandler {
             feedHolder.v_line.setVisibility(View.GONE);
         }
 
-
+        if(feed.data.user.id.equals(Global.USER_ID+""))
+        {
+            feedHolder.rl_agree.setVisibility(View.GONE);
+        }
 
 
 
@@ -370,7 +385,7 @@ public class BaseFeedHandler {
 
     public static  void setFeedCommonClick(Context context ,Feed2 feed, BaseFeedFragment.FeedHolder feedHolder) {
         if (feedHolder.rl_agree.getVisibility() == View.VISIBLE) {
-            feedHolder.iv_agree.setOnClickListener(new ArgeeOnClickController(context, true, feed.feedable_type, feed.feedable_id, feedHolder.tv_agreecount));
+            feedHolder.iv_agree.setOnClickListener(new ArgeeOnClickController(context, feed, feedHolder.tv_agreecount));
         }
     }
 

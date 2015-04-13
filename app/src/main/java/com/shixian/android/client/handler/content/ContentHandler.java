@@ -32,18 +32,13 @@ public class ContentHandler {
 
     private TextView content;
 
-//    private static Pattern urlPattern = Pattern
-//            .compile("(http://|ftp://|https://|www){0,1}[^\u4e00-\u9fa5\\s]*?\\.(com|net|cn|me|tw|fr)[^\u4e00-\u9fa5\\s]*");
 
-//    private static final Pattern URLPATTERN = Pattern
-//            .compile("((http://|ftp://|https://|www.){0,1}[0-9A-Za-z]*?\\.(com|net|cn|me|tw|fr)[^\u4e00-\u9fa5\\s]*)|@(.)*\\s");
-
+    //\&%_\./-~-]*)?
 
     private static final Pattern URLPATTERN = Pattern
-            .compile("((http://|https://|ftp://){0,1}(([0-9a-zA-Z]+\\.)+(com|net|cn|me|tw|fr|tk|edu)[0-9a-zA-Z/\\.]*))|@[^\\s]+\\s");
+            .compile("((http://|https://|ftp://){0,1}(([0-9a-zA-Z]+\\.)+(com|net|cn|me|tw|fr|tk|edu|io)[0-9a-zA-Z/\\._%\\?&=\\-#]*))|@[^\\s]+\\s");
 
 
-    //   Pattern urlPattern = Pattern.compile("^(https|http|www|ftp|)?(://)?(\\w+(-\\w+)*)(\\.(\\w+(-\\w+)*))*((:\\d+)?)(/(\\w+(-\\w+)*))*(\\.?(\\w)*)(\\?)?(((\\w*%)*(\\w*\\?)*(\\w*:)*(\\w*\\+)*(\\w*\\.)*(\\w*&)*(\\w*-)*(\\w*=)*(\\w*%)*(\\w*\\?)*(\\w*:)*(\\w*\\+)*(\\w*\\.)*(\\w*&)*(\\w*-)*(\\w*=)*)*(\\w*)*)$",Pattern.CASE_INSENSITIVE );
     public ContentHandler(TextView tv) {
         this.content = tv;
 
@@ -87,7 +82,6 @@ public class ContentHandler {
     }
 
 
-    private boolean hasSpan=false;
 
     public void formatColorContent(TextView tv,String s)
     {
@@ -99,29 +93,13 @@ public class ContentHandler {
         SpannableString spannableString=new SpannableString(s);
         Matcher urlMatcher= URLPATTERN.matcher(s);
 
-//        int start=0;
 
         while (urlMatcher.find())
         {
-
             URLSpan span=new CosmterUrlSpan(urlMatcher.group(),URLCOLOR);
             spannableString.setSpan(span,urlMatcher.start(),urlMatcher.end(),Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-
-//            MyOnclickSpan onclickSpan=new MyOnclickSpan();
-
-//            spannableString.setSpan(onclickSpan,start,urlMatcher.start(),Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-
-//            start=urlMatcher.end();
-//            hasSpan=true;
         }
 
-
-//        if(!hasSpan)
-//        {
-//            MyOnclickSpan onclickSpan=new MyOnclickSpan();
-//            spannableString.setSpan(onclickSpan,0,s.length()-1,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-//
-//        }
 
         tv.setText(spannableString);
 

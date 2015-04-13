@@ -54,9 +54,9 @@ public class MyUserIndexFragment extends BaseFeedFragment {
 
 
     protected void initCacheData() {
-        firstPageDate = SharedPerenceUtil.getUserIndexFeed(context, user.id);
+        firstPageDate = SharedPerenceUtil.getUserIndexFeed(context.getApplicationContext(), user.id);
 
-        String userInfo = SharedPerenceUtil.getUserIndexInfo(context, user.id);
+        String userInfo = SharedPerenceUtil.getUserIndexInfo(context.getApplicationContext(), user.id);
         if (!TextUtils.isEmpty(userInfo))
             user = new Gson().fromJson(userInfo, User.class);
         feedList = JsonUtils.ParseFeeds(firstPageDate);
@@ -200,7 +200,6 @@ public class MyUserIndexFragment extends BaseFeedFragment {
                             feedList = JsonUtils.ParseFeeds(firstPageDate);
                             pullToRefreshListView.onPullDownRefreshComplete();
 
-                            SharedPerenceUtil.putUserIndexFeed(context, firstPageDate, user.id);
 
                             context.runOnUiThread(new Runnable() {
                                 @Override
@@ -218,7 +217,7 @@ public class MyUserIndexFragment extends BaseFeedFragment {
                                     context.dissProgress();
                                 }
                             });
-
+                            SharedPerenceUtil.putUserIndexFeed(context.getApplicationContext(), firstPageDate, user.id);
 
                         }
                     }.start();
@@ -262,8 +261,6 @@ public class MyUserIndexFragment extends BaseFeedFragment {
                     User user = gson.fromJson(userinfo, User.class);
                     MyUserIndexFragment.this.user = user;
 
-                    //保存userinfo
-                    SharedPerenceUtil.putUserIndexInfo(context, userinfo, user.id + "");
 
                     if (adapter == null) {
                         adapter = new UserIndexFeedAdapte();
@@ -271,6 +268,9 @@ public class MyUserIndexFragment extends BaseFeedFragment {
                     } else {
                         adapter.notifyDataSetChanged();
                     }
+                    //保存userinfo
+                    SharedPerenceUtil.putUserIndexInfo(context.getApplicationContext(), userinfo, user.id + "");
+
                 }
             }
 
@@ -607,7 +607,7 @@ public class MyUserIndexFragment extends BaseFeedFragment {
 
     public void logout()
     {
-        SharedPerenceUtil.clearAllData(context);
+        SharedPerenceUtil.clearAllData(context.getApplicationContext());
         AccessTokenKeeper.clear(context);
         Intent intent=new Intent(context,LoginActivity.class);
         startActivity(intent);

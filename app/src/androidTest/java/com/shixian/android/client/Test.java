@@ -8,13 +8,17 @@ import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.contants.AppContants;
+import com.shixian.android.client.engine.BootEngine;
 import com.shixian.android.client.engine.ProjectEngine;
 import com.shixian.android.client.handler.content.ContentHandler;
+import com.shixian.android.client.model.BaseBoot;
 import com.shixian.android.client.sina.WeiBoUtils;
 import com.shixian.android.client.utils.ApiUtils;
+import com.shixian.android.client.utils.JsonUtils;
 
 import org.apache.http.Header;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,24 +28,7 @@ import java.util.regex.Pattern;
 public class Test extends InstrumentationTestCase {
 
 
-    public void testAddIdea()
-    {
 
-            ProjectEngine.addIdea("17", "你好周星驰", new AsyncHttpResponseHandler() {
-                @Override
-                public void onSuccess(int position, Header[] headers, byte[] bytes) {
-
-                    Log.i("AAAA", new String(bytes) + "success");
-
-                }
-
-                @Override
-                public void onFailure(int position, Header[] headers, byte[] bytes, Throwable throwable) {
-                    Log.i("AAAA", new String(bytes) + "+ fo");
-                }
-            });
-
-    }
 
 
     public void testpostxxx()
@@ -60,19 +47,7 @@ public class Test extends InstrumentationTestCase {
 
 
 
-        ApiUtils.get(AppContants.INDEX_URL, null, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int position, Header[] headers, byte[] bytes) {
 
-                Log.i("AAAA", new String(bytes));
-
-            }
-
-            @Override
-            public void onFailure(int position, Header[] headers, byte[] bytes, Throwable throwable) {
-                Log.i("AAAA", new String(bytes));
-            }
-        });
     }
 
     public void testSendMessage()
@@ -99,6 +74,29 @@ public class Test extends InstrumentationTestCase {
             Log.i("AAAA",text);
         }
 
+    }
+
+
+    public void testBoot()
+    {
+        BootEngine.getBootFeed(getInstrumentation().getContext(),new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, Header[] headers, byte[] bytes) {
+
+                Log.i("AAAA",new String(bytes));
+
+                List<BaseBoot> boots= JsonUtils.parseBoots(new String(bytes));
+
+
+                System.out.print("xxxxx");
+            }
+
+            @Override
+            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+
+                Log.i("AAAA",new String(bytes));
+            }
+        });
     }
 
 }

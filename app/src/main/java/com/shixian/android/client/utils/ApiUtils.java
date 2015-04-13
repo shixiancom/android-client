@@ -13,6 +13,7 @@ import com.loopj.android.http.RequestParams;
 public class ApiUtils {
 
     public static AsyncHttpClient client=new AsyncHttpClient();
+    public static PersistentCookieStore cookieStore;
 
 
 
@@ -22,7 +23,14 @@ public class ApiUtils {
 
         if(client==null) {
             client = new AsyncHttpClient();
-            PersistentCookieStore cookieStore=new PersistentCookieStore(context);
+            cookieStore=new PersistentCookieStore(context);
+            client.setCookieStore(cookieStore);
+        }
+
+
+        if(cookieStore==null)
+        {
+            cookieStore=new PersistentCookieStore(context);
             client.setCookieStore(cookieStore);
         }
 

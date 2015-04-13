@@ -57,7 +57,7 @@ public class AddIdeaActivity  extends UmengActivity {
 
         et_content= (EditText) findViewById(R.id.et_comment);
 
-        et_content.setText(SharedPerenceUtil.getEditIdea(this,projectid));
+        et_content.setText(SharedPerenceUtil.getEditIdea(this.getApplicationContext(),projectid));
 
 
 
@@ -151,7 +151,7 @@ public class AddIdeaActivity  extends UmengActivity {
 
 
                             setResult(Activity.RESULT_OK);
-                            SharedPerenceUtil.putEditHasEdit(AddIdeaActivity.this,false,projectid);
+                            SharedPerenceUtil.putEditHasEdit(AddIdeaActivity.this.getApplicationContext(),false,projectid);
                             finish();
 
                         }
@@ -181,14 +181,14 @@ public class AddIdeaActivity  extends UmengActivity {
         if(et_content.getText().toString().isEmpty())
         {
             finish();
-            SharedPerenceUtil.clearIdeaEdit(this,projectid);
+            SharedPerenceUtil.clearIdeaEdit(this.getApplicationContext(),projectid);
         }else{
 
            final  DialgoFragment dialgoFragment=new DialgoFragment("您要放弃发表？","发表想法","确定","取消",new DialogInterface.OnClickListener() {
                @Override
                public void onClick(DialogInterface dialog, int which) {
 
-                   SharedPerenceUtil.putEditIdea(AddIdeaActivity.this, projectid, et_content.getText().toString());
+                   SharedPerenceUtil.putEditIdea(AddIdeaActivity.this.getApplicationContext(), projectid, et_content.getText().toString());
                    setResult(ProjectActivity.RESULT_NOSEND);
                    finish();
                }},null);

@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.MainActivity;
@@ -18,7 +17,6 @@ import com.shixian.android.client.handler.feed.BaseFeedHandler;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.feeddate.BaseFeed;
-import com.shixian.android.client.utils.ApiUtils;
 import com.shixian.android.client.utils.CommonUtil;
 import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
@@ -41,7 +39,7 @@ public class IndexFragment extends BaseFeedFragment {
 
     protected void initCacheData() {
 
-        firstPageDate = SharedPerenceUtil.getIndexFeed(context);
+        firstPageDate = SharedPerenceUtil.getIndexFeed(context.getApplicationContext());
         feedList = JsonUtils.ParseFeeds(firstPageDate);
         if (adapter == null) {
             adapter = new FeedAdapter();
@@ -104,9 +102,6 @@ public class IndexFragment extends BaseFeedFragment {
                             feedList = JsonUtils.ParseFeeds(firstPageDate);
 
 
-                            SharedPerenceUtil.putIndexFeed(context, firstPageDate);
-
-
                             //保存数据到本地
                             page = 1;
 
@@ -130,6 +125,9 @@ public class IndexFragment extends BaseFeedFragment {
                             });
 
 
+                            SharedPerenceUtil.putIndexFeed(context.getApplicationContext(), firstPageDate);
+
+
                         }
                     }.start();
 
@@ -143,12 +141,6 @@ public class IndexFragment extends BaseFeedFragment {
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
-              AsyncHttpClient client= ApiUtils.client;
-
-                if(new String(bytes)!=null)
-                {
-                    Toast.makeText(context,new String(bytes),Toast.LENGTH_SHORT).show();
-                }else
 
                 Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
                 pullToRefreshListView.onPullDownRefreshComplete();

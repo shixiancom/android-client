@@ -91,6 +91,8 @@ public interface AppContants {
 
 
 
+    String BOOT_URL=DOMAIN+"/api/v1/boot/featured_boot_projects";
+
 
 
 

@@ -5,6 +5,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.shixian.android.client.activities.fragment.MsgDetialFragment;
 import com.shixian.android.client.contants.AppContants;
+import com.shixian.android.client.model.BaseBoot;
+import com.shixian.android.client.model.Boot;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.News;
@@ -46,6 +48,39 @@ public class JsonUtils {
         return getString(obj, key, null);
     }
 
+
+    /**
+     *
+     * @param json
+     * @return
+     */
+    public  static List<BaseBoot> parseBoots(String json)
+    {
+        List<BaseBoot> boots=new ArrayList<>();
+        Gson gson=new Gson();
+
+        try {
+            JSONObject jsonObject=new JSONObject(json);
+            String data = jsonObject.getString("data");
+            JSONArray jsonArrayrray = new JSONArray(data);
+
+            for(int i=0;i<jsonArrayrray.length();i++)
+            {
+                JSONObject jobj = jsonArrayrray.getJSONObject(i);
+                Boot boot=gson.fromJson(jobj.toString(), Boot.class);
+                boots.add(boot);
+            }
+
+            boots.add(0,new BaseBoot());
+            boots.add(4,new BaseBoot());
+            boots.add(8,new BaseBoot());
+
+        } catch (JSONException e) {
+
+        }
+
+        return  boots;
+    }
 
     /**
      * 解析feed的工具方法
@@ -174,10 +209,7 @@ public class JsonUtils {
             for(int j=0;j<jsonArray.length();j++)
             {
                 News news=gson.fromJson(jsonArray.getString(j),News.class);
-                if("Agreement".equals(news.notifiable_type))
-                {
-                    continue;
-                }
+
                 newses.add(news);
 
             }
@@ -269,4 +301,6 @@ public class JsonUtils {
 
         return entry;
     }
+
+
 }

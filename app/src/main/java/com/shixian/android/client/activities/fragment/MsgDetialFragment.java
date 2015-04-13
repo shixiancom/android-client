@@ -1,10 +1,12 @@
 package com.shixian.android.client.activities.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -186,7 +188,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
     protected void initCacheData() {
 
-        firstPageDate= SharedPerenceUtil.getIndexFeed(context);
+        firstPageDate= SharedPerenceUtil.getIndexFeed(context.getApplicationContext());
         feedEntry = JsonUtils.parseAllItemType(firstPageDate, msgType);
         if (adapter == null) {
             adapter = new FeedAdapter();
@@ -230,6 +232,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
         context.showProgress();
 
 
+        Log.i("AAAA",msgType.url);
 
         ApiUtils.get(context,msgType.url, null, new AsyncHttpResponseHandler() {
             @Override
@@ -527,6 +530,8 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
 
 
+
+
                             switch (switchOpt) {
                                 case "Idea":
                                     type = context.getResources().getString(R.string.feed_add_idea);
@@ -633,7 +638,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
                             setAllItemCommonClickListener(context, holder, allItemType);
 
-                            setFeedCommonClick(switchOpt,allItemType.id,holder);
+//                            setFeedCommonClick(context,allItemType,holder);
 
 
                         }
@@ -718,7 +723,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
                     //设置点击事件
                     setFeedOnClickListener(context,commentHolder,comment);
-
                     break;
 
 
@@ -729,22 +733,13 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
             return view;
 
-
-
-
-
-
-
-
-
         }
     }
 
-    public void setFeedCommonClick(String type,String id,BaseFeedFragment.FeedHolder feedHolder)
-    {
-        if(feedHolder.rl_agree.getVisibility()==View.VISIBLE)
-        {
-            feedHolder.iv_agree.setOnClickListener(new ArgeeOnClickController(context,true,type, id,feedHolder.tv_agreecount));
+
+    public static  void setFeedCommonClick(Context context ,MsgType msgType, BaseFeedFragment.FeedHolder feedHolder) {
+        if (feedHolder.rl_agree.getVisibility() == View.VISIBLE) {
+           // feedHolder.iv_agree.setOnClickListener(new ArgeeOnClickController(context, msgType, feedHolder.tv_agreecount));
         }
     }
 
@@ -768,9 +763,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
         IndexOnClickController controller=new IndexOnClickController(context,baseFeed);
         holder.iv_icon.setOnClickListener(controller);
         holder.tv_name.setOnClickListener(controller);
-
-
-
 
         if(holder.tv_content.getVisibility()==View.VISIBLE)
         {
@@ -1054,6 +1046,16 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
             this.notifiable_type=news.notifiable_type;
             this.notifiable_id=news.notifiable_id;
 
+
+            if("new_agreement".equals(news.noti_type))
+            {
+                this.notifiable_type=news.data.notifiable_type;
+                this.notifiable_id=news.data.id;
+                this.notifiable_type =this.notifiable_type.replaceFirst(this.notifiable_type.substring(0, 1), this.notifiable_type.substring(0, 1).toUpperCase())  ;
+
+
+            }
+
             url=String.format(AppContants.MSG_RESOPNSE_URL,notifiable_type.toLowerCase()+"s",notifiable_id);
             if("UserProjectRelation".equals(notifiable_type))
             {
@@ -1070,6 +1072,8 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                     url=String.format(AppContants.MSG_RESOPNSE_URL,"user_project_relations",commentable_id);
                 }
             }
+
+
 
         }
     }

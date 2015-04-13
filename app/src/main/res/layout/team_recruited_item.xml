@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+<LinearLayout
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/spotlight_shape"
+    >
+
+    <LinearLayout
+        android:clickable="true"
+        android:focusable="true"
+        android:id="@+id/ll_project"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <com.shixian.android.client.views.FontTextView
+        android:singleLine="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_title"
+        android:layout_marginLeft="@dimen/global_left"
+        android:layout_marginRight="@dimen/global_right"
+        android:layout_marginTop="16dp"
+        android:ellipsize="end"
+        android:textSize="20sp"
+
+        />
+
+
+    <com.shixian.android.client.views.FontTextView
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_content"
+        android:layout_marginLeft="@dimen/global_left"
+        android:layout_marginRight="@dimen/global_right"
+        android:maxLines="12"
+        android:lineSpacingMultiplier="1.3"
+        android:textSize="14sp"
+        android:ellipsize="end"
+        />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_user"
+        android:focusable="true"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <ImageView
+            android:layout_marginTop="16sp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/iv_icon"
+            android:layout_marginLeft="@dimen/global_left"
+            android:src="@drawable/default_icon"
+            />
+
+        <com.shixian.android.client.views.FontTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:id="@+id/tv_name"
+            android:text="hello"
+            android:layout_alignTop="@id/iv_icon"
+            android:layout_marginLeft="@dimen/global_left"
+            android:layout_toRightOf="@id/iv_icon"
+            android:layout_marginRight="@dimen/global_right"
+            android:textSize="16sp"
+            />
+
+        <com.shixian.android.client.views.FontTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_name"
+            android:layout_toRightOf="@id/tv_name"
+            android:text="xxxxxxxxxxxxxxxxxx\nxcxcasdads"
+            android:id="@+id/tv_userdescription"
+            android:layout_alignLeft="@id/tv_name"
+            android:layout_marginTop="5dp"
+            android:singleLine="true"
+            android:textSize="14sp"
+            android:textColor="#777777"
+            />
+        </RelativeLayout>
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_position"
+        android:orientation="vertical"
+        >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#E5E5E5"
+            android:layout_marginTop="@dimen/main_content_top"
+            />
+
+    <com.shixian.android.client.views.FontTextView
+        android:textSize="14sp"
+        android:layout_marginLeft="@dimen/global_left"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="空缺职位"
+        android:textColor="@color/gray_textcolor"
+        android:layout_marginBottom="8dp"
+        />
+
+
+    <com.shixian.android.client.views.FontTextView
+        android:layout_marginLeft="@dimen/global_left"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_vacancy"
+        android:lineSpacingMultiplier="1.3"
+        android:layout_marginRight="@dimen/global_right"
+        />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
+
+<View
+android:layout_width="match_parent"
+android:layout_height="20dp"
+android:background="@color/gray_bk"/>
+
+</LinearLayout>

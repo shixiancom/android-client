@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:background="@color/gray_bk"
+    >
+
+    <com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView
+        android:id="@+id/lv_index"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/gray_bk"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        >
+
+        </com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView>
+
+</LinearLayout>

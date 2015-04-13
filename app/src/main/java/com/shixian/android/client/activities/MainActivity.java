@@ -16,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -40,6 +41,7 @@ import com.shixian.android.client.activities.fragment.DiscoryProjectFragment;
 import com.shixian.android.client.activities.fragment.IndexFragment;
 import com.shixian.android.client.activities.fragment.MyUserIndexFragment;
 import com.shixian.android.client.activities.fragment.NewsFragment;
+import com.shixian.android.client.activities.fragment.SpotlightFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
@@ -123,7 +125,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout ll_descory;
     private LinearLayout ll_index;
     private RelativeLayout ll_msg;
-    private LinearLayout ll_addproject;
+ //   private LinearLayout ll_addproject;
     private LinearLayout ll_spotlight;
 
     //用于记录 当前属于哪个
@@ -138,6 +140,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private TextView toastView;
 
     private TextView tv_caogao;
+
+    private RelativeLayout rl_title;
 
     /**
      * Toast 的Params
@@ -176,7 +180,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private void checkUpdate() {
 
-        if(SharedPerenceUtil.checkNeedUpdate(this))
+        if(SharedPerenceUtil.checkNeedUpdate(this.getApplicationContext()))
         {
 
 
@@ -264,7 +268,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if(projectList==null)
             projectList = new ArrayList<>();
 
-        myProjectjson = SharedPerenceUtil.getMyProject(this);
+        myProjectjson = SharedPerenceUtil.getMyProject(this.getApplicationContext());
 
         //获取用户项目
         ApiUtils.get(MainActivity.this,AppContants.URL_MY_PROJECT_INFO, null, new AsyncHttpResponseHandler() {
@@ -293,7 +297,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                             projectList.add(sp);
 
-                            SharedPerenceUtil.putMyProject(MainActivity.this, myProjectjson);
+                            SharedPerenceUtil.putMyProject(MainActivity.this.getApplicationContext(), myProjectjson);
 
                             if (projectAdapter == null) {
                                 projectAdapter = new MenuAdapter();
@@ -330,7 +334,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      * 初始化左侧抽屉user 信息
      */
     private void initUserInfo() {
-        userInfo = SharedPerenceUtil.getUserInfo(this);
+        userInfo = SharedPerenceUtil.getUserInfo(this.getApplicationContext());
 
         CommonEngine.getMyUserInfo(MainActivity.this,new AsyncHttpResponseHandler() {
             @Override
@@ -350,12 +354,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
                     //发送推送需要的信息
-                    sendJpushData();
+                    sendJpushData(true);
 
                     if(!TextUtils.isEmpty(user.username))
                      tv_uname.setText(user.username);
 
-                    SharedPerenceUtil.putUserInfo(MainActivity.this, userInfo);
+                    SharedPerenceUtil.putUserInfo(MainActivity.this.getApplicationContext(), userInfo);
 
                     //异步下载图片(头像)
                     ApiUtils.get(MainActivity.this,AppContants.DOMAIN + user.avatar.small.url, null, new AsyncHttpResponseHandler() {
@@ -406,6 +410,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         Global.iv_conte_size = DisplayUtil.dip2px(this, 200);
 
+        rl_title= (RelativeLayout) findViewById(R.id.rl_title);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -445,12 +450,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     toastView.setVisibility(View.GONE);
                 }
 
-                if(((MyApplication)getApplication()).getHasCaogao())
+
+                if(lv_menu.getFirstVisiblePosition()==0)
                 {
-                    tv_caogao.setVisibility(View.VISIBLE);
-                }else{
-                    tv_caogao.setVisibility(View.GONE);
+                    if(((MyApplication)getApplication()).getHasCaogao())
+                    {
+                        if(tv_caogao!=null)
+                        tv_caogao.setVisibility(View.VISIBLE);
+                    }else{
+
+                        if(tv_caogao!=null)
+                        tv_caogao.setVisibility(View.GONE);
+                    }
+
                 }
+
 
 
                 super.onDrawerOpened(drawerView);
@@ -497,13 +511,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                SimpleProject project = projectList.get(position);
-                if (project != null) {
-                    Intent intent = new Intent(MainActivity.this, ProjectActivity.class);
-                    intent.putExtra("project_id", project.getId() + "");
-                    MainActivity.this.startActivity(intent);
+                if(position==0)
+                {
+                    Intent intent=new Intent(MainActivity.this,NewProjectActivity.class);
 
+                    startActivityForResult(intent,REFREST_CODE);
+                }else{
+                    SimpleProject project = projectList.get(position);
+                    if (project != null) {
+                        Intent intent = new Intent(MainActivity.this, ProjectActivity.class);
+                        intent.putExtra("project_id", project.getId() + "");
+                        MainActivity.this.startActivity(intent);
+
+                    }
                 }
+
 
             }
         });
@@ -514,14 +536,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         ll_descory = (LinearLayout) findViewById(R.id.ll_descory);
         ll_msg = (RelativeLayout) findViewById(R.id.ll_msg);
         ll_index = (LinearLayout) findViewById(R.id.ll_index);
-        ll_addproject= (LinearLayout) findViewById(R.id.ll_addproject);
+    //    ll_addproject= (LinearLayout) findViewById(R.id.ll_addproject);
         ll_spotlight= (LinearLayout) findViewById(R.id.ll_spotlight);
 
 
         ll_descory.setOnClickListener(this);
         ll_msg.setOnClickListener(this);
         ll_index.setOnClickListener(this);
-        ll_addproject.setOnClickListener(this);
+   //     ll_addproject.setOnClickListener(this);
         ll_spotlight.setOnClickListener(this);
 
 
@@ -534,6 +556,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         ll_left.getLayoutParams().width = Global.screenWidth - actionBarHeight;
 
+  //      rl_title.getLayoutParams().height= actionBarHeight;
 
         //现实消息
         // showMsg(5);
@@ -572,13 +595,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
 
-        tv_caogao= (TextView) findViewById(R.id.tv_caogao);
-        if(((MyApplication)getApplication()).getHasCaogao())
-        {
-            tv_caogao.setVisibility(View.VISIBLE);
-        }else{
-            tv_caogao.setVisibility(View.GONE);
-        }
 
 
     }
@@ -649,23 +665,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 isIndex = false;
 
                 break;
-            case R.id.ll_addproject:
-                //这里有一个问题 要不要发表完成要不要刷新界面 我 目前让它刷新
-                Intent intent=new Intent(this,NewProjectActivity.class);
-
-                startActivityForResult(intent,REFREST_CODE);
-
-                break;
 
             //本周启动
             case R.id.ll_spotlight:
 
-                if (currentFeed instanceof NewsFragment) {
+                if (currentFeed instanceof SpotlightFragment) {
                     drawerLayout.closeDrawers();
                     return;
                 }
 
-                switchFragment(new NewsFragment(), "ll_msg");
+                switchFragment(new SpotlightFragment(), "ll_spotlight");
                 isIndex = false;
                 break;
 
@@ -673,6 +682,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
+
+    @Override
+    public void finish() {
+
+        sendJpushData(false);
+        super.finish();
+    }
+
+    private static  final int TYPE_CREATE_PROJECT=0;
+    private static final int TYPE_PROJECT_ITEM=1;
 
     private class MenuAdapter extends BaseAdapter {
 
@@ -692,29 +711,72 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
 
         @Override
+        public int getViewTypeCount() {
+            return 2;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if(position==0)
+             return TYPE_CREATE_PROJECT;
+            return TYPE_PROJECT_ITEM;
+        }
+
+        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            View view;
-            ProjectHolder holder;
-            if (convertView == null) {
-                view = View.inflate(MainActivity.this, R.layout.lv_project_item, null);
-                holder = new ProjectHolder();
-                holder.tv_title = (TextView) view.findViewById(R.id.tv_title);
-                holder.iv_sit = (ImageView) view.findViewById(R.id.iv_sit);
+            View view=null;
+            switch (getItemViewType(position))
+            {
+                case TYPE_CREATE_PROJECT:
 
-                view.setTag(holder);
+                    view=View.inflate(MainActivity.this,R.layout.create_project_item,null);
+                    LinearLayout ll_addproject= (LinearLayout) view.findViewById(R.id.ll_addproject);
 
-            } else {
-                view = convertView;
-                holder = (ProjectHolder) view.getTag();
+                    tv_caogao= (TextView) view.findViewById(R.id.tv_caogao);
+                    if(((MyApplication)getApplication()).getHasCaogao())
+                    {
+                        tv_caogao.setVisibility(View.VISIBLE);
+                    }else{
+                        tv_caogao.setVisibility(View.GONE);
+                    }
+
+
+
+
+                    break;
+
+                case TYPE_PROJECT_ITEM:
+
+                    ProjectHolder holder;
+                    if (convertView == null) {
+                        view = View.inflate(MainActivity.this, R.layout.lv_project_item, null);
+                        holder = new ProjectHolder();
+                        holder.tv_title = (TextView) view.findViewById(R.id.tv_title);
+                        holder.iv_sit = (ImageView) view.findViewById(R.id.iv_sit);
+
+                        view.setTag(holder);
+
+                    } else {
+                        view = convertView;
+                        holder = (ProjectHolder) view.getTag();
+                    }
+
+
+                    holder.iv_sit.setAlpha(0.54f);
+
+                    holder.tv_title.setText(projectList.get(position).getTitle());
+
+                    break;
+
+
             }
 
 
-            holder.iv_sit.setAlpha(0.54f);
-
-            holder.tv_title.setText(projectList.get(position).getTitle());
-
             return view;
+
+
+
         }
     }
 
@@ -927,12 +989,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     /**
      * 发送极光推送信息
      */
-    private void sendJpushData() {
+    private void sendJpushData(boolean isInit) {
 
         String regId = JPushInterface.getRegistrationID(this);
         RequestParams params = new RequestParams();
         params.put("reg_id", regId);
-        params.put("uid", Global.USER_ID);
+        if(isInit)
+            params.put("uid", Global.USER_ID);
         params.put("device", CommonUtil.getImei(this, ""));
 
 
@@ -944,8 +1007,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void onFailure(int position, Header[] headers, byte[] bytes, Throwable throwable) {
-
-
             }
         });
 
@@ -976,6 +1037,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         //     initMsgStatus();
+   //     hideReponse();
 
     }
 
