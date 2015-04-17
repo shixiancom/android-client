@@ -39,6 +39,8 @@ import org.apache.http.Header;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jpush.android.api.JPushInterface;
+
 /**
  * Created by doom on 15/2/8.
  */
@@ -195,12 +197,13 @@ public class NewsFragment extends AbsListViewBaseFragment
                     new Thread(){
                         public  void run()
                         {
-                            newsList= JsonUtils.parseNews(temp);
+                            final List<News> tempList= JsonUtils.parseNews(temp);
 
 
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    newsList=tempList;
                                     if(adapter==null)
                                     {
                                         adapter=new NewsAdapter();
@@ -219,8 +222,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     }
 
                                     ((MainActivity)context).hideMsg();
-
-
+                                    JPushInterface.clearAllNotifications(context);
 
                                 }
                             });
@@ -406,7 +408,7 @@ public class NewsFragment extends AbsListViewBaseFragment
 
                     //头像图片处理
 
-                    ImageLoader.getInstance().displayImage(AppContants.DOMAIN + news.user.avatar.small.url, holder.iv_icon, feedOptions, animateFirstListener);
+                    ImageLoader.getInstance().displayImage(AppContants.ASSET_DOMAIN + news.user.avatar.small.url, holder.iv_icon, feedOptions, animateFirstListener);
 
 
                     ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
@@ -472,8 +474,8 @@ public class NewsFragment extends AbsListViewBaseFragment
                             holder.tv_project.setText(news.project.getTitle());
                             holder.tv_name.setText(news.user.username);
                             holder.tv_type.setText(Html.fromHtml(getResources().getString(R.string.new_reply)));
-                           // holder.tv_content.setText(news.data.content);
-                            contentHandler.formatColorContent(holder.tv_content,news.data.content);
+                           holder.tv_content.setText(news.data.content);
+//                            contentHandler.formatColorContent(holder.tv_content,news.data.content);
                             break;
                         case "new_entity":
 
@@ -488,8 +490,8 @@ public class NewsFragment extends AbsListViewBaseFragment
 
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(R.string.attachment);
-                                   // holder.tv_content.setText(news.data.content);
-                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
+                                   holder.tv_content.setText(news.data.content);
+//                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
 
                                     break;
                                 case "Homework":
@@ -497,8 +499,8 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_project.setText(project);
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(R.string.new_homework);
-                                   // holder.tv_content.setText(news.data.content);
-                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
+                                   holder.tv_content.setText(news.data.content);
+//                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
 
                                     break;
                                 case "Idea":
@@ -506,8 +508,8 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_project.setText(project);
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(R.string.new_idea);
-                                  //  holder.tv_content.setText(news.data.content);
-                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
+                                    holder.tv_content.setText(news.data.content);
+//                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
                                     break;
 
                                 case "Image":
@@ -516,8 +518,8 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_project.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(R.string.new_image);
-                                   // holder.tv_content.setText(news.data.content);
-                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
+                                   holder.tv_content.setText(news.data.content);
+//                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
                                     break;
                                 case "Plan":
                                     holder.tv_content.setVisibility(View.VISIBLE);
@@ -526,16 +528,16 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_type.setText(R.string.new_plan);
                                     holder.tv_project.setText(project);
                                     if (news.data != null)
-                                       // holder.tv_content.setText(news.data.content);
-                                        contentHandler.formatColorContent(holder.tv_content,news.data.content);
+                                       holder.tv_content.setText(news.data.content);
+//                                        contentHandler.formatColorContent(holder.tv_content,news.data.content);
                                     break;
                                 case "Vote":
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_project.setText(news.project.getTitle());
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(R.string.new_vote);
-//                                    holder.tv_content.setText(news.data.content);
-                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
+                                    holder.tv_content.setText(news.data.content);
+//                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
                                     break;
 
                                 case "Task":
@@ -543,8 +545,8 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_project.setText(news.project.getTitle());
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(R.string.new_task1);
-//                                    holder.tv_content.setText(news.data.content);
-                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
+                                    holder.tv_content.setText(news.data.content);
+//                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
                                     break;
 
 
@@ -573,8 +575,8 @@ public class NewsFragment extends AbsListViewBaseFragment
                             holder.tv_project.setText(news.project.getTitle());
                             holder.tv_name.setText(news.user.username);
                             holder.tv_type.setText(R.string.compele_task);
-//                            holder.tv_content.setText(news.data.content);
-                            contentHandler.formatColorContent(holder.tv_content,news.data.content);
+                            holder.tv_content.setText(news.data.content);
+//                            contentHandler.formatColorContent(holder.tv_content,news.data.content);
                             break;
                         case "new_mention":
 
@@ -584,8 +586,8 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(R.string.new_mention);
-//                                    holder.tv_content.setText(news.data.content);
-                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
+                                    holder.tv_content.setText(news.data.content);
+//                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
 
                                     break;
                                 case "Comment":
@@ -594,8 +596,8 @@ public class NewsFragment extends AbsListViewBaseFragment
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
                                     holder.tv_type.setText(R.string.new_mention);
-//                                    holder.tv_content.setText(news.data.content);
-                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
+                                    holder.tv_content.setText(news.data.content);
+//                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
                                     break;
 
                                 case "Homework":
@@ -603,9 +605,9 @@ public class NewsFragment extends AbsListViewBaseFragment
 
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
-//                                    holder.tv_content.setText(news.data.content);
+                                    holder.tv_content.setText(news.data.content);
                                     holder.tv_type.setText(R.string.new_mention);
-                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
+//                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
                                     break;
 
                                 case "Idea":
@@ -613,8 +615,8 @@ public class NewsFragment extends AbsListViewBaseFragment
 
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
-//                                    holder.tv_content.setText(news.data.content);
-                                    holder.tv_type.setText(R.string.new_mention);
+                                    holder.tv_content.setText(news.data.content);
+//                                    holder.tv_type.setText(R.string.new_mention);
                                     contentHandler.formatColorContent(holder.tv_content,news.data.content);
                                     break;
 
@@ -623,9 +625,9 @@ public class NewsFragment extends AbsListViewBaseFragment
 
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
-//                                    holder.tv_content.setText(news.data.content);
+                                    holder.tv_content.setText(news.data.content);
                                     holder.tv_type.setText(R.string.new_mention);
-                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
+//                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
                                     break;
 
                                 case "task":
@@ -633,9 +635,9 @@ public class NewsFragment extends AbsListViewBaseFragment
 
                                     holder.tv_content.setVisibility(View.VISIBLE);
                                     holder.tv_name.setText(news.user.username);
-//                                    holder.tv_content.setText(news.data.content);
+                                    holder.tv_content.setText(news.data.content);
                                     holder.tv_type.setText(R.string.new_mention);
-                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
+//                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
                                     break;
 
                             }
@@ -649,8 +651,8 @@ public class NewsFragment extends AbsListViewBaseFragment
                             holder.tv_content.setVisibility(View.VISIBLE);
                             holder.tv_name.setText(news.user.username);
                             holder.tv_type.setText(R.string.reply_you);
-//                            holder.tv_content.setText(news.data.content);
-                            contentHandler.formatColorContent(holder.tv_content,news.data.content);
+                            holder.tv_content.setText(news.data.content);
+//                            contentHandler.formatColorContent(holder.tv_content,news.data.content);
 
 
                             break;
@@ -663,8 +665,8 @@ public class NewsFragment extends AbsListViewBaseFragment
                             holder.tv_name.setText(news.user.username);
                             holder.tv_type.setText(R.string.give_task);
 
-//                            holder.tv_content.setText(news.data.content);
-                            contentHandler.formatColorContent(holder.tv_content,news.data.content);
+                            holder.tv_content.setText(news.data.content);
+//                            contentHandler.formatColorContent(holder.tv_content,news.data.content);
                             holder.tv_project.setText(news.project.getTitle());
                             break;
 

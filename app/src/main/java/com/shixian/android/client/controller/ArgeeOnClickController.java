@@ -71,23 +71,25 @@ public class ArgeeOnClickController implements View.OnClickListener {
                 @Override
                 public void onSuccess(int i, Header[] headers, byte[] bytes) {
 
-
                     try {
                         JSONObject jsonObject=new JSONObject(new String(bytes));
-                        if("ok".equals(jsonObject.getString("message")))
-                        {
 
-                            tv_argeecount.setText(jsonObject.getString("count"));
-                            if(isAgree)
-                                ((ImageView)v).setImageResource(R.drawable.like);
-                            else
-                                ((ImageView)v).setImageResource(R.drawable.liked);
+
+                            tv_argeecount.setText(jsonObject.getString("agreement_count"));
+                            if(isAgree) {
+                                ((ImageView) v).setImageResource(R.drawable.liked);
+                                ((ImageView) v).setBackgroundResource(R.drawable.agree_select);
+                            }
+                            else {
+                                ((ImageView) v).setImageResource(R.drawable.like);
+                                ((ImageView) v).setBackgroundResource(R.drawable.disagree_select);
+                            }
 
                             if(TYPE_FEED==type) {
                                 feed.agreement_status = !feed.agreement_status;
                                 isAgree=!isAgree;
                             }
-                        }
+
                         clickable=true;
                     } catch (Exception e) {
                         Toast.makeText(context,"服务器异常 稍后再试",Toast.LENGTH_SHORT).show();

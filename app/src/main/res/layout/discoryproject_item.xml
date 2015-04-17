@@ -49,8 +49,6 @@
             android:paddingBottom="0dp"
             android:layout_weight="0"
             android:textSize="14sp"
-
-
             />
 
 

@@ -57,15 +57,16 @@ public class LoginUtil {
         RequestParams params = new RequestParams();
         params.add("access_token", mAccessToken.getToken());
 
-        ApiUtils.client.setTimeout(20000);
+//        ApiUtils.client.setTimeout(20000);
 
 
-        final AsyncHttpClient client = new AsyncHttpClient();
+        //final AsyncHttpClient client = new AsyncHttpClient();
 
 
-        ApiUtils.init(context);
+        ApiUtils.client=null;
+        ApiUtils.uploadclient=null;
 
-        client.get("http://asset.shixian.com/api/v1/api_login.json", params, new AsyncHttpResponseHandler() {
+        ApiUtils.get(context,"http://api.shixian.com/api/v1/api_login.json", params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
 
@@ -81,18 +82,18 @@ public class LoginUtil {
                             SharedPreferences sp = context.getSharedPreferences("userinfo", Context.MODE_PRIVATE);
                             sp.edit().putString("cookie", headers[j].getValue()).commit();
 
+                            ApiUtils.cookie=headers[j].getValue();
                            // ApiUtils.client.addHeader(headers[j].getName(), headers[j].getValue());
 
 
                             ApiUtils.client.addHeader("Cookie", headers[j].getValue());
 
-                            Log.i("AAAA",headers[j].getValue()+"－－－－－－－－新的cookie");
-
 
                             ApiUtils.client.addHeader("user-agent", "android");
 
 
-                            CommonUtil.logDebug("AAAA", headers[j].getValue());
+
+
                             break;
                         }
 

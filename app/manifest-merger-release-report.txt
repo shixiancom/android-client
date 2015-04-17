@@ -119,37 +119,35 @@ ADDED from AndroidManifest.xml:63:9
 		ADDED from AndroidManifest.xml:64:13
 	android:name
 		ADDED from AndroidManifest.xml:63:19
+activity#com.shixian.android.client.activities.LoginActivity2
+ADDED from AndroidManifest.xml:68:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:69:13
+	android:name
+		ADDED from AndroidManifest.xml:68:19
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from AndroidManifest.xml:66:13
+ADDED from AndroidManifest.xml:71:13
 action#android.intent.action.MAIN
-ADDED from AndroidManifest.xml:67:17
+ADDED from AndroidManifest.xml:72:17
 	android:name
-		ADDED from AndroidManifest.xml:67:25
+		ADDED from AndroidManifest.xml:72:25
 category#android.intent.category.LAUNCHER
-ADDED from AndroidManifest.xml:68:17
+ADDED from AndroidManifest.xml:73:17
 	android:name
-		ADDED from AndroidManifest.xml:68:27
+		ADDED from AndroidManifest.xml:73:27
 activity#com.shixian.android.client.activities.MainActivity
-ADDED from AndroidManifest.xml:72:9
+ADDED from AndroidManifest.xml:77:9
 	android:screenOrientation
-		ADDED from AndroidManifest.xml:73:13
+		ADDED from AndroidManifest.xml:78:13
 	android:label
-		ADDED from AndroidManifest.xml:75:13
+		ADDED from AndroidManifest.xml:80:13
 	android:launchMode
-		ADDED from AndroidManifest.xml:77:13
-	android:configChanges
-		ADDED from AndroidManifest.xml:76:13
-	android:name
-		ADDED from AndroidManifest.xml:74:13
-activity#com.shixian.android.client.activities.DetailActivity
-ADDED from AndroidManifest.xml:81:9
-	android:screenOrientation
 		ADDED from AndroidManifest.xml:82:13
-	android:theme
-		ADDED from AndroidManifest.xml:83:13
+	android:configChanges
+		ADDED from AndroidManifest.xml:81:13
 	android:name
-		ADDED from AndroidManifest.xml:81:19
-activity#com.shixian.android.client.activities.ProjectActivity
+		ADDED from AndroidManifest.xml:79:13
+activity#com.shixian.android.client.activities.DetailActivity
 ADDED from AndroidManifest.xml:86:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:87:13
@@ -157,7 +155,7 @@ ADDED from AndroidManifest.xml:86:9
 		ADDED from AndroidManifest.xml:88:13
 	android:name
 		ADDED from AndroidManifest.xml:86:19
-activity#com.shixian.android.client.activities.UserActivity
+activity#com.shixian.android.client.activities.ProjectActivity
 ADDED from AndroidManifest.xml:91:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:92:13
@@ -165,212 +163,220 @@ ADDED from AndroidManifest.xml:91:9
 		ADDED from AndroidManifest.xml:93:13
 	android:name
 		ADDED from AndroidManifest.xml:91:19
-activity#com.shixian.android.client.activities.SimpleSampleActivity
-ADDED from AndroidManifest.xml:97:9
+activity#com.shixian.android.client.activities.UserActivity
+ADDED from AndroidManifest.xml:96:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:97:13
 	android:theme
 		ADDED from AndroidManifest.xml:98:13
 	android:name
-		ADDED from AndroidManifest.xml:97:19
+		ADDED from AndroidManifest.xml:96:19
+activity#com.shixian.android.client.activities.SimpleSampleActivity
+ADDED from AndroidManifest.xml:102:9
+	android:theme
+		ADDED from AndroidManifest.xml:103:13
+	android:name
+		ADDED from AndroidManifest.xml:102:19
 activity#com.shixian.android.client.activities.AddIdeaActivity
-ADDED from AndroidManifest.xml:101:9
+ADDED from AndroidManifest.xml:106:9
 	android:theme
-		ADDED from AndroidManifest.xml:102:13
+		ADDED from AndroidManifest.xml:107:13
 	android:name
-		ADDED from AndroidManifest.xml:101:19
+		ADDED from AndroidManifest.xml:106:19
 activity#com.shixian.android.client.activities.NewProjectActivity
-ADDED from AndroidManifest.xml:105:9
+ADDED from AndroidManifest.xml:110:9
 	android:theme
-		ADDED from AndroidManifest.xml:106:13
-	android:name
-		ADDED from AndroidManifest.xml:105:19
-activity#com.shixian.android.client.activities.WebActivity
-ADDED from AndroidManifest.xml:109:9
-	android:screenOrientation
 		ADDED from AndroidManifest.xml:111:13
+	android:name
+		ADDED from AndroidManifest.xml:110:19
+activity#com.shixian.android.client.activities.WebActivity
+ADDED from AndroidManifest.xml:114:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:116:13
 	android:theme
-		ADDED from AndroidManifest.xml:112:13
+		ADDED from AndroidManifest.xml:117:13
 	android:name
-		ADDED from AndroidManifest.xml:110:13
+		ADDED from AndroidManifest.xml:115:13
 activity#com.sina.weibo.sdk.component.WeiboSdkBrowser
-ADDED from AndroidManifest.xml:117:9
+ADDED from AndroidManifest.xml:122:9
 	android:exported
-		ADDED from AndroidManifest.xml:120:13
-	android:windowSoftInputMode
-		ADDED from AndroidManifest.xml:119:13
-	android:configChanges
-		ADDED from AndroidManifest.xml:118:13
-	android:name
-		ADDED from AndroidManifest.xml:117:19
-service#cn.jpush.android.service.PushService
-ADDED from AndroidManifest.xml:124:9
-	android:enabled
-		ADDED from AndroidManifest.xml:126:13
-	android:exported
-		ADDED from AndroidManifest.xml:127:13
-	android:name
 		ADDED from AndroidManifest.xml:125:13
-intent-filter#cn.jpush.android.intent.PUSH_TIME+cn.jpush.android.intent.PushService+cn.jpush.android.intent.REGISTER+cn.jpush.android.intent.REPORT
-ADDED from AndroidManifest.xml:128:13
-action#cn.jpush.android.intent.REGISTER
-ADDED from AndroidManifest.xml:129:17
+	android:windowSoftInputMode
+		ADDED from AndroidManifest.xml:124:13
+	android:configChanges
+		ADDED from AndroidManifest.xml:123:13
 	android:name
-		ADDED from AndroidManifest.xml:129:25
-action#cn.jpush.android.intent.REPORT
-ADDED from AndroidManifest.xml:130:17
-	android:name
-		ADDED from AndroidManifest.xml:130:25
-action#cn.jpush.android.intent.PushService
-ADDED from AndroidManifest.xml:131:17
-	android:name
-		ADDED from AndroidManifest.xml:131:25
-action#cn.jpush.android.intent.PUSH_TIME
-ADDED from AndroidManifest.xml:132:17
-	android:name
-		ADDED from AndroidManifest.xml:132:25
-receiver#cn.jpush.android.service.PushReceiver
-ADDED from AndroidManifest.xml:137:9
+		ADDED from AndroidManifest.xml:122:19
+service#cn.jpush.android.service.PushService
+ADDED from AndroidManifest.xml:129:9
 	android:enabled
-		ADDED from AndroidManifest.xml:139:13
+		ADDED from AndroidManifest.xml:131:13
+	android:exported
+		ADDED from AndroidManifest.xml:132:13
 	android:name
-		ADDED from AndroidManifest.xml:138:13
+		ADDED from AndroidManifest.xml:130:13
+intent-filter#cn.jpush.android.intent.PUSH_TIME+cn.jpush.android.intent.PushService+cn.jpush.android.intent.REGISTER+cn.jpush.android.intent.REPORT
+ADDED from AndroidManifest.xml:133:13
+action#cn.jpush.android.intent.REGISTER
+ADDED from AndroidManifest.xml:134:17
+	android:name
+		ADDED from AndroidManifest.xml:134:25
+action#cn.jpush.android.intent.REPORT
+ADDED from AndroidManifest.xml:135:17
+	android:name
+		ADDED from AndroidManifest.xml:135:25
+action#cn.jpush.android.intent.PushService
+ADDED from AndroidManifest.xml:136:17
+	android:name
+		ADDED from AndroidManifest.xml:136:25
+action#cn.jpush.android.intent.PUSH_TIME
+ADDED from AndroidManifest.xml:137:17
+	android:name
+		ADDED from AndroidManifest.xml:137:25
+receiver#cn.jpush.android.service.PushReceiver
+ADDED from AndroidManifest.xml:142:9
+	android:enabled
+		ADDED from AndroidManifest.xml:144:13
+	android:name
+		ADDED from AndroidManifest.xml:143:13
 intent-filter#cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY+com.shixian.android.client
-ADDED from AndroidManifest.xml:140:13
+ADDED from AndroidManifest.xml:145:13
 	android:priority
-		ADDED from AndroidManifest.xml:140:28
+		ADDED from AndroidManifest.xml:145:28
 action#cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY
-ADDED from AndroidManifest.xml:141:17
-	android:name
-		ADDED from AndroidManifest.xml:141:25
-category#com.shixian.android.client
-ADDED from AndroidManifest.xml:142:17
-	android:name
-		ADDED from AndroidManifest.xml:142:27
-intent-filter#android.intent.action.USER_PRESENT+android.net.conn.CONNECTIVITY_CHANGE
-ADDED from AndroidManifest.xml:144:13
-action#android.intent.action.USER_PRESENT
-ADDED from AndroidManifest.xml:145:17
-	android:name
-		ADDED from AndroidManifest.xml:145:25
-action#android.net.conn.CONNECTIVITY_CHANGE
 ADDED from AndroidManifest.xml:146:17
 	android:name
 		ADDED from AndroidManifest.xml:146:25
-intent-filter#android.intent.action.PACKAGE_ADDED+android.intent.action.PACKAGE_REMOVED
-ADDED from AndroidManifest.xml:148:13
-action#android.intent.action.PACKAGE_ADDED
-ADDED from AndroidManifest.xml:149:17
+category#com.shixian.android.client
+ADDED from AndroidManifest.xml:147:17
 	android:name
-		ADDED from AndroidManifest.xml:149:25
-action#android.intent.action.PACKAGE_REMOVED
+		ADDED from AndroidManifest.xml:147:27
+intent-filter#android.intent.action.USER_PRESENT+android.net.conn.CONNECTIVITY_CHANGE
+ADDED from AndroidManifest.xml:149:13
+action#android.intent.action.USER_PRESENT
 ADDED from AndroidManifest.xml:150:17
 	android:name
 		ADDED from AndroidManifest.xml:150:25
-data
+action#android.net.conn.CONNECTIVITY_CHANGE
 ADDED from AndroidManifest.xml:151:17
+	android:name
+		ADDED from AndroidManifest.xml:151:25
+intent-filter#android.intent.action.PACKAGE_ADDED+android.intent.action.PACKAGE_REMOVED
+ADDED from AndroidManifest.xml:153:13
+action#android.intent.action.PACKAGE_ADDED
+ADDED from AndroidManifest.xml:154:17
+	android:name
+		ADDED from AndroidManifest.xml:154:25
+action#android.intent.action.PACKAGE_REMOVED
+ADDED from AndroidManifest.xml:155:17
+	android:name
+		ADDED from AndroidManifest.xml:155:25
+data
+ADDED from AndroidManifest.xml:156:17
 	android:scheme
-		ADDED from AndroidManifest.xml:151:23
+		ADDED from AndroidManifest.xml:156:23
 activity#cn.jpush.android.ui.PushActivity
-ADDED from AndroidManifest.xml:155:9
+ADDED from AndroidManifest.xml:160:9
 	android:configChanges
-		ADDED from AndroidManifest.xml:158:13
+		ADDED from AndroidManifest.xml:163:13
 	android:theme
-		ADDED from AndroidManifest.xml:157:13
+		ADDED from AndroidManifest.xml:162:13
 	android:name
-		ADDED from AndroidManifest.xml:156:13
+		ADDED from AndroidManifest.xml:161:13
 intent-filter#android.intent.category.DEFAULT+cn.jpush.android.ui.PushActivity+com.shixian.android.client
-ADDED from AndroidManifest.xml:159:13
+ADDED from AndroidManifest.xml:164:13
 action#cn.jpush.android.ui.PushActivity
-ADDED from AndroidManifest.xml:160:17
+ADDED from AndroidManifest.xml:165:17
 	android:name
-		ADDED from AndroidManifest.xml:160:25
+		ADDED from AndroidManifest.xml:165:25
 category#android.intent.category.DEFAULT
-ADDED from AndroidManifest.xml:161:17
+ADDED from AndroidManifest.xml:166:17
 	android:name
-		ADDED from AndroidManifest.xml:161:27
+		ADDED from AndroidManifest.xml:166:27
 service#cn.jpush.android.service.DownloadService
-ADDED from AndroidManifest.xml:166:9
+ADDED from AndroidManifest.xml:171:9
 	android:enabled
-		ADDED from AndroidManifest.xml:168:13
+		ADDED from AndroidManifest.xml:173:13
 	android:exported
-		ADDED from AndroidManifest.xml:169:13
+		ADDED from AndroidManifest.xml:174:13
 	android:name
-		ADDED from AndroidManifest.xml:167:13
+		ADDED from AndroidManifest.xml:172:13
 receiver#cn.jpush.android.service.AlarmReceiver
-ADDED from AndroidManifest.xml:172:9
-	android:name
-		ADDED from AndroidManifest.xml:172:19
-receiver#com.shixian.android.client.receivers.MyReceiver
 ADDED from AndroidManifest.xml:177:9
+	android:name
+		ADDED from AndroidManifest.xml:177:19
+receiver#com.shixian.android.client.receivers.MyReceiver
+ADDED from AndroidManifest.xml:182:9
 	android:enabled
-		ADDED from AndroidManifest.xml:179:13
+		ADDED from AndroidManifest.xml:184:13
 	android:name
-		ADDED from AndroidManifest.xml:178:13
+		ADDED from AndroidManifest.xml:183:13
 intent-filter#cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK+cn.jpush.android.intent.CONNECTION+cn.jpush.android.intent.MESSAGE_RECEIVED+cn.jpush.android.intent.NOTIFICATION_OPENED+cn.jpush.android.intent.NOTIFICATION_RECEIVED+cn.jpush.android.intent.REGISTRATION+cn.jpush.android.intent.UNREGISTRATION+com.shixian.android.client
-ADDED from AndroidManifest.xml:180:13
+ADDED from AndroidManifest.xml:185:13
 action#cn.jpush.android.intent.REGISTRATION
-ADDED from AndroidManifest.xml:181:17
-	android:name
-		ADDED from AndroidManifest.xml:181:25
-action#cn.jpush.android.intent.UNREGISTRATION
-ADDED from AndroidManifest.xml:182:17
-	android:name
-		ADDED from AndroidManifest.xml:182:25
-action#cn.jpush.android.intent.MESSAGE_RECEIVED
-ADDED from AndroidManifest.xml:183:17
-	android:name
-		ADDED from AndroidManifest.xml:183:25
-action#cn.jpush.android.intent.NOTIFICATION_RECEIVED
-ADDED from AndroidManifest.xml:184:17
-	android:name
-		ADDED from AndroidManifest.xml:184:25
-action#cn.jpush.android.intent.NOTIFICATION_OPENED
-ADDED from AndroidManifest.xml:185:17
-	android:name
-		ADDED from AndroidManifest.xml:185:25
-action#cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK
 ADDED from AndroidManifest.xml:186:17
 	android:name
 		ADDED from AndroidManifest.xml:186:25
-action#cn.jpush.android.intent.CONNECTION
+action#cn.jpush.android.intent.UNREGISTRATION
 ADDED from AndroidManifest.xml:187:17
 	android:name
 		ADDED from AndroidManifest.xml:187:25
+action#cn.jpush.android.intent.MESSAGE_RECEIVED
+ADDED from AndroidManifest.xml:188:17
+	android:name
+		ADDED from AndroidManifest.xml:188:25
+action#cn.jpush.android.intent.NOTIFICATION_RECEIVED
+ADDED from AndroidManifest.xml:189:17
+	android:name
+		ADDED from AndroidManifest.xml:189:25
+action#cn.jpush.android.intent.NOTIFICATION_OPENED
+ADDED from AndroidManifest.xml:190:17
+	android:name
+		ADDED from AndroidManifest.xml:190:25
+action#cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK
+ADDED from AndroidManifest.xml:191:17
+	android:name
+		ADDED from AndroidManifest.xml:191:25
+action#cn.jpush.android.intent.CONNECTION
+ADDED from AndroidManifest.xml:192:17
+	android:name
+		ADDED from AndroidManifest.xml:192:25
 service#com.umeng.update.net.DownloadingService
-ADDED from AndroidManifest.xml:194:9
+ADDED from AndroidManifest.xml:199:9
 	android:process
-		ADDED from AndroidManifest.xml:196:13
+		ADDED from AndroidManifest.xml:201:13
 	android:name
-		ADDED from AndroidManifest.xml:195:13
-activity#com.umeng.update.UpdateDialogActivity
-ADDED from AndroidManifest.xml:198:9
-	android:theme
 		ADDED from AndroidManifest.xml:200:13
+activity#com.umeng.update.UpdateDialogActivity
+ADDED from AndroidManifest.xml:203:9
+	android:theme
+		ADDED from AndroidManifest.xml:205:13
 	android:name
-		ADDED from AndroidManifest.xml:199:13
+		ADDED from AndroidManifest.xml:204:13
 meta-data#JPUSH_CHANNEL
-ADDED from AndroidManifest.xml:211:9
-	android:value
-		ADDED from AndroidManifest.xml:211:49
-	android:name
-		ADDED from AndroidManifest.xml:211:20
-meta-data#JPUSH_APPKEY
-ADDED from AndroidManifest.xml:213:9
-	android:value
-		ADDED from AndroidManifest.xml:213:48
-	android:name
-		ADDED from AndroidManifest.xml:213:20
-meta-data#UMENG_APPKEY
 ADDED from AndroidManifest.xml:216:9
 	android:value
+		ADDED from AndroidManifest.xml:216:49
+	android:name
 		ADDED from AndroidManifest.xml:216:20
-	android:name
-		ADDED from AndroidManifest.xml:216:61
-meta-data#UMENG_CHANNEL
-ADDED from AndroidManifest.xml:217:9
+meta-data#JPUSH_APPKEY
+ADDED from AndroidManifest.xml:218:9
 	android:value
-		ADDED from AndroidManifest.xml:217:20
+		ADDED from AndroidManifest.xml:218:48
 	android:name
-		ADDED from AndroidManifest.xml:217:44
+		ADDED from AndroidManifest.xml:218:20
+meta-data#UMENG_APPKEY
+ADDED from AndroidManifest.xml:221:9
+	android:value
+		ADDED from AndroidManifest.xml:221:20
+	android:name
+		ADDED from AndroidManifest.xml:221:61
+meta-data#UMENG_CHANNEL
+ADDED from AndroidManifest.xml:222:9
+	android:value
+		ADDED from AndroidManifest.xml:222:20
+	android:name
+		ADDED from AndroidManifest.xml:222:44
 uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
 MERGED from com.android.support:appcompat-v7:21.0.3:15:5

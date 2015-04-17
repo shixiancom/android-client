@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 想法xxxxxxxxxx -->
+<com.shixian.android.client.views.PersonItemLinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <FrameLayout
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="@dimen/global_left"
+            android:id="@+id/fr_xx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        <ImageView
+            android:scaleType="centerCrop"
+            android:id="@+id/iv_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_launcher" />
+
+            <ProgressBar
+                android:layout_gravity="center"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/progressBar"
+                />
+
+        </FrameLayout>
+
+
+        <com.shixian.android.client.views.FontTextView
+            android:layout_centerVertical="true"
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/iv_icon_right"
+            android:layout_toRightOf="@id/fr_xx"
+            android:textColor="#005580"
+            android:background="@drawable/text_common_selector"
+
+            android:textSize="18sp" />
+
+
+        <Button
+            android:minWidth="88dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:singleLine="true"
+            android:id="@+id/bt_follow"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/global_right"
+            android:layout_centerVertical="true"
+            android:text="关注"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_follow"
+            style="?android:attr/borderlessButtonStyle"
+            android:paddingBottom="0dp"
+            />
+        <!--  android:textColor="#44000000" -->
+
+<!--#20C8AF-->
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_marginLeft="16dp"
+        android:id="@+id/tv_witness"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_name"
+        android:layout_marginTop="10dp"
+        android:textColor="#888888"
+        android:textSize="15sp"/>
+
+    <View
+        android:id="@+id/v_line"
+        android:layout_width="wrap_content"
+        android:layout_height="1px"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="#E5E5E5" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+
+            <com.shixian.android.client.views.FontTextView
+                android:id="@+id/tv_activitys"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:text="7"
+                android:textSize="20sp" />
+
+            <com.shixian.android.client.views.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="3dp"
+                android:text="@string/user_activity"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <com.shixian.android.client.views.FontTextView
+                android:id="@+id/tv_project"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:text="7"
+                android:textSize="20sp" />
+
+            <com.shixian.android.client.views.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="3dp"
+                android:text="@string/user_projects"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <com.shixian.android.client.views.FontTextView
+                android:id="@+id/tv_fllowen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:text="7"
+                android:textSize="20sp" />
+
+            <com.shixian.android.client.views.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="3dp"
+                android:text="@string/user_ollowers"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <com.shixian.android.client.views.FontTextView
+                android:id="@+id/tv_fllowing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:text="7"
+                android:textSize="20sp" />
+
+            <com.shixian.android.client.views.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="3dp"
+                android:text="@string/user_followings"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/v_line1"
+        android:layout_width="wrap_content"
+        android:layout_height="1px"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="#E5E5E5" />
+
+    <!--
+    <LinearLayout 
+        android:id="@+id/ll_reply"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        
+    </LinearLayout>
+    -->
+
+</com.shixian.android.client.views.PersonItemLinearLayout>

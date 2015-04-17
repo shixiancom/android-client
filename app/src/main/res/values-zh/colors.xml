@@ -9,4 +9,6 @@
     <item name="green" type="color">#FF3BBD79</item>
     <color name="transparent_background">#ffffffff</color>
     <color name="blue">#ff87cefa</color>
+    <!--<color name="menu_item">#EFEDEE</color>-->
+    <color name="menu_item">#83d1ee</color>
 </resources>

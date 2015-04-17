@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shixian.android.client.R;
+import com.shixian.android.client.utils.MyLinkMovementMethod;
 import com.shixian.android.client.views.CosmterUrlSpan;
 import com.shixian.android.client.views.CustomDialog;
 
@@ -28,7 +30,7 @@ public class ContentHandler {
 
     private static final String TAG="ContentHandler";
 
-    private static final int URLCOLOR=Color.parseColor("#00CC88");
+    private static final int URLCOLOR=Color.parseColor("#0088cc");
 
     private TextView content;
 
@@ -36,7 +38,7 @@ public class ContentHandler {
     //\&%_\./-~-]*)?
 
     private static final Pattern URLPATTERN = Pattern
-            .compile("((http://|https://|ftp://){0,1}(([0-9a-zA-Z]+\\.)+(com|net|cn|me|tw|fr|tk|edu|io)[0-9a-zA-Z/\\._%\\?&=\\-#]*))|@[^\\s]+\\s");
+            .compile("((http://|https://|ftp://){0,1}(([0-9a-zA-Z\\-]+\\.)+(com|net|cn|me|tw|fr|tk|edu|io)[0-9a-zA-Z/\\._%\\?&=\\-#]*))|@[^\\s]+\\s");
 
 
     public ContentHandler(TextView tv) {
@@ -46,9 +48,11 @@ public class ContentHandler {
 
     public ContentHandler longClickCopy() {
 
+
         content.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(final View v) {
+
                 v.setBackgroundColor(Color.GRAY);
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                 builder.setItems(R.array.message_action_text_copy, new DialogInterface.OnClickListener() {
@@ -83,11 +87,11 @@ public class ContentHandler {
 
 
 
-    public void formatColorContent(TextView tv,String s)
+    public void formatColorContent(TextView tv,CharSequence s)
     {
 
 
-        tv.setMovementMethod(LinkMovementMethod.getInstance());
+        tv.setMovementMethod(MyLinkMovementMethod.getInstance());
         tv.setClickable(true);
 
         SpannableString spannableString=new SpannableString(s);

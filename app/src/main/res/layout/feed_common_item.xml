@@ -52,9 +52,7 @@
             android:textColor="#9B9B9B"
             android:layout_marginRight="10dp"
             android:layout_gravity="center_vertical"
-
             />
-
 
 
         <com.shixian.android.client.views.FontTextView
@@ -64,14 +62,12 @@
             android:layout_height="wrap_content"
             android:text="测试"
             android:textColor="#005580"
-            android:textSize="@dimen/actor_text_size"
+            android:textSize="@dimen/project_text_size"
             android:layout_alignLeft="@id/tv_name"
             android:layout_below="@id/tv_name"
-            android:layout_marginTop="2dp"
             android:background="@drawable/text_common_selector"
+            android:layout_alignBottom="@id/iv_icon"
             />
-
-
 
 
         <com.shixian.android.client.views.FontTextView
@@ -139,6 +135,7 @@
                 android:layout_height="16dp"
                 android:id="@+id/iv_agree"
                 android:src="@drawable/like"
+                android:background="@drawable/agree_select"
                 />
             <TextView
                 android:layout_width="wrap_content"

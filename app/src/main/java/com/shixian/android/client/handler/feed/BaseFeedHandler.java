@@ -4,6 +4,7 @@ package com.shixian.android.client.handler.feed;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,7 +101,7 @@ public class BaseFeedHandler {
             case "Project":
                 type = context.getResources().getString(R.string.add_project);
                 project = feed.data.title;
-                contentHandler.formatColorContent(feedHolder.tv_content,feed.data.description);
+                contentHandler.formatColorContent(feedHolder.tv_content, Html.fromHtml(feed.data.description));
                 // feedHolder.tv_content.setText(Html.fromHtml(feed.data.description));
                 //隐藏回复框
                 feedHolder.tv_response.setVisibility(View.GONE);
@@ -118,7 +119,7 @@ public class BaseFeedHandler {
                 // feedHolder.tv_content.setText(feed.data.content);
                 contentHandler.formatColorContent(feedHolder.tv_content,feed.data.content);
                 feedHolder.iv_content.setVisibility(View.VISIBLE);
-                ImageLoader.getInstance().displayImage(AppContants.DOMAIN + feed.data.attachment.thumb.url, feedHolder.iv_content, contentOptions, animateFirstListener);
+                ImageLoader.getInstance().displayImage(AppContants.ASSET_DOMAIN + feed.data.attachment.thumb.url, feedHolder.iv_content, contentOptions, animateFirstListener);
                 feedHolder.rl_agree.setVisibility(View.VISIBLE);
 
                 ivContentOnClickListener(context,feedHolder,feed.data.attachment.url);
@@ -160,6 +161,7 @@ public class BaseFeedHandler {
 
             case "Agreement":
                 feedHolder.rl_agree.setVisibility(View.VISIBLE);
+                if (feed.data.feedable_type!=null)
                 switch (feed.data.feedable_type){
                     case "idea":
                         type="赞同了想法";
@@ -178,7 +180,7 @@ public class BaseFeedHandler {
                         type="赞同了图片";
                         contentHandler.formatColorContent(feedHolder.tv_content,feed.data.content);
                         feedHolder.iv_content.setVisibility(View.VISIBLE);
-                        ImageLoader.getInstance().displayImage(AppContants.DOMAIN + feed.data.attachment.thumb.url, feedHolder.iv_content, contentOptions, animateFirstListener);
+                        ImageLoader.getInstance().displayImage(AppContants.ASSET_DOMAIN + feed.data.attachment.thumb.url, feedHolder.iv_content, contentOptions, animateFirstListener);
                         ivContentOnClickListener(context,feedHolder,feed.data.attachment.url);
                         break;
 
@@ -210,7 +212,7 @@ public class BaseFeedHandler {
 
 
 
-        ImageLoader.getInstance().displayImage(AppContants.DOMAIN + feed.data.user.avatar.small.url, feedHolder.iv_icon, feedOptions, animateFirstListener);
+        ImageLoader.getInstance().displayImage(AppContants.ASSET_DOMAIN + feed.data.user.avatar.small.url, feedHolder.iv_icon, feedOptions, animateFirstListener);
 
 
         feedHolder.tv_type.setText(type);
@@ -220,14 +222,19 @@ public class BaseFeedHandler {
 
         if(feed.agreement_status)
         {
-            feedHolder.iv_agree.setImageResource(R.drawable.liked);
-        }else{
             feedHolder.iv_agree.setImageResource(R.drawable.like);
+            feedHolder.iv_agree.setBackgroundResource(R.drawable.agree_select);
+
+        }else{
+
+            feedHolder.iv_agree.setImageResource(R.drawable.liked);
+            feedHolder.iv_agree.setBackgroundResource(R.drawable.agree_select);
         }
 
         //设置样式
 //                int textSize=DisplayUtil.sp2px(context,13);
-        feedHolder.tv_name.setTextSize(13);
+        feedHolder.tv_name.setTextSize(14);
+        feedHolder.tv_type.setTextSize(14);
         feedHolder.tv_time.setTextSize(11);
         feedHolder.tv_content.setTextSize(15);
 
@@ -372,7 +379,8 @@ public class BaseFeedHandler {
 
 
         //头像图片处理
-        ImageLoader.getInstance().displayImage(AppContants.DOMAIN + comment.user.avatar.small.url, commentHolder.iv_icon, commentOptions, animateFirstListener);
+        ImageLoader.getInstance().displayImage(AppContants.ASSET_DOMAIN + comment.user.avatar.small.url, commentHolder.iv_icon, commentOptions, animateFirstListener);
+
 
 
 

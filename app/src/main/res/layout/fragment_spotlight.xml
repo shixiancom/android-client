@@ -3,15 +3,37 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:layout_weight="1"
     android:background="@color/gray_bk"
+    android:orientation="vertical"
     >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        >
+
+        <TextView
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#0088CC"
+            android:text="想加入项目？请前往Shixian.com 申请参与"
+            />
+
+        </LinearLayout>
+    
+
 
     <com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView
         android:id="@+id/lv_index"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:background="@color/gray_bk"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         >
 
         </com.shixian.android.client.views.pulltorefreshlist.PullToRefreshListView>

@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/iv_icon"
             android:layout_toRightOf="@id/iv_icon"
-            android:textSize="13sp"
+            android:textSize="14sp"
             android:background="@drawable/text_common_selector"
 
             />
@@ -44,7 +44,7 @@
             android:layout_alignTop="@id/iv_icon"
             android:layout_toRightOf="@id/tv_name"
             android:layout_marginLeft="5dp"
-            android:textSize="13sp"
+            android:textSize="14sp"
             />
 
 
@@ -60,6 +60,7 @@
             android:layout_toRightOf="@id/iv_icon"
             android:layout_marginBottom="5dp"
             android:background="@drawable/text_common_selector"
+            android:textSize="16sp"
             />
 
 

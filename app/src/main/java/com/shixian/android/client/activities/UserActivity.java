@@ -1,8 +1,11 @@
 package com.shixian.android.client.activities;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -31,6 +34,8 @@ import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
 
 import org.apache.http.Header;
+
+import java.util.List;
 
 /**
  * Created by tangtang on 15/4/2.
@@ -187,13 +192,14 @@ public class UserActivity extends BaseFeedActivity {
                         public void run() {
 
                             firstPageDate = temp;
-                            feedList = JsonUtils.ParseFeeds(firstPageDate);
+                            final List<BaseFeed> tempList= JsonUtils.ParseFeeds(firstPageDate);
                             pullToRefreshListView.onPullDownRefreshComplete();
 
 
                             UserActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    feedList=tempList;
                                     if (adapter == null) {
                                         adapter = new UserIndexFeedAdapte();
                                         pullToRefreshListView.getRefreshableView().setAdapter(adapter);
@@ -222,10 +228,12 @@ public class UserActivity extends BaseFeedActivity {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+
                 Toast.makeText(UserActivity.this, R.string.check_net, Toast.LENGTH_SHORT).show();
                 pullToRefreshListView.onPullDownRefreshComplete();
                 pullToRefreshListView.getFooterLoadingLayout().show(false);
                 UserActivity.this.dissProgress();
+
             }
 
 
@@ -267,7 +275,18 @@ public class UserActivity extends BaseFeedActivity {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(UserActivity.this, R.string.check_net, Toast.LENGTH_SHORT).show();
+                if(bytes!=null)
+                {
+                    if(new String(bytes).contains("Not"))
+                    {
+                        Toast.makeText(UserActivity.this,"查无此人",Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }else{
+                    Toast.makeText(UserActivity.this, R.string.check_net, Toast.LENGTH_SHORT).show();
+
+                }
+
             }
 
 
@@ -345,7 +364,7 @@ public class UserActivity extends BaseFeedActivity {
                         String key = keys[keys.length - 1];
 
 
-                        ImageLoader.getInstance().displayImage(AppContants.DOMAIN + user.avatar.small.url, iv_icon, feedOptions, animateFirstListener);
+                        ImageLoader.getInstance().displayImage(AppContants.ASSET_DOMAIN + user.avatar.small.url, iv_icon, feedOptions, animateFirstListener);
                     }
 
                     if (user.has_followed) {
@@ -377,21 +396,22 @@ public class UserActivity extends BaseFeedActivity {
                             if (user.has_followed) {
                                 //取消关注api
                                 //关注api
-//                           ApiUtils.post(String.format(AppContants.USER_UNFOLLOW_URL,user.id),null,new AsyncHttpResponseHandler() {
-//                               @Override
-//                               public void onSuccess(int i, Header[] headers, byte[] bytes) {
-//                                   Toast.makeText(context,"取消关注成功",Toast.LENGTH_SHORT).show();
-//                                   bt_follow.setBackgroundColor(Color.argb(0,32,168,192+15));//20a8cf
-//                                   user.has_followed=false;
-//                               }
-//
-//                               @Override
-//                               public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-//                                   Toast.makeText(context,"取消关注失败，稍后再试",Toast.LENGTH_SHORT).show();
-//                               }
-//                           });
+                           ApiUtils.delete(UserActivity.this,String.format(AppContants.USER_UNFOLLOW_URL,user.id),new AsyncHttpResponseHandler() {
+                               @Override
+                               public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                                   Toast.makeText(UserActivity.this,"取消关注成功",Toast.LENGTH_SHORT).show();
+                                   bt_follow.setBackgroundResource(R.drawable.shape_follow);
+                                   bt_follow.setText(R.string.follow);
+                                   user.has_followed=false;
+                               }
 
-                                Toast.makeText(UserActivity.this, "暂不支持取消功能，我们正在飞速开发", Toast.LENGTH_SHORT).show();
+                               @Override
+                               public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                                   Toast.makeText(UserActivity.this,"取消关注失败，稍后再试",Toast.LENGTH_SHORT).show();
+                               }
+                           });
+
+//                                Toast.makeText(UserActivity.this, "暂不支持取消功能，我们正在飞速开发", Toast.LENGTH_SHORT).show();
                             } else {
                                 //关注api
                                 ApiUtils.post(UserActivity.this,String.format(AppContants.USER_FOLLOW_URL, user.id), null, new AsyncHttpResponseHandler() {
@@ -417,6 +437,20 @@ public class UserActivity extends BaseFeedActivity {
                     if (user.id.equals(Global.USER_ID)) {
                         bt_follow.setVisibility(View.GONE);
                     }
+
+
+                    iv_icon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Intent intent = new Intent(UserActivity.this, SimpleSampleActivity.class);
+                            intent.putExtra("url", user.avatar.url);
+
+
+                            UserActivity.this.startActivity(intent);
+                        }
+                    });
+
 
                     break;
 
@@ -532,12 +566,12 @@ public class UserActivity extends BaseFeedActivity {
         feedHolder.tv_proect.setOnClickListener(feedcontroller);
 
 
-        if (feedHolder.tv_content.getVisibility() == View.VISIBLE) {
-
-            feedHolder.tv_content.setOnClickListener(feedcontroller);
-            feedHolder.tv_content.setMovementMethod(LinkMovementMethod.getInstance());
-
-        }
+//        if (feedHolder.tv_content.getVisibility() == View.VISIBLE) {
+//
+//            feedHolder.tv_content.setOnClickListener(feedcontroller);
+//            feedHolder.tv_content.setMovementMethod(LinkMovementMethod.getInstance());
+//
+//        }
 
 
         if (feedHolder.iv_content.getVisibility() == View.VISIBLE) {

@@ -2,10 +2,15 @@ package com.shixian.android.client.activities.fragment;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,21 +18,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.LoginActivity;
 import com.shixian.android.client.activities.MainActivity;
-import com.shixian.android.client.activities.base.BaseFeedActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.engine.CommonEngine;
+import com.shixian.android.client.engine.JPushEngine;
+import com.shixian.android.client.engine.UserEngine;
 import com.shixian.android.client.handler.feed.BaseFeedHandler;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
@@ -35,11 +43,16 @@ import com.shixian.android.client.model.User;
 import com.shixian.android.client.model.feeddate.BaseFeed;
 import com.shixian.android.client.sina.AccessTokenKeeper;
 import com.shixian.android.client.utils.ApiUtils;
+import com.shixian.android.client.utils.CameraPhotoUtil;
 import com.shixian.android.client.utils.CommonUtil;
 import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
 
 import org.apache.http.Header;
+
+import java.io.File;
+import java.util.List;
+
 
 /**
  * Created by s0ng on 2015/2/12.
@@ -51,6 +64,16 @@ public class MyUserIndexFragment extends BaseFeedFragment {
 
     private String TAG = "UserIndexFragment";
     private User user;
+
+    private final int RESULT_REQUEST_PHOTO = 1005;
+    private final int RESULT_REQUEST_PHOTO_CROP = 1006;
+    private static final int RESULT_EDIT_LIST = 11;
+
+    private Uri fileUri;
+    private Uri fileCropUri;
+
+    //上传头像过程中的progressbar
+    private ProgressBar progressBar;
 
 
     protected void initCacheData() {
@@ -197,13 +220,14 @@ public class MyUserIndexFragment extends BaseFeedFragment {
                         public void run() {
 
                             firstPageDate = temp;
-                            feedList = JsonUtils.ParseFeeds(firstPageDate);
+                            final List<BaseFeed> tempList = JsonUtils.ParseFeeds(firstPageDate);
                             pullToRefreshListView.onPullDownRefreshComplete();
 
 
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    feedList=tempList;
                                     if (adapter == null) {
                                         adapter = new UserIndexFeedAdapte();
                                         pullToRefreshListView.getRefreshableView().setAdapter(adapter);
@@ -331,7 +355,7 @@ public class MyUserIndexFragment extends BaseFeedFragment {
             switch (itemType) {
                 case TYPE_USERITEM:
                     //return 第一项 就是那个啥
-                    view = View.inflate(context, R.layout.person_index_item, null);
+                    view = View.inflate(context, R.layout.myperson_index_item, null);
 
 
                     TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
@@ -347,13 +371,16 @@ public class MyUserIndexFragment extends BaseFeedFragment {
                     TextView tv_fllowen = (TextView) view.findViewById(R.id.tv_fllowen);
                     TextView tv_fllowing = (TextView) view.findViewById(R.id.tv_fllowing);
 
+                    progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+                    progressBar.setVisibility(View.GONE);
+
 
                     //下载头像
                     String keys[] = user.avatar.small.url.split("/");
                     String key = keys[keys.length - 1];
 
 
-                    ImageLoader.getInstance().displayImage(AppContants.DOMAIN + user.avatar.small.url, iv_icon, BaseFeedHandler.feedOptions, animateFirstListener);
+                    ImageLoader.getInstance().displayImage(AppContants.ASSET_DOMAIN + user.avatar.small.url, iv_icon, BaseFeedHandler.feedOptions, animateFirstListener);
 
 
                     if (user.has_followed) {
@@ -426,6 +453,14 @@ public class MyUserIndexFragment extends BaseFeedFragment {
                     {
                         bt_follow.setVisibility(View.GONE);
                     }
+
+                    iv_icon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            setIcon();
+                        }
+                    });
+
 
                     break;
 
@@ -540,11 +575,11 @@ public class MyUserIndexFragment extends BaseFeedFragment {
         feedHolder.tv_proect.setOnClickListener(feedcontroller);
 
 
-        if (feedHolder.tv_content.getVisibility() == View.VISIBLE) {
-
-            feedHolder.tv_content.setOnClickListener(feedcontroller);
-
-        }
+//        if (feedHolder.tv_content.getVisibility() == View.VISIBLE) {
+//
+//            feedHolder.tv_content.setOnClickListener(feedcontroller);
+//
+//        }
 
 
         if (feedHolder.iv_content.getVisibility() == View.VISIBLE) {
@@ -594,9 +629,6 @@ public class MyUserIndexFragment extends BaseFeedFragment {
         super.onResume();
         ((MainActivity)context).initMsgStatus();
         ((MainActivity)context).setCurrentFragment(this);
-
-
-
     }
 
     @Override
@@ -614,6 +646,8 @@ public class MyUserIndexFragment extends BaseFeedFragment {
         Intent broadIntent=new Intent();
         broadIntent.setAction(AppContants.ACTION_FINISHACTIVITY);
         context.sendBroadcast(broadIntent);
+
+        JPushEngine.sendJpushData(context,false);
 
     }
 
@@ -637,6 +671,130 @@ public class MyUserIndexFragment extends BaseFeedFragment {
         return super.onOptionsItemSelected(item);
     }
 
+
+
+    //头像相关的
+    void setIcon() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("更换头像")
+                .setItems(R.array.camera_gallery, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            camera();
+                        } else {
+                            photo();
+                        }
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+     //   dialogTitleLineColor(dialog);
+    }
+
+
+    private void camera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        fileUri = CameraPhotoUtil.getOutputMediaFileUri();
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        startActivityForResult(intent, RESULT_REQUEST_PHOTO);
+    }
+
+    private void photo() {
+        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, RESULT_REQUEST_PHOTO);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RESULT_REQUEST_PHOTO) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    fileUri = data.getData();
+                }
+
+                fileCropUri = CameraPhotoUtil.getOutputMediaFileUri();
+                cropImageUri(fileUri, fileCropUri, 640, 640, RESULT_REQUEST_PHOTO_CROP);
+            }
+
+        } else if (requestCode == RESULT_REQUEST_PHOTO_CROP) {
+            if (resultCode == Activity.RESULT_OK) {
+                try {
+                    String filePath = CommonUtil.getPath(getActivity(), fileCropUri);
+                    RequestParams params = new RequestParams();
+                    File file=new File(filePath);
+                    Log.i("AAAA", filePath);
+                    params.put("avatar", file);
+                    //
+                   // postNetwork(HOST_USER_AVATAR, params, HOST_USER_AVATAR);
+
+
+
+                    if(progressBar!=null)
+                    {
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+                    //TODO 发送图片
+                    UserEngine.editIcon(getActivity(),params,new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                            Toast.makeText(getActivity(),"成功",Toast.LENGTH_SHORT).show();
+                            if(progressBar!=null)
+                            {
+                                progressBar.setVisibility(View.GONE);
+                            }
+                            initFirstData();
+
+                        }
+
+                        @Override
+                        public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+//
+                            if(progressBar!=null)
+                            {
+                                progressBar.setVisibility(View.GONE);
+                            }
+
+
+                        }
+                    });
+
+
+                } catch (Exception e) {
+                }
+            }
+        } else if (requestCode == RESULT_EDIT_LIST) {
+            if (resultCode == Activity.RESULT_OK) {
+
+//                user = AccountInfo.loadAccount(this);
+//                getUserInfoRows();
+                adapter.notifyDataSetChanged();
+            } else {
+
+            }
+        }
+    }
+
+
+
+    private void cropImageUri(Uri uri, Uri outputUri, int outputX, int outputY, int requestCode) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        intent.putExtra("outputX", outputX);
+        intent.putExtra("outputY", outputY);
+        intent.putExtra("scale", true);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
+        intent.putExtra("return-data", false);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("noFaceDetection", true); // no face detection
+        intent.putExtra("scale", true);// 去黑边
+        intent.putExtra("scaleUpIfNeeded", true);// 去黑边
+        startActivityForResult(intent, requestCode);
+    }
 
 
 }

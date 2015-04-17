@@ -22,6 +22,8 @@ import com.shixian.android.client.utils.JsonUtils;
 import com.shixian.android.client.utils.SharedPerenceUtil;
 import org.apache.http.Header;
 
+import java.util.List;
+
 /**
  * Created by s0ng on 2015/2/10.
  */
@@ -99,16 +101,17 @@ public class IndexFragment extends BaseFeedFragment {
                             CommonUtil.logDebug(TAG, new String(bytes));
 
 
-                            feedList = JsonUtils.ParseFeeds(firstPageDate);
+                            final List<BaseFeed> tempList = JsonUtils.ParseFeeds(firstPageDate);
 
 
                             //保存数据到本地
                             page = 1;
 
+
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-
+                                    feedList=tempList;
                                     if (adapter == null) {
                                         adapter = new FeedAdapter();
 
@@ -339,11 +342,11 @@ public class IndexFragment extends BaseFeedFragment {
         //项目
         feedHolder.tv_proect.setOnClickListener(controller);
 
-        if (feedHolder.tv_content.getVisibility() == View.VISIBLE) {
-
-            feedHolder.tv_content.setOnClickListener(controller);
-
-        }
+//        if (feedHolder.tv_content.getVisibility() == View.VISIBLE) {
+//
+//            feedHolder.tv_content.setOnClickListener(controller);
+//
+//        }
 
 
         if (feedHolder.iv_content.getVisibility() == View.VISIBLE) {

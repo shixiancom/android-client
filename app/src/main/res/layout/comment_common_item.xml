@@ -37,7 +37,7 @@
             android:layout_marginLeft="5dp"
             android:textColor="#005580"
             android:background="@drawable/text_common_selector"
-            android:textSize="@dimen/actor_text_size" />
+            android:textSize="13sp" />
 
 
 

@@ -1,4 +1,5 @@
 <LinearLayout
+    android:background="@drawable/menu_list_select"
     android:id="@+id/ll_addproject"
     android:gravity="center_vertical"
     android:layout_width="match_parent"

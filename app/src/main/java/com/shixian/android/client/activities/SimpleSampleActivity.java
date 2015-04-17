@@ -119,7 +119,7 @@ public class SimpleSampleActivity extends Activity {
         ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
 
 
-        ImageLoader.getInstance().displayImage(AppContants.DOMAIN + url, mImageView, contentOptions, animateFirstListener);
+        ImageLoader.getInstance().displayImage(AppContants.ASSET_DOMAIN + url, mImageView, contentOptions, animateFirstListener);
 
 
 

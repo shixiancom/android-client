@@ -5,15 +5,14 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.loopj.android.http.PersistentCookieStore;
 import com.shixian.android.client.Global;
-import com.shixian.android.client.MyApplication;
 import com.shixian.android.client.R;
 import com.shixian.android.client.model.User;
 import com.shixian.android.client.sina.AccessTokenKeeper;
@@ -47,6 +46,9 @@ public class LoginActivity extends Activity
     private AuthInfo mAuthInfo;
     private AuthListener mLoginListener = new AuthListener();
 
+    private SharedPreferences sharedPreferences;
+
+
 
 
     @Override
@@ -54,15 +56,16 @@ public class LoginActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 
+        sharedPreferences=getSharedPreferences("config",MODE_PRIVATE);
 
-        init();
+        initLogin();
 
 
         }
 
 
 
-    private void init() {
+    private void initLogin() {
         setContentView(R.layout.activity_login);
 
         initJpush();
@@ -84,39 +87,8 @@ public class LoginActivity extends Activity
 
 
 //        AccessTokenKeeper.clear(this);
-          mAccessToken=AccessTokenKeeper.readAccessToken(LoginActivity.this);
-      // Toast.makeText(this,mAccessToken.getToken(),Toast.LENGTH_LONG).show();
-        //不为null 并且可用
-        if(mAccessToken!=null&&mAccessToken.isSessionValid()){
 
-            ApiUtils.init(LoginActivity.this);
-          //  Log.i("AAAA",mAccessToken.getToken()+"本地保存有token的时候--------------------");
-            //这里还要验证token是否可用
-            //在这里需要现实进度条给用户提示
-
-            String cookie=getSharedPreferences("userinfo", Context.MODE_PRIVATE).getString("cookie","");
-
-            ApiUtils.client.addHeader("Cookie", cookie);
-            ApiUtils.client.addHeader("user-agent", "android");
-
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-        }else{
             setOnclick();
-        }
-
-
-    //大哥我先把这里注释掉了 到时候再打开阿
-      /*  new Handler().postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                // 跳过登录
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            }
-        }, 1000);*/
-
 
     }
 
@@ -202,6 +174,7 @@ public class LoginActivity extends Activity
     private void initJpush() {
 
         JPushInterface.init(this);
+        JPushInterface.setLatestNotificationNumber(this, 3);
     }
 
 

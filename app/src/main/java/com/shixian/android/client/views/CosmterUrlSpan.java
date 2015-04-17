@@ -107,6 +107,8 @@ public class CosmterUrlSpan extends URLSpan {
         super.updateDrawState(ds);
         ds.setUnderlineText(false);
         ds.setColor(color);
+
+
     }
 
     @Override

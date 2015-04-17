@@ -31,18 +31,16 @@ import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.base.BaseActivity;
 import com.shixian.android.client.activities.SimpleSampleActivity;
-import com.shixian.android.client.activities.base.BaseFeedActivity;
 import com.shixian.android.client.activities.fragment.base.AbsListViewBaseFragment;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
-import com.shixian.android.client.controller.ArgeeOnClickController;
 import com.shixian.android.client.controller.IndexOnClickController;
+import com.shixian.android.client.controller.MsgAgreeOnClickController;
 import com.shixian.android.client.controller.OnAllItemTypeClickController;
 import com.shixian.android.client.enter.EnterLayout;
 import com.shixian.android.client.handler.content.ContentHandler;
 import com.shixian.android.client.handler.feed.BaseFeedHandler;
 import com.shixian.android.client.model.Comment;
-import com.shixian.android.client.model.Feed2;
 import com.shixian.android.client.model.News;
 import com.shixian.android.client.model.feeddate.AllItemType;
 import com.shixian.android.client.model.feeddate.BaseFeed;
@@ -275,9 +273,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                                     context.dissProgress();
                                     pullToRefreshListView.getListView().setSelection(msgType.position);
 
-
-
-
                                 }
                             });
 
@@ -407,117 +402,20 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
                 case TYPE_ALLTYPE:
                     BaseFeedFragment.FeedHolder holder;
-//                    if(convertView==null)
-//                    {
-//                        view=View.inflate(context,R.layout.feed_common_item,null);
-//                        holder=new BaseFeedFragment.FeedHolder();
-//                        holder.iv_icon= (ImageView) view.findViewById(R.id.iv_icon);
-//                        holder.tv_name= (TextView) view.findViewById(R.id.tv_name);
-//                        holder.tv_proect= (TextView) view.findViewById(R.id.tv_project);
-//                        holder.tv_time= (TextView) view.findViewById(R.id.tv_time);;
-//                        holder.tv_content= (TextView) view.findViewById(R.id.tv_content);;
-//                        holder.iv_content=(ImageView) view.findViewById(R.id.iv_content);;
-//                        holder.tv_response= (TextView) view.findViewById(R.id.tv_response);
-//                        holder.tv_type= (TextView) view.findViewById( R.id.tv_type);
-//                        holder.v_line=view.findViewById(R.id.v_line);
-//                        holder.ll_body= (LinearLayout) view.findViewById(R.id.ll_body);
-//                        holder.rl_agree= (android.widget.RelativeLayout) view.findViewById(R.id.rl_agree);
-//                        holder.tv_agree= (TextView) view.findViewById(R.id.tv_agree);
-//                        holder.tv_agreecount= (TextView) view.findViewById(R.id.tv_agreecount);
-//
-//                        view.setTag(holder);
-//
-//
-//
-//                    }else{
-//                        view=convertView;
-//                        holder= (FeedHolder) view.getTag();
-//                    }
-//
-//
-//                    view.setBackgroundColor(Color.WHITE);
-//
-//
-//                    ContentHandler contentHandler=new ContentHandler(holder.tv_content).longClickCopy();
-//
-//
-//
-//                        AllItemType allItemType=feedEntry.firstEntry;
-//
-//                        if(allItemType!=null) {
-//
-//
-//
-//
-//                            String type = "";
-//                            String project = project = allItemType.project.title;
-//
-//
-//                            String switchOpt;
-//
-//                            if (msgType.isComment) {
-//                                switchOpt = msgType.commentable_type;
-//
-//                            } else {
-//                                switchOpt = msgType.notifiable_type;
-//                            }
-//
-
-//
-//                            holder.tv_type.setText(type);
-//
-//
-//                            holder.tv_proect.setText(project);
-//
-//
-//                            holder.tv_name.setText(feedEntry.firstEntry.user.username);
-//                            ImageLoader.getInstance().displayImage(AppContants.DOMAIN + allItemType.user.avatar.small.url, holder.iv_icon, feedOptions, animateFirstListener);
-//
-//
-//
-//
-//                            //设置样式
-//
-//
-//                            holder.tv_type.setVisibility(View.VISIBLE);
-//                            holder.tv_proect.setVisibility(View.VISIBLE);
-//                            holder.tv_response.setVisibility(View.GONE);
-//
-//                            setAllItemCommonClickListener(context, holder, allItemType);
-//
-//
-//                        }
-//
-
-
-
                     view= BaseFeedHandler.initFeedItemView2(context,convertView);
-
                     holder= (FeedHolder) view.getTag();
-
-
                     view.setBackgroundColor(Color.WHITE);
-
-
                     ContentHandler contentHandler= new ContentHandler(holder.tv_content).longClickCopy();
-
                     holder.rl_agree.setVisibility(View.GONE);
+
                     if(position==0) {
-
                         AllItemType allItemType = feedEntry.firstEntry;
-
 
                         if (allItemType != null) {
 
-
-                            ImageLoader.getInstance().displayImage(AppContants.DOMAIN + allItemType.user.avatar.small.url, holder.iv_icon, feedOptions, animateFirstListener);
-
-
+                            ImageLoader.getInstance().displayImage(AppContants.ASSET_DOMAIN + allItemType.user.avatar.small.url, holder.iv_icon, feedOptions, animateFirstListener);
                             String type = "";
                             String project = project = allItemType.project.title;
-
-
-
 
                             String switchOpt;
 
@@ -529,15 +427,13 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                             }
 
 
-
-
-
                             switch (switchOpt) {
                                 case "Idea":
                                     type = context.getResources().getString(R.string.feed_add_idea);
                                     //  holder.tv_content.setText(allItemType.content);
                                     contentHandler.formatColorContent(holder.tv_content, allItemType.content);
                                     holder.rl_agree.setVisibility(View.VISIBLE);
+                                    holder.tv_agreecount.setText(allItemType.agreement_count);
                                     break;
                                 case "Project":
                                     type = context.getResources().getString(R.string.feed_add_project);
@@ -563,11 +459,11 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                                     holder.iv_content.setVisibility(View.VISIBLE);
 
 
-                                    ImageLoader.getInstance().displayImage(AppContants.DOMAIN + allItemType.attachment.thumb.url, holder.iv_content, contentOptions, animateFirstListener);
+                                    ImageLoader.getInstance().displayImage(AppContants.ASSET_DOMAIN + allItemType.attachment.thumb.url, holder.iv_content, contentOptions, animateFirstListener);
 
                                     ivContentOnClickListener(holder, allItemType.attachment.url);
                                     holder.rl_agree.setVisibility(View.VISIBLE);
-
+                                    holder.tv_agreecount.setText(allItemType.agreement_count);
                                     break;
                                 case "UserProjectRelation":
                                     type = context.getResources().getString(R.string.feed_join_project);
@@ -604,8 +500,11 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                                     holder.iv_content.setVisibility(View.VISIBLE);
                                     holder.iv_content.setImageResource(R.drawable.file);
                                     holder.rl_agree.setVisibility(View.VISIBLE);
+                                    holder.tv_agreecount.setText(allItemType.agreement_count);
                                     break;
                             }
+
+
                             holder.tv_type.setText(type);
 
 
@@ -617,9 +516,10 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
                             //设置样式
 //                int textSize=DisplayUtil.sp2px(context,13);
-                            holder.tv_name.setTextSize(13);
+                            holder.tv_name.setTextSize(14);
                             holder.tv_time.setTextSize(11);
                             holder.tv_content.setTextSize(15);
+                            holder.tv_type.setTextSize(14);
 
                             ViewGroup.LayoutParams params = holder.iv_icon.getLayoutParams();
                             int imageSize = DisplayUtil.dip2px(context, 40);
@@ -636,9 +536,25 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                             holder.tv_proect.setVisibility(View.VISIBLE);
                             holder.tv_response.setVisibility(View.GONE);
 
+                            //设置点赞状态和shuliang
+                            if(allItemType.agreement_status)
+                            {
+                                holder.iv_agree.setImageResource(R.drawable.like);
+
+                            }else{
+
+                                holder.iv_agree.setImageResource(R.drawable.liked);
+                            }
+
+                            //如果user是自己 则不显示点赞
+                            if(Global.USER_ID==allItemType.user.id)
+                            {
+                                holder.rl_agree.setVisibility(View.GONE);
+                            }
+
                             setAllItemCommonClickListener(context, holder, allItemType);
 
-//                            setFeedCommonClick(context,allItemType,holder);
+                            setFeedCommonClick(context,allItemType,holder,msgType);
 
 
                         }
@@ -681,7 +597,7 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
                     contentHandler.formatColorContent(commentHolder.tv_content,comment.content);
 
-                    ImageLoader.getInstance().displayImage(AppContants.DOMAIN + comment.user.avatar.small.url, commentHolder.iv_icon, commentOptions, animateFirstListener);
+                    ImageLoader.getInstance().displayImage(AppContants.ASSET_DOMAIN + comment.user.avatar.small.url, commentHolder.iv_icon, commentOptions, animateFirstListener);
 
 
                     //隐藏回复框
@@ -737,9 +653,16 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
     }
 
 
-    public static  void setFeedCommonClick(Context context ,MsgType msgType, BaseFeedFragment.FeedHolder feedHolder) {
+    public static  void setFeedCommonClick(Context context ,AllItemType allItemType, BaseFeedFragment.FeedHolder feedHolder,MsgType msgType) {
         if (feedHolder.rl_agree.getVisibility() == View.VISIBLE) {
-           // feedHolder.iv_agree.setOnClickListener(new ArgeeOnClickController(context, msgType, feedHolder.tv_agreecount));
+            if(msgType.isComment)
+            {
+                feedHolder.iv_agree.setOnClickListener(new MsgAgreeOnClickController(context, allItemType, feedHolder.tv_agreecount,msgType.commentable_type,msgType.commentable_id));
+
+            }else{
+                feedHolder.iv_agree.setOnClickListener(new MsgAgreeOnClickController(context, allItemType, feedHolder.tv_agreecount,msgType.notifiable_type,msgType.notifiable_id));
+
+            }
         }
     }
 
@@ -1053,7 +976,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                 this.notifiable_id=news.data.id;
                 this.notifiable_type =this.notifiable_type.replaceFirst(this.notifiable_type.substring(0, 1), this.notifiable_type.substring(0, 1).toUpperCase())  ;
 
-
             }
 
             url=String.format(AppContants.MSG_RESOPNSE_URL,notifiable_type.toLowerCase()+"s",notifiable_id);
@@ -1073,6 +995,8 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                 }
             }
 
+
+            Log.i("AAAA",url);
 
 
         }

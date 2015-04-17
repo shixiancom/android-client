@@ -20,11 +20,12 @@ public class SharedPerenceUtil {
 
     public  static void clearAllData(Context context)
     {
-
-        context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).edit().remove("myproject").remove("indexdata").remove("userindexdata").remove("descoryproject").remove("news").commit();
-        context.getSharedPreferences("userinfo",Context.MODE_PRIVATE).edit().remove("userjson").remove("myproject").remove("cookie").commit();
-
-
+        context.getSharedPreferences("editidea",Context.MODE_PRIVATE).edit().clear().commit();
+//        context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).edit().remove("myproject").remove("indexdata").remove("userindexdata").remove("descoryproject").remove("news").commit();
+//        context.getSharedPreferences("userinfo",Context.MODE_PRIVATE).edit().remove("userjson").remove("myproject").remove("cookie").commit();
+        context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).edit().clear().commit();
+        context.getSharedPreferences("userinfo",Context.MODE_PRIVATE).edit().clear().commit();
+        context.getSharedPreferences("newproject",Context.MODE_PRIVATE).edit().clear().commit();
     }
 
     public static void clearIdeaEdit(Context context, String projectid) {
@@ -147,6 +148,11 @@ public class SharedPerenceUtil {
     {
         context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).edit().putString("myproject",json).commit();
 
+    }
+
+    public static void clearMyProject(Context context)
+    {
+        context.getSharedPreferences("cachedate",Context.MODE_PRIVATE).edit().clear().commit();
     }
 
 

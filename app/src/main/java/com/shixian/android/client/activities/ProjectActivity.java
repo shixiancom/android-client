@@ -45,6 +45,8 @@ import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
 import com.sina.weibo.sdk.api.share.WeiboShareSDK;
 import org.apache.http.Header;
 
+import java.util.List;
+
 /**
  * Created by tangtang on 15/4/2.
  */
@@ -256,7 +258,7 @@ public class ProjectActivity extends BaseFeedActivity {
                         public void run() {
 
                             firstPageDate = temp;
-                            feedList = JsonUtils.ParseFeeds(firstPageDate);
+                            final List<BaseFeed> tempList = JsonUtils.ParseFeeds(firstPageDate);
 
 
 
@@ -264,6 +266,7 @@ public class ProjectActivity extends BaseFeedActivity {
                             ProjectActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    feedList=tempList;
                                     if (adapter == null) {
                                         adapter = new ProjectFeedAdapter();
                                         pullToRefreshListView.getRefreshableView().setAdapter(adapter);
@@ -740,7 +743,6 @@ public class ProjectActivity extends BaseFeedActivity {
     protected void onPostResume() {
         super.onPostResume();
         hasCaogao=SharedPerenceUtil.hasIdeaEdit(this.getApplicationContext(),project.id+"");
-        System.out.print("asdasd");
     }
 
     @Override
@@ -748,7 +750,6 @@ public class ProjectActivity extends BaseFeedActivity {
         super.onPostCreate(savedInstanceState, persistentState);
         hasCaogao=SharedPerenceUtil.hasIdeaEdit(this.getApplicationContext(),project.id+"");
 
-        System.out.print("asdasd");
     }
 
     @Override
@@ -870,8 +871,5 @@ public class ProjectActivity extends BaseFeedActivity {
 
 
         ViewGroup viewGroup= (ViewGroup) ((ViewGroup)getWindow().getDecorView()).getChildAt(0);
-        Log.i("AAAA","root"+viewGroup.getClass().getSimpleName());
-        Log.i("AAAA","root"+viewGroup.getChildAt(0).getClass().getSimpleName());
-        Log.i("AAAA","root"+viewGroup.getChildAt(1).getClass().getSimpleName());
     }
 }

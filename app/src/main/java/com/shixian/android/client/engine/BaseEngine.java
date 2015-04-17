@@ -26,9 +26,8 @@ public class BaseEngine  {
             this.add("sx_apikey", Constants.APP_KEY);
 
             //签名和时间戳已经在外部实现
-            this.add("sx_ts",new Date().toString());
+            this.add("sx_ts",System.currentTimeMillis()+"");
             //还差校验和
-
 
         }
 

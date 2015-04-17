@@ -4,4 +4,9 @@
     <string-array name="message_action_text_copy">
         <item>复制</item>
     </string-array>
+
+    <string-array name="camera_gallery">
+        <item>相机</item>
+        <item>图片</item>
+    </string-array>
 </resources>

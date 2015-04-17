@@ -238,13 +238,15 @@ public class DiscoryProjectFragment extends BaseFragment {
                             CommonUtil.logDebug(TAG, new String(temp));
 
                             // projectList.addAll(JsonUtils.ParseFeeds(firstPageDate));
-                            projectList=JsonUtils.ParsesProject(temp);
+                            final List<Project> tempList= JsonUtils.ParsesProject(temp);
 
                             page = 1;
 
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+
+                                    projectList=tempList;
                                     if (adapter == null) {
                                         adapter = new ProjectAdapter();
 

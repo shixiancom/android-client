@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,7 +34,7 @@ public class AddIdeaActivity  extends UmengActivity {
 
     private static final String TAG="AddIdeaActivity";
 
-    private static final int LESS_TEXT_LENGTH=140;
+    private static final int LESS_TEXT_LENGTH=20;
 
     private String projectid;
 
@@ -142,7 +143,9 @@ public class AddIdeaActivity  extends UmengActivity {
                         String result=new String(bytes);
                         if(result.contains("false"))
                         {
-                            Toast.makeText(AddIdeaActivity.this,"评论失败",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddIdeaActivity.this,"发表失败",Toast.LENGTH_SHORT).show();
+
+                           // Log.i("AAAA",new String(bytes));
 
                         }else{
 

@@ -258,8 +258,9 @@ public class AddProjectStepTwoFragment extends UmengFragment implements Fragment
             if(position==currentSelect)
                 holder.iv_check.setVisibility(View.VISIBLE);
             else
-                    holder.iv_check.setVisibility(View.GONE);
+               holder.iv_check.setVisibility(View.GONE);
 
+            holder.tv_admin.setText(types[position]);
 
 
             return view;

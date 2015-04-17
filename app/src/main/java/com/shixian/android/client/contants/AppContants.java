@@ -13,9 +13,12 @@ public interface AppContants {
     /**
      * 服务器接口地址前缀
      */
-    String DOMAIN="http://asset.shixian.com";
+    String DOMAIN="http://api.shixian.com";
 
-    String NOHOST_DOMAIN="http://shixian.com";
+    String API_DOMAIN="http://api.shixian.com";
+
+
+    String ASSET_DOMAIN="http://asset.shixian.com";
 
     /**
      * 获取自身信息url
@@ -56,16 +59,16 @@ public interface AppContants {
     String COMMENT_URL=DOMAIN+"/api/v1/%s/%s/comments.json";
 
     //用户关注地址
-    String USER_FOLLOW_URL=DOMAIN+"/api/v1/users/%s/follow.json";
+    String USER_FOLLOW_URL=API_DOMAIN+"/api/v1/users/%s/follow.json";
 
     //用户取消关注地址
-    String USER_UNFOLLOW_URL=DOMAIN+"/api/v1/users/%s/unfollow.json";
+    String USER_UNFOLLOW_URL=API_DOMAIN+"/api/v1/users/%s/unfollow.json";
 
     //生成项目关注信息
-    String PROJECT_FOLLOW_URL=DOMAIN+"/api/v1/projects/%s/follow.json";
+    String PROJECT_FOLLOW_URL=API_DOMAIN+"/api/v1/projects/%s/follow.json";
 
     //取消项目关注
-    String PROJECT_UNFOLLOW_URL=DOMAIN+"/api/v1/projects/{project_id}/unfollow.json";
+    String PROJECT_UNFOLLOW_URL=API_DOMAIN+"/api/v1/projects/{project_id}/unfollow.json";
 
     String MSG_STATUS_URL=DOMAIN+"/api/v1/notifications/status.json";
 
@@ -80,18 +83,20 @@ public interface AppContants {
     //String DEBUG_JPUSH_NEED_URL="http://172.168.97.167:3000"+"/api/v1/android_tokens";
 
 
-    String ADD_IDEA_URL=NOHOST_DOMAIN+"/api/v1/ideas.json";
+    String ADD_IDEA_URL=API_DOMAIN+"/api/v1/ideas.json";
 
-    String ADD_PROJECT_URL=NOHOST_DOMAIN+"/api/v1/projects";
+    String ADD_PROJECT_URL=API_DOMAIN+"/api/v1/projects";
 
 
-    String AGREE_URL=NOHOST_DOMAIN+"/api/v1/feeds/agreement";
+    String AGREE_URL=API_DOMAIN+"/api/v1/feeds/agreement";
 
-    String DISAGREE_URL=NOHOST_DOMAIN+"/api/v1/feeds/disagreement";
+    String DISAGREE_URL=API_DOMAIN+"/api/v1/feeds/disagreement";
 
 
 
     String BOOT_URL=DOMAIN+"/api/v1/boot/featured_boot_projects";
+
+    String USER_EDIT_URL="http://api.shixian.com/api/v1"+"/users/edit.json";
 
 
 

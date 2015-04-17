@@ -13,12 +13,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.FrameLayout;
 
 import com.shixian.android.client.R;
@@ -158,13 +156,11 @@ public class SwipeActivity extends BaseCommonActivity {
                         currentX = downX;
                         currentY = downY;
                         lastX = downX;
-                        Log.i("AAAA","onInterceptTouchEvent方法中的 down");
 
                         break;
                     case MotionEvent.ACTION_MOVE:
                         float dx = ev.getX() - downX;
                         float dy = ev.getY() - downY;
-                        Log.i("AAAA","onInterceptTouchEvent方法中的 move");
                         //横向滑动 最后一个条件是滑动对象线长度大雨60dp
                         if ((dy == 0f || Math.abs(dx / dy) > 1) && (dx * dx + dy * dy > touchSlop * touchSlop)) {
                             downX = ev.getX();
@@ -178,7 +174,6 @@ public class SwipeActivity extends BaseCommonActivity {
                         }
                         break;
                     case MotionEvent.ACTION_UP:
-                        Log.i("AAAA","onInterceptTouchEvent方法中的 up");
                         break;
                 }
                 //20dp以内可以滑动
@@ -187,7 +182,6 @@ public class SwipeActivity extends BaseCommonActivity {
                 tracker = VelocityTracker.obtain();
                 return true;
             }
-            Log.i("AAAA",super.onInterceptTouchEvent(ev)+"");
             return super.onInterceptTouchEvent(ev);
         }
 
@@ -203,14 +197,12 @@ public class SwipeActivity extends BaseCommonActivity {
                         currentX = downX;
                         currentY = downY;
                         lastX = downX;
-                        Log.i("AAAA","onTouchEvent方法中的 down");
 
 
                         break;
                     case MotionEvent.ACTION_MOVE:
                         currentX = event.getX();
                         currentY = event.getY();
-                        Log.i("AAAA","onTouchEvent方法中的 move");
                         float dx = currentX - lastX;
                         if (content.getX() + dx < 0) {
                             setContentX(0);
@@ -245,7 +237,6 @@ public class SwipeActivity extends BaseCommonActivity {
 
             }
 
-            Log.i("AAAA","touchEvent ---return:"+super.onTouchEvent(event));
             return super.onTouchEvent(event);
         }
 

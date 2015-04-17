@@ -319,7 +319,7 @@ public class SpotlightFragment extends AbsListViewBaseFragment {
 
                         //    ImageLoader.getInstance().displayImage(AppContants.DOMAIN + user.avatar.small.url, imageView, BaseFeedHandler.commentOptions, animateFirstListener);
                           //  imageView.setImageResource(R.drawable.default_icon);
-                                ImageLoader.getInstance().displayImage(AppContants.DOMAIN + user.avatar.small.url, (ImageView)view1.findViewById(R.id.iv_icon), BaseFeedHandler.commentOptions, animateFirstListener);
+                                ImageLoader.getInstance().displayImage(AppContants.ASSET_DOMAIN + user.avatar.small.url, (ImageView)view1.findViewById(R.id.iv_icon), BaseFeedHandler.commentOptions, animateFirstListener);
 
                             coHolder.gl_compoters.addView(view1);
 
@@ -385,7 +385,7 @@ public class SpotlightFragment extends AbsListViewBaseFragment {
                         parentHolder.tv_vacancy.setText("暂无");
                     }
                     parentHolder.tv_title.setText(reritedBoot.project.title);
-                    ImageLoader.getInstance().displayImage(AppContants.DOMAIN + reritedBoot.user.avatar.small.url, parentHolder.iv_icon, BaseFeedHandler.feedOptions, animateFirstListener);
+                    ImageLoader.getInstance().displayImage(AppContants.ASSET_DOMAIN + reritedBoot.user.avatar.small.url, parentHolder.iv_icon, BaseFeedHandler.feedOptions, animateFirstListener);
                     parentHolder.tv_content.setText(reritedBoot.project.description);
                     parentHolder.tv_name.setText(reritedBoot.user.username);
                     parentHolder.tv_userdescription.setText(reritedBoot.user.description);
@@ -475,7 +475,7 @@ public class SpotlightFragment extends AbsListViewBaseFragment {
                 simpleIconHolder= (SimpleIconHolder) view.getTag();
             }
 
-            ImageLoader.getInstance().displayImage(AppContants.DOMAIN + users.get(position).avatar.small.url, simpleIconHolder.iv_icon, BaseFeedHandler.commentOptions, animateFirstListener);
+            ImageLoader.getInstance().displayImage(AppContants.ASSET_DOMAIN + users.get(position).avatar.small.url, simpleIconHolder.iv_icon, BaseFeedHandler.commentOptions, animateFirstListener);
 
             return view;
         }

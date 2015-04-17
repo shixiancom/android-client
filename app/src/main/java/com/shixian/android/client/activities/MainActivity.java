@@ -46,6 +46,7 @@ import com.shixian.android.client.activities.fragment.base.BaseFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.engine.CommonEngine;
+import com.shixian.android.client.engine.JPushEngine;
 import com.shixian.android.client.model.NewsSataus;
 import com.shixian.android.client.model.SimpleProject;
 import com.shixian.android.client.model.User;
@@ -60,6 +61,7 @@ import org.json.JSONException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
@@ -96,7 +98,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Drawable drawable;
 
     //抽屉里的子listView
-    private List<SimpleProject> projectList;
+    private List<SimpleProject> projectList= new ArrayList<>();
     private MenuAdapter projectAdapter;
 
 
@@ -354,7 +356,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
                     //发送推送需要的信息
-                    sendJpushData(true);
+                    JPushEngine.sendJpushData(MainActivity.this,true);
 
                     if(!TextUtils.isEmpty(user.username))
                      tv_uname.setText(user.username);
@@ -362,7 +364,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     SharedPerenceUtil.putUserInfo(MainActivity.this.getApplicationContext(), userInfo);
 
                     //异步下载图片(头像)
-                    ApiUtils.get(MainActivity.this,AppContants.DOMAIN + user.avatar.small.url, null, new AsyncHttpResponseHandler() {
+                    ApiUtils.get(MainActivity.this,AppContants.ASSET_DOMAIN + user.avatar.small.url, null, new AsyncHttpResponseHandler() {
                         @Override
                         public void onSuccess(int i, Header[] headers, final byte[] bytes) {
                             Bitmap icon = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -517,7 +519,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                     startActivityForResult(intent,REFREST_CODE);
                 }else{
-                    SimpleProject project = projectList.get(position);
+                    SimpleProject project = projectList.get(position-1);
                     if (project != null) {
                         Intent intent = new Intent(MainActivity.this, ProjectActivity.class);
                         intent.putExtra("project_id", project.getId() + "");
@@ -549,12 +551,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         //设置左侧抽屉的宽度等于屏幕宽度减去Toolbar的高度
         LinearLayout ll_left = (LinearLayout) findViewById(R.id.ll_left);
-        int actionBarHeight = 0;
-        TypedValue tv = new TypedValue();
-        if (this.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, this.getResources().getDisplayMetrics());
-        }
-        ll_left.getLayoutParams().width = Global.screenWidth - actionBarHeight;
+//        int actionBarHeight = 0;
+//        TypedValue tv = new TypedValue();
+//        if (this.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+//            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, this.getResources().getDisplayMetrics());
+//        }
+
+        ll_left.getLayoutParams().width = Global.screenWidth - DisplayUtil.dip2px(this,56);
+
 
   //      rl_title.getLayoutParams().height= actionBarHeight;
 
@@ -593,6 +597,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         tv_uname.setOnClickListener(userOnClickListener);
         iv_icon.setOnClickListener(userOnClickListener);
 
+        projectAdapter = new MenuAdapter();
+        lv_menu.setAdapter(projectAdapter);
 
 
 
@@ -686,7 +692,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void finish() {
 
-        sendJpushData(false);
+     //  sendJpushData(false);
         super.finish();
     }
 
@@ -697,7 +703,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         @Override
         public int getCount() {
-            return projectList.size();
+            return projectList.size()+1;
         }
 
         @Override
@@ -765,7 +771,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                     holder.iv_sit.setAlpha(0.54f);
 
-                    holder.tv_title.setText(projectList.get(position).getTitle());
+                    holder.tv_title.setText(projectList.get(position-1).getTitle());
 
                     break;
 
@@ -920,7 +926,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mParams.gravity = Gravity.LEFT + Gravity.TOP;
 
         mParams.x = DisplayUtil.dip2px(this, 30);
-        mParams.y = DisplayUtil.dip2px(this, 30);
+        mParams.y = DisplayUtil.dip2px(this, 10);
         mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
 //				| WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
                 | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
@@ -985,33 +991,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //        });
     }
 
-    /******************************************************JPUSH****************/
-    /**
-     * 发送极光推送信息
-     */
-    private void sendJpushData(boolean isInit) {
-
-        String regId = JPushInterface.getRegistrationID(this);
-        RequestParams params = new RequestParams();
-        params.put("reg_id", regId);
-        if(isInit)
-            params.put("uid", Global.USER_ID);
-        params.put("device", CommonUtil.getImei(this, ""));
-
-
-        ApiUtils.post(MainActivity.this,AppContants.JPUSH_NEED_URL, params, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int position, Header[] headers, byte[] bytes) {
-
-            }
-
-            @Override
-            public void onFailure(int position, Header[] headers, byte[] bytes, Throwable throwable) {
-            }
-        });
-
-
-    }
 
 
     /**

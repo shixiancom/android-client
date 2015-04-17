@@ -50,7 +50,7 @@ public class ProjectEngine extends  BaseEngine{
     {
         RequestParams params=new RequestParams();
 
-        params.put("entity_type", entity_type);
+        params.put("entity_type", entity_type.toLowerCase());
         params.put("entity_id", entity_id);
 
         if(isagree)

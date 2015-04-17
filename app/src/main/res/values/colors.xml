@@ -15,4 +15,7 @@
     <color name="gray_textcolor">#9B9B9B</color>
 
     <color name="gray_bk">#FAFAFA</color>
+
+   <!--<color name="menu_item">#EFEDEE</color>-->
+    <color name="menu_item">#83d1ee</color>
 </resources>

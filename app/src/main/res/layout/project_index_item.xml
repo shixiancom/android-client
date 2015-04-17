@@ -41,7 +41,9 @@
             android:minWidth="88dp"
             android:singleLine="true"
             android:text="@string/follow"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            />
 
         <Button
             android:layout_width="wrap_content"

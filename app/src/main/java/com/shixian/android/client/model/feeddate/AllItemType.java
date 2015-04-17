@@ -17,6 +17,9 @@ public class AllItemType extends  BaseFeedItem{
     public String comments_count;
     public String type;
     public String feedable_type;
+    public String  agreement_count;
+    public boolean agreement_status;
+
 
 
     public static class Attachment {
