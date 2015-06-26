@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -15,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.base.BaseFeedActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
@@ -49,6 +50,7 @@ import java.util.List;
 
 /**
  * Created by tangtang on 15/4/2.
+ * 项目页面 包括项目信息 和项目的feed
  */
 public class ProjectActivity extends BaseFeedActivity {
 
@@ -403,6 +405,8 @@ public class ProjectActivity extends BaseFeedActivity {
             switch (itemType) {
                 case TYPE_PROJECT:
 
+                    Log.i("AAAA","TYPE_PROJECT");
+
                     view=View.inflate( ProjectActivity.this,R.layout.project_index_item,null);
 
                     if(project!=null)
@@ -542,7 +546,9 @@ public class ProjectActivity extends BaseFeedActivity {
 /**************************************************/
                     initFeedItemOnClick(feed,feedHolder);
 
-                    BaseFeedHandler.setFeedCommonClick(ProjectActivity.this, feed, feedHolder);
+                    BaseFeedHandler.setFeedCommonClick(feed.data.user,ProjectActivity.this, feed, feedHolder);
+
+                    BaseFeedHandler.setTypeAgreeFeed(feedList,adapter,ProjectActivity.this,feed,feedHolder);
 
 
 
@@ -559,12 +565,13 @@ public class ProjectActivity extends BaseFeedActivity {
 
 /**************************************************************/
                     Comment comment = (Comment) feedList.get(position - 1);
+                    comment.position=position-1;
                     BaseFeedHandler.initCommentItemData(comment, commentHolder, animateFirstListener);
 
-
+                    BaseFeedHandler.setCommentLogClickListener(commentHolder.tv_content,adapter,feedList,comment);
 /******************************************/
 
-                    initCommentItemOnClick(comment,commentHolder);
+                    initCommentItemOnClick(comment, commentHolder, adapter,feedList);
                     break;
 
 
@@ -652,7 +659,7 @@ public class ProjectActivity extends BaseFeedActivity {
     }
 
 
-    private void initCommentItemOnClick(final Comment comment,BaseFeedFragment.CommentHolder commentHolder) {
+    private void initCommentItemOnClick(final Comment comment,BaseFeedFragment.CommentHolder commentHolder,BaseAdapter adapter,List<BaseFeed> feedList) {
 
         //设置点击事件
 
@@ -681,18 +688,22 @@ public class ProjectActivity extends BaseFeedActivity {
 //            holder.tv_content.setOnClickListener(controller);
 //        }
 
-        if(commentHolder.tv_content.getVisibility()==View.VISIBLE)
-        {
+        if (commentHolder.tv_content.getVisibility() == View.VISIBLE) {
 
-            //点击跳出回复框 带@的
-            commentHolder.tv_content.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    popComment(v,comment,listView,0);
-                }
-            });
+            if(comment.user.username.equals(Global.USER_NAME))
+            {
+                BaseFeedHandler.setCommentOnCliekListener(commentHolder.tv_content,adapter,feedList,comment);
+            }else{
+                commentHolder.tv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popComment(v, comment, listView,0);
+                    }
+                });
+            }
 
         }
+
 
 
 
@@ -810,7 +821,7 @@ public class ProjectActivity extends BaseFeedActivity {
 
 
 
-    //执行动画
+    //执行动画  点击收缩展开的动画
     private void execAnmi(Button clickView,View anmiview)
     {
 

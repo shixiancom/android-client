@@ -1,17 +1,23 @@
 package com.shixian.android.client.handler.feed;
 
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -21,19 +27,27 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.SimpleSampleActivity;
+import com.shixian.android.client.activities.base.BaseActivity;
+import com.shixian.android.client.activities.base.BaseCommonActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.controller.ArgeeOnClickController;
+import com.shixian.android.client.controller.MyTypeAgreeFeedControll;
 import com.shixian.android.client.handler.content.ContentHandler;
 import com.shixian.android.client.model.Comment;
 import com.shixian.android.client.model.Feed2;
+import com.shixian.android.client.model.User;
+import com.shixian.android.client.model.feeddate.BaseFeed;
 import com.shixian.android.client.utils.DisplayUtil;
 import com.shixian.android.client.utils.TimeUtil;
+
+import java.util.List;
 
 /**
  * Created by tangtang on 15/4/3.
  */
 public class BaseFeedHandler {
+
 
 
     public  static DisplayImageOptions contentOptions = new DisplayImageOptions
@@ -68,6 +82,14 @@ public class BaseFeedHandler {
             .build();
 
 
+    /**
+     *  这里又有一个奇葩的点赞需求  是我有生之年  见过最奇葩的 需求  不过客户是上帝
+     *  干吧
+     * @param context
+     * @param feed
+     * @param feedHolder
+     * @param animateFirstListener
+     */
     public static void initFeedItemViewData(Context context, Feed2 feed,BaseFeedFragment.FeedHolder feedHolder,ImageLoadingListener animateFirstListener) {
         String type = "";
         String project = "";
@@ -94,9 +116,6 @@ public class BaseFeedHandler {
                 // feedHolder.tv_content.setText(feed.data.content.trim());
                 contentHandler.formatColorContent(feedHolder.tv_content,feed.data.content);
                 feedHolder.rl_agree.setVisibility(View.VISIBLE);
-
-                feedHolder.tv_agreecount.setText(feed.agreement_count);
-
                 break;
             case "Project":
                 type = context.getResources().getString(R.string.add_project);
@@ -174,7 +193,7 @@ public class BaseFeedHandler {
                         feedHolder.tv_content.setText(feed.data.content+"\n"+"  "+feed.data.file_name);
                         feedHolder.iv_content.setVisibility(View.VISIBLE);
                         feedHolder.iv_content.setImageResource(R.drawable.file);
-
+                        feedHolder.tv_agreecount.setText(feed.agreement_count);
                         break;
                     case "image":
                         type="赞同了图片";
@@ -182,9 +201,12 @@ public class BaseFeedHandler {
                         feedHolder.iv_content.setVisibility(View.VISIBLE);
                         ImageLoader.getInstance().displayImage(AppContants.ASSET_DOMAIN + feed.data.attachment.thumb.url, feedHolder.iv_content, contentOptions, animateFirstListener);
                         ivContentOnClickListener(context,feedHolder,feed.data.attachment.url);
+                        feedHolder.tv_agreecount.setText(feed.agreement_count);
                         break;
 
                 }
+
+
 
 
                 feedHolder.tv_content.setVisibility(View.VISIBLE);
@@ -205,10 +227,7 @@ public class BaseFeedHandler {
             feedHolder.v_line.setVisibility(View.GONE);
         }
 
-        if(feed.data.user.id.equals(Global.USER_ID+""))
-        {
-            feedHolder.rl_agree.setVisibility(View.GONE);
-        }
+
 
 
 
@@ -220,15 +239,15 @@ public class BaseFeedHandler {
         feedHolder.tv_name.setText(feed.data.user.username);
         feedHolder.tv_time.setText(TimeUtil.getDistanceTime(feed.created_at));
 
+        feedHolder.tv_agreecount.setText(feed.agreement_count);
         if(feed.agreement_status)
         {
             feedHolder.iv_agree.setImageResource(R.drawable.like);
-            feedHolder.iv_agree.setBackgroundResource(R.drawable.agree_select);
+
 
         }else{
 
             feedHolder.iv_agree.setImageResource(R.drawable.liked);
-            feedHolder.iv_agree.setBackgroundResource(R.drawable.agree_select);
         }
 
         //设置样式
@@ -269,8 +288,6 @@ public class BaseFeedHandler {
         {
             feedHolder.tv_content.setVisibility(View.GONE);
         }
-
-
 
     }
 
@@ -347,6 +364,7 @@ public class BaseFeedHandler {
             commentHolder.tv_response = (TextView) view.findViewById(R.id.tv_response);
 //            commentHolder.v_line = view.findViewById(R.id.v_line);
             commentHolder.ll_body = (LinearLayout) view.findViewById(R.id.ll_body);
+            commentHolder.ll_card=(LinearLayout)view.findViewById(R.id.ll_card);
 
             view.setTag(commentHolder);
 
@@ -354,6 +372,8 @@ public class BaseFeedHandler {
             view = convertView;
 
         }
+
+
 
         return view;
     }
@@ -371,11 +391,9 @@ public class BaseFeedHandler {
         commentHolder.tv_name.setText(comment.user.username);
         commentHolder.tv_time.setText(TimeUtil.getDistanceTime(comment.created_at));
         commentHolder.tv_content.setVisibility(View.VISIBLE);
-       // commentHolder.tv_content.setText(comment.content);
+        commentHolder.tv_content.setText(comment.content);
 
 
-        ContentHandler contentHandler= new ContentHandler(commentHolder.tv_content).longClickCopy();
-        contentHandler.formatColorContent(commentHolder.tv_content,comment.content);
 
 
         //头像图片处理
@@ -389,14 +407,85 @@ public class BaseFeedHandler {
             commentHolder.tv_response.setVisibility(View.GONE);
 //            commentHolder.v_line.setVisibility(View.GONE);
         }
-    }
 
-    public static  void setFeedCommonClick(Context context ,Feed2 feed, BaseFeedFragment.FeedHolder feedHolder) {
-        if (feedHolder.rl_agree.getVisibility() == View.VISIBLE) {
-            feedHolder.iv_agree.setOnClickListener(new ArgeeOnClickController(context, feed, feedHolder.tv_agreecount));
+        if(comment.isLast)
+        {
+            commentHolder.ll_card.setBackgroundDrawable(BaseCommonActivity.layer_comment_last);
+        }else{
+            commentHolder.ll_card.setBackgroundDrawable(BaseCommonActivity.layer_comment_not_last);
         }
     }
 
+    public static  void setFeedCommonClick(User user,Context context ,Feed2 feed, BaseFeedFragment.FeedHolder feedHolder) {
 
 
+
+
+        if(user!=null)
+        if(!Global.USER_NAME.equals(user.username))
+        {
+
+            feedHolder.iv_agree.setOnClickListener(new ArgeeOnClickController(context, feed, feedHolder.tv_agreecount));
+        }else{
+            feedHolder.iv_agree.setOnClickListener(null);
+        }
+
+
+
+    }
+
+
+
+
+
+    public static void setCommentLogClickListener(TextView tv_content,BaseAdapter adapter,List<BaseFeed> feedList,Comment comment)
+    {
+        ContentHandler contentHandler;
+        if(comment.user.username.equals(Global.USER_NAME))
+        {
+            contentHandler = new ContentHandler(tv_content).longClickCopyAndDelete(comment,adapter,feedList);
+
+        }else{
+            contentHandler=new ContentHandler(tv_content).longClickCopy();
+        }
+        contentHandler.formatColorContent(tv_content,comment.content);
+
+
+    }
+
+
+    /**
+     * 这个是给设置点击自己回复时候的方法  点击别人的回复是没有用的
+     * @param tv_content  这个是该控件
+     * @param adapter  这个是  adapter  我们删除之后需要  更新界面
+     * @param feedList  这个是  baseFeed 的容器  要从这里面删除该 内容
+     * @param comment   这个就是comment 实体对象
+     *
+     *                  总的来说 这个方法是和  上边的 长按方法是一致的 但是这种奇葩要求 已经在我身上发生了  暂且只能这么做了
+     *
+     *
+     */
+    public static void setCommentOnCliekListener(TextView tv_content,BaseAdapter adapter,List<BaseFeed> feedList,Comment comment)
+    {
+        ContentHandler contentHandler;
+        if(comment.user.username.equals(Global.USER_NAME))
+        {
+            contentHandler = new ContentHandler(tv_content).clickCopyAndDelete(comment,adapter,feedList);
+
+        }else{
+            contentHandler=new ContentHandler(tv_content).longClickCopy();
+        }
+        contentHandler.formatColorContent(tv_content,comment.content);
+
+
+    }
+
+
+    public static void setTypeAgreeFeed(List<BaseFeed> feedList, BaseAdapter adapter, Context context, Feed2 feed, BaseFeedFragment.FeedHolder feedHolder) {
+        if(Global.USER_NAME.equals(feed.data.user.username)&&feed.feedable_type.equals("Agreement"))
+        {
+            feedHolder.iv_agree.setOnClickListener(new MyTypeAgreeFeedControll(feedHolder.tv_agreecount,context,feed,feedList,adapter));
+
+        }
+    }
 }

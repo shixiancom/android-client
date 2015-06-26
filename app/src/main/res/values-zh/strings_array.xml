@@ -9,4 +9,9 @@
         <item>相机</item>
         <item>图片</item>
     </string-array>
+
+    <string-array name="comment_gallery">
+        <item>复制</item>
+        <item>删除</item>
+    </string-array>
 </resources>

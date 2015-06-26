@@ -6,6 +6,7 @@ import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by tangtang on 15/3/16.
+ * 友盟统计
  */
 public class UmengActivity extends ActionBarActivity {
 

@@ -20,4 +20,10 @@
     <dimen name="card_global_margin">8dp</dimen>
     <dimen name="project_text_size">16sp</dimen>
 
+    <dimen name="global_padding">8dp</dimen>
+
+    <dimen name="padding_top">16dp</dimen>
+
+
+
 </resources>

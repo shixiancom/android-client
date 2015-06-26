@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -60,7 +59,7 @@ public class LoginFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
 
 
         View view=inflater.inflate(R.layout.activity_login,null,false);
@@ -139,14 +138,14 @@ public class LoginFragment extends Fragment {
             // 从 Bundle 中解析 Token
             mAccessToken = Oauth2AccessToken.parseAccessToken(values);
 
-            // Log.i("AAAA2",mAccessToken.getToken());
+
+            Log.i("AAAA2",values.toString());
 
 
 
             if (mAccessToken.isSessionValid()) {
 
 
-                Log.i("AAAA", mAccessToken.getToken() + "点击登录的时候--------------------");
                 // 保存 Token 到 SharedPreferences
                 AccessTokenKeeper.writeAccessToken(getActivity(), mAccessToken);
                 CommonUtil.logDebug(TAG, mAccessToken.getToken());

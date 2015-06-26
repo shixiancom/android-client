@@ -156,10 +156,14 @@ public class MyUserIndexFragment extends BaseFeedFragment {
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
+                if(isAdded())
+                {
+                    Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
+                    pullToRefreshListView.onPullUpRefreshComplete();
+                    page -= 1;
+                }
 
-                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT);
-                pullToRefreshListView.onPullUpRefreshComplete();
-                page -= 1;
+
             }
         });
     }
@@ -477,7 +481,7 @@ public class MyUserIndexFragment extends BaseFeedFragment {
 /**************************************************/
                     initFeedItemOnClick(feed, feedHolder);
 
-                    BaseFeedHandler.setFeedCommonClick(context,feed,feedHolder);
+                    BaseFeedHandler.setFeedCommonClick(feed.data.user,context,feed,feedHolder);
 
                     break;
 
@@ -724,7 +728,6 @@ public class MyUserIndexFragment extends BaseFeedFragment {
                     String filePath = CommonUtil.getPath(getActivity(), fileCropUri);
                     RequestParams params = new RequestParams();
                     File file=new File(filePath);
-                    Log.i("AAAA", filePath);
                     params.put("avatar", file);
                     //
                    // postNetwork(HOST_USER_AVATAR, params, HOST_USER_AVATAR);

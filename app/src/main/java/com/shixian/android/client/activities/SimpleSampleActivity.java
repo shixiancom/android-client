@@ -47,7 +47,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-
+/**
+ * 查看大图的页面
+ */
 public class SimpleSampleActivity extends Activity {
 
 

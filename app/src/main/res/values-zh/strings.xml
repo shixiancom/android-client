@@ -43,7 +43,7 @@
     <string name="project_vote"><font color='#005580'>{project_title}</font> </string>
     <string name="project_homework"><font color='#005580'>{project_title}</font> </string>
     <string name="new_mention_attachment">提到了你</string>
-    <string name="new_mention"><font color='blue'> 回复 </font> 中提到你</string>
+    <string name="new_mention"> 回复中提到你</string>
     <string name="compele_task">完成了任务</string>
     <string name="project_new_task"><font color='blue'>{project_title}</font> 中</string>
 
@@ -71,6 +71,7 @@
     <string name="tv_reply">回复</string>
     <string name="follow">关注</string>
     <string name="following">取消关注</string>
+    <string name="des_following">已关注</string>
     <string name="login">登陆</string>
     <string name="share">分享</string>
     <string name="shixian">实现</string>

@@ -28,6 +28,7 @@ import org.apache.http.Header;
 
 /**
  * Created by tangtang on 15/3/25.
+ * 添加想法的activity
  */
 public class AddIdeaActivity  extends UmengActivity {
 
@@ -165,7 +166,8 @@ public class AddIdeaActivity  extends UmengActivity {
                     @Override
                     public void onFailure(int position, Header[] headers, byte[] bytes, Throwable throwable) {
                        // Toast.makeText(AddIdeaActivity.this,R.string.check_net,Toast.LENGTH_SHORT).show();
-                        Toast.makeText(AddIdeaActivity.this,new String(bytes),Toast.LENGTH_SHORT).show();
+                        if (bytes!=null)
+                            Toast.makeText(AddIdeaActivity.this,new String(bytes),Toast.LENGTH_SHORT).show();
 
                     }
                 });

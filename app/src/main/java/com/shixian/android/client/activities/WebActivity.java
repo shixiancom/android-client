@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 /**
  * Created by tangtang on 15/4/1.
+ * 点击url后跳转的页面
  */
 public class WebActivity extends SwipeActivity  {
 

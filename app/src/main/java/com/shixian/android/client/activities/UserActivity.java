@@ -8,6 +8,7 @@ import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -467,8 +468,9 @@ public class UserActivity extends BaseFeedActivity {
 /**************************************************/
                     initFeedItemOnClick(feed, feedHolder);
 
-                    BaseFeedHandler.setFeedCommonClick(UserActivity.this,feed, feedHolder);
+                    BaseFeedHandler.setFeedCommonClick(feed.data.user,UserActivity.this,feed, feedHolder);
 
+                    BaseFeedHandler.setTypeAgreeFeed(feedList,adapter,UserActivity.this,feed,feedHolder);
 
                     break;
 
@@ -482,12 +484,17 @@ public class UserActivity extends BaseFeedActivity {
 
 /**************************************************************/
                     Comment comment = (Comment) feedList.get(position - 1);
+                    comment.position=position-1;
                     BaseFeedHandler.initCommentItemData(comment, commentHolder, animateFirstListener);
 
 
 /******************************************/
 
-                    initCommentItemOnClick(comment, commentHolder);
+
+                    BaseFeedHandler.setCommentLogClickListener(commentHolder.tv_content,adapter,feedList,comment);
+/******************************************/
+
+                    initCommentItemOnClick(comment, commentHolder, adapter,feedList);
                     break;
             }
 
@@ -496,7 +503,7 @@ public class UserActivity extends BaseFeedActivity {
         }
     }
 
-    protected void initCommentItemOnClick(final Comment comment, BaseFeedFragment.CommentHolder commentHolder) {
+    protected void initCommentItemOnClick(final Comment comment, BaseFeedFragment.CommentHolder commentHolder,BaseAdapter adapter,List<BaseFeed> feedList) {
 
         IndexOnClickController controller = new IndexOnClickController(UserActivity.this, comment);
 
@@ -512,16 +519,21 @@ public class UserActivity extends BaseFeedActivity {
 
         if (commentHolder.tv_content.getVisibility() == View.VISIBLE) {
 
-            //点击跳出回复框 带@的
-            commentHolder.tv_content.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    popComment(v, comment, listView, 0);
-                }
-            });
+            if(comment.user.username.equals(Global.USER_NAME))
+            {
+                BaseFeedHandler.setCommentOnCliekListener(commentHolder.tv_content,adapter,feedList,comment);
+            }else{
+                commentHolder.tv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popComment(v, comment, listView,0);
+                    }
+                });
+            }
 
 
         }
+
 
 
         if (commentHolder.tv_response.getVisibility() == View.VISIBLE) {

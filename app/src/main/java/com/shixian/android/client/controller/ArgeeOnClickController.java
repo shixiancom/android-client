@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 /**
  * Created by tangtang on 15/4/3.
+ * 赞同的controller
  */
 public class ArgeeOnClickController implements View.OnClickListener {
 
@@ -78,11 +79,9 @@ public class ArgeeOnClickController implements View.OnClickListener {
                             tv_argeecount.setText(jsonObject.getString("agreement_count"));
                             if(isAgree) {
                                 ((ImageView) v).setImageResource(R.drawable.liked);
-                                ((ImageView) v).setBackgroundResource(R.drawable.agree_select);
                             }
                             else {
                                 ((ImageView) v).setImageResource(R.drawable.like);
-                                ((ImageView) v).setBackgroundResource(R.drawable.disagree_select);
                             }
 
                             if(TYPE_FEED==type) {

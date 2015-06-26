@@ -17,6 +17,7 @@ public class TimeUtil {
 
         String interval = null;
         try {
+
             SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             ParsePosition pos = new ParsePosition(0);
             Date d1 = (Date) sd.parse(createtime, pos);

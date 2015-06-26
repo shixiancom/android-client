@@ -162,12 +162,14 @@ public class AddProjectStepTwoFragment extends UmengFragment implements Fragment
                                 Toast.makeText(getActivity(),"标题:"+object.getString("title"),Toast.LENGTH_SHORT).show();
 
                             } catch (JSONException e) {
+                                if(isAdded())
                                 Toast.makeText(getActivity(),"服务器异常",Toast.LENGTH_SHORT).show();
 
                             }
 
 
                         }else {
+                            if(isAdded())
                             Toast.makeText(getActivity(), R.string.check_net, Toast.LENGTH_SHORT).show();
                         }
 

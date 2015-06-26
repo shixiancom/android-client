@@ -30,7 +30,9 @@ import com.umeng.analytics.MobclickAgent;
 
 import cn.jpush.android.api.JPushInterface;
 
-
+/**
+ * 登陆的activity
+ */
 public class LoginActivity extends Activity
 {
     private String TAG = "LoginActivity";
@@ -38,9 +40,15 @@ public class LoginActivity extends Activity
 
   //  private ProgressDialog progressDialog;
 
+    /**
+     * 进度条
+     */
    ProgressDialog mProgressDialog ;
 
 
+    /**
+     *  登陆按钮
+     */
     private LoginButton loginButton;
 
     private AuthInfo mAuthInfo;

@@ -24,6 +24,9 @@ import com.shixian.android.client.R;
 import java.util.ArrayList;
 
 
+/**
+ * 滑动关闭的 activity
+ */
 public class SwipeActivity extends BaseCommonActivity {
 
     private SwipeLayout swipeLayout;

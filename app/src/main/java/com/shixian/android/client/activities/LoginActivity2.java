@@ -83,6 +83,7 @@ public class LoginActivity2 extends FragmentActivity{
 
 
 
+
         for(int i=0;i<4;i++)
         {
             imageViews[i]= (ImageView) findViewById(dot_Id[i]);

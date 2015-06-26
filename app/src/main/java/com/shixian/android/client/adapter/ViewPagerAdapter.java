@@ -10,6 +10,7 @@ import com.shixian.android.client.activities.fragment.StartFragment;
 
 /**
  * Created by tangtang on 15/4/16.
+ * 这个是引导页面的
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter{
 
@@ -26,12 +27,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter{
         switch (position)
         {
             case 0:
-                return StartFragment.getInstance(R.drawable.tutorial_1);
-            case 1:
                 return StartFragment.getInstance(R.drawable.tutorial_2);
-            case 2:
+            case 1:
                 return StartFragment.getInstance(R.drawable.tutorial_3);
-
+            case 2:
+                return StartFragment.getInstance(R.drawable.tutorial_1);
             case 3:
                 return new LoginFragment();
         }

@@ -16,6 +16,7 @@ import com.loopj.android.http.RequestParams;
 import com.shixian.android.client.MyApplication;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.LoginActivity;
+import com.shixian.android.client.activities.LoginActivity2;
 import com.shixian.android.client.activities.MainActivity;
 import com.shixian.android.client.model.Message;
 import com.shixian.android.client.sina.Constants;
@@ -90,6 +91,7 @@ public class LoginUtil {
 
 
                             ApiUtils.client.addHeader("user-agent", "android");
+                            ApiUtils.client.addHeader("sx_appversion","1.1.0");
 
 
 
@@ -114,7 +116,9 @@ public class LoginUtil {
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
             //    Toast.makeText(context,context.getResources().getString(R.string.check_net), Toast.LENGTH_LONG).show();
                 progressDialog.dismiss();
-                ((LoginActivity)context).setOnclick();
+                if(context instanceof LoginActivity)
+                    ((LoginActivity)context).setOnclick();
+
             //  Toast.makeText(context,"请求超时 xxxxxxxxxxxxxxxxxxxx"+new String(bytes),Toast.LENGTH_SHORT).show();
 
             }

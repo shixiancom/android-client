@@ -4,13 +4,17 @@ package com.shixian.android.client.activities.fragment;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.BaseAdapter;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.shixian.android.client.Global;
 import com.shixian.android.client.R;
 import com.shixian.android.client.activities.MainActivity;
 import com.shixian.android.client.activities.fragment.base.BaseFeedFragment;
 import com.shixian.android.client.contants.AppContants;
+import com.shixian.android.client.controller.ArgeeOnClickController;
 import com.shixian.android.client.controller.IndexOnClickController;
 import com.shixian.android.client.engine.CommonEngine;
 import com.shixian.android.client.handler.feed.BaseFeedHandler;
@@ -145,9 +149,12 @@ public class IndexFragment extends BaseFeedFragment {
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
 
-                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
-                pullToRefreshListView.onPullDownRefreshComplete();
-                context.dissProgress();
+                if(isAdded())
+                {
+                    Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
+                    pullToRefreshListView.onPullDownRefreshComplete();
+                    context.dissProgress();
+                }
 
 
             }
@@ -221,8 +228,10 @@ public class IndexFragment extends BaseFeedFragment {
 //                Log.i("AAAA", new String(bytes));
 
                 //TODO 错误可能定义的不是太准确  最后一天调整
-                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
-                pullToRefreshListView.onPullUpRefreshComplete();
+                if (isAdded()) {
+                    Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
+                    pullToRefreshListView.onPullUpRefreshComplete();
+                }
                 page -= 1;
             }
         });
@@ -303,8 +312,11 @@ public class IndexFragment extends BaseFeedFragment {
                     BaseFeedHandler.initFeedItemViewData(context, feed, feedHolder, animateFirstListener);
 /**************************************************/
                     initFeedItemOnClick(feed, feedHolder);
-                    BaseFeedHandler.setFeedCommonClick(context,feed,feedHolder);
+                    BaseFeedHandler.setFeedCommonClick(feed.data.user,context,feed,feedHolder);
                   // setFeedCommonClick(feed,feedHolder);
+
+                    BaseFeedHandler.setTypeAgreeFeed(feedList,adapter,context,feed,feedHolder);
+
                     break;
 
                 case BaseFeed.TYPE_COMMENT:
@@ -314,12 +326,16 @@ public class IndexFragment extends BaseFeedFragment {
 
 /**************************************************************/
                     Comment comment = (Comment) feedList.get(position);
+                    comment.position=position;
                     BaseFeedHandler.initCommentItemData(comment, commentHolder, animateFirstListener);
 
 
+                    BaseFeedHandler.setCommentLogClickListener(commentHolder.tv_content,adapter,feedList,comment);
 /******************************************/
 
-                    initCommentItemOnClick(comment, commentHolder);
+                    initCommentItemOnClick(comment, commentHolder, adapter,feedList);
+
+
                     break;
             }
 
@@ -379,7 +395,12 @@ public class IndexFragment extends BaseFeedFragment {
     }
 
 
-    protected void initCommentItemOnClick(final Comment comment,CommentHolder commentHolder) {
+    /**
+     * 这里又又非常恶心的改需求  简直是反人类的设计
+     * @param comment
+     * @param commentHolder
+     */
+    protected void initCommentItemOnClick(final Comment comment,CommentHolder commentHolder,BaseAdapter adapter,List<BaseFeed> feedList) {
 
         IndexOnClickController controller = new IndexOnClickController(context, comment);
         commentHolder.iv_icon.setOnClickListener(controller);
@@ -390,12 +411,19 @@ public class IndexFragment extends BaseFeedFragment {
 
         if (commentHolder.tv_content.getVisibility() == View.VISIBLE) {
 
-            commentHolder.tv_content.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    popComment(v, comment, listView,0);
-                }
-            });
+            if(comment.user.username.equals(Global.USER_NAME))
+            {
+                BaseFeedHandler.setCommentOnCliekListener(commentHolder.tv_content,adapter,feedList,comment);
+            }else{
+                commentHolder.tv_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popComment(v, comment, listView,0);
+                    }
+                });
+            }
+
+
         }
 
 

@@ -191,9 +191,14 @@ public class SpotlightFragment extends AbsListViewBaseFragment {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context, R.string.check_net,Toast.LENGTH_SHORT).show();
-                pullToRefreshListView.onPullDownRefreshComplete();
-                ((MainActivity)context).dissProgress();
+
+                if(isAdded())
+                {
+                    Toast.makeText(context, R.string.check_net,Toast.LENGTH_SHORT).show();
+                    pullToRefreshListView.onPullDownRefreshComplete();
+                    ((MainActivity)context).dissProgress();
+                }
+
             }
         });
     }

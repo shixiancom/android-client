@@ -35,7 +35,7 @@
         android:layout_alignParentTop="true"
         android:layout_margin="10dp"
         android:background="@null"
-        android:hint="至少200字"
+        android:hint="至少70字"
         android:inputType="textMultiLine|textAutoCorrect|textCapSentences"
         android:scrollbars="horizontal|vertical"
         android:textColor="#000000" />

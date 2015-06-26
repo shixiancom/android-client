@@ -5,6 +5,9 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.LinearLayout.LayoutParams;
 
+/**
+ * 点击收缩的动画
+ */
 public class ExpandAnimation extends Animation {
     private View mAnimatedView;
     private LayoutParams mViewLayoutParams;

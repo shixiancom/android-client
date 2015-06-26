@@ -32,7 +32,7 @@ public class AddProjectStepOneFragment extends UmengFragment implements Fragment
 
     private NewProjectActivity activity;
 
-    private static final int MIN_LEN=200;
+    private static final int MIN_LEN=70;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

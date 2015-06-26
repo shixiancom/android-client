@@ -98,7 +98,6 @@ public class DiscoryProjectFragment extends BaseFragment {
             }
 
 
-
             @Override
             public void onPullUpToRefresh(
                     PullToRefreshBase<ListView> refreshView) {
@@ -191,9 +190,11 @@ public class DiscoryProjectFragment extends BaseFragment {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
+                if (isAdded()){
+                    Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
+                    pullToRefreshListView.onPullUpRefreshComplete();
+                }
                 page -= 1;
-                pullToRefreshListView.onPullUpRefreshComplete();
             }
         });
     }
@@ -334,7 +335,7 @@ public class DiscoryProjectFragment extends BaseFragment {
             {
                 //TODO
                holder.bt_fllowen.setBackgroundResource(R.drawable.shape_unfollow);
-                holder.bt_fllowen.setText(R.string.following);
+                holder.bt_fllowen.setText(R.string.des_following);
                // holder.tv_fllowen.setBackgroundResource(R.drawable.unfollow);
 
 
@@ -385,7 +386,7 @@ public class DiscoryProjectFragment extends BaseFragment {
                             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                                 Toast.makeText(context,"关注成功",Toast.LENGTH_SHORT).show();
                                 holder.bt_fllowen.setBackgroundResource(R.drawable.shape_unfollow);
-                                holder.bt_fllowen.setText(R.string.following);
+                                holder.bt_fllowen.setText(R.string.des_following);
                                 project.has_followed=true;
                             }
 

@@ -17,7 +17,7 @@ public class Global {
     //放在这里容易被回收
     public static User user;
     public static String USER_ID;
-    public static String USER_NAME;
+    public static String USER_NAME="";
 
     public static Context context;
 

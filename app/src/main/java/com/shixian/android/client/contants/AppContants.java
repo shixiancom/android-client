@@ -96,9 +96,11 @@ public interface AppContants {
 
     String BOOT_URL=DOMAIN+"/api/v1/boot/featured_boot_projects";
 
-    String USER_EDIT_URL="http://api.shixian.com/api/v1"+"/users/edit.json";
 
 
+    String COMMENT_DELETE_URL=DOMAIN+"/api/v1/comments/%s";
+
+    String USER_EDIT_URL=DOMAIN+"/api/v1"+"/users/edit.json";
 
 
     /******************************数据消息 **************************************************/

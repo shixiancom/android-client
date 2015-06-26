@@ -73,6 +73,7 @@ import android.util.TypedValue;
 
 /**
  * Created by doom on 15/2/2.
+ * 这里是首页activity  里面可以切换导航栏的那些activity  并且管理导航栏（导航栏并没有交给fragment托管）
  */
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -180,6 +181,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
+    /**
+     *作废了
+     */
+    @Deprecated
     private void checkUpdate() {
 
         if(SharedPerenceUtil.checkNeedUpdate(this.getApplicationContext()))
@@ -208,6 +213,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
+    /**
+     *初始化jpush的广播接收者
+     */
     private void initReceiver() {
 
         swicthFrageReveiver = new SwicthFrageReveiver();
@@ -218,6 +226,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
+    /**
+     * 初始化数据
+     */
     private void initDate() {
 
         //初始化用户头像id
@@ -230,6 +241,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
+    /**
+     * 初始化消息状态
+     */
     public void initMsgStatus() {
         ApiUtils.get(MainActivity.this,AppContants.MSG_STATUS_URL, null, new AsyncHttpResponseHandler() {
             @Override
@@ -259,12 +273,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(MainActivity.this, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
 
+    /**
+     * 初始化侧边栏的项目
+     */
     private void initUserProjects() {
 
         if(projectList==null)
@@ -404,6 +420,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
+    /**
+     * 初始化UI
+     */
     private void initUI() {
 
 
@@ -605,6 +624,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
+    /**
+     * 天街fragment
+     */
     protected void addFragment() {
 
 
@@ -1065,6 +1087,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode==MainActivity.REFREST_CODE)
+
             if(resultCode== Activity.RESULT_OK)
             {
 

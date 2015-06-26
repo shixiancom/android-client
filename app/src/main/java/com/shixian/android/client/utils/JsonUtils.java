@@ -1,5 +1,7 @@
 package com.shixian.android.client.utils;
 
+import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -19,13 +21,91 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
  * Created by sllt on 15/1/28.
  */
 public class JsonUtils {
+
+
+
+    private static Map<String,Integer>  feedTypes;
+    private static Map<String,Integer> newsTypes;
+    private static Map<String,Integer> bootTypes;
+
+    private static String[] arrayFeedType={
+            "Idea",
+            "Project",
+            "Plan",
+            "Image",
+            "UserProjectRelation",
+            "Homework",
+            "Task",
+            "Vote",
+            "Attachment",
+            "Agreement"
+
+    };
+
+    private static String[] arrayBoots={
+            "competitor_projects",
+            "team_recruit_projects",
+            "old_boot_projects"
+    };
+
+    private static String[] arratNewsTypes={
+            "new_agreement",
+            "invit_follow",
+            "join_accept",
+            "join_accept",
+            "join_reject",
+            "new_comment",
+            "new_entity",
+            "UserRelation",
+            "new_follow",
+            "new_homework",
+            "new_mention",
+            "new_reply",
+            "new_task"
+
+    };
+
+
+
+    static{
+        feedTypes=new HashMap<>();
+        newsTypes=new HashMap<>();
+        bootTypes=new HashMap<>();
+
+        int i=0;
+        for(String str:arrayFeedType)
+        {
+            Integer integer=new Integer(i);
+            i++;
+            feedTypes.put(str,integer);
+        }
+
+        i=0;
+        for(String str:arratNewsTypes)
+        {
+            Integer integer=new Integer(i);
+            i++;
+            newsTypes.put(str,integer);
+        }
+
+        i=0;
+
+        for(String str:arrayBoots)
+        {
+            Integer integer=new Integer(i);
+            i++;
+            bootTypes.put(str,integer);
+        }
+    }
 
     public static String getString(JSONObject obj, String key, String dft) {
         if (!obj.has(key)) {
@@ -68,6 +148,10 @@ public class JsonUtils {
             {
                 JSONObject jobj = jsonArrayrray.getJSONObject(i);
                 Boot boot=gson.fromJson(jobj.toString(), Boot.class);
+                if(boot==null||bootTypes.get(boot.type)==null)
+                {
+                    continue;
+                }
                 boots.add(boot);
             }
 
@@ -106,6 +190,9 @@ public class JsonUtils {
 //                    feeds.add(feed);
 //                    feed.type=BaseFeed.TYPE_FEED;
 //                }
+                if(feed==null||TextUtils.isEmpty(feed.feedable_type)||feedTypes.get(feed.feedable_type)==null)
+                    continue;
+
                 feeds.add(feed);
                 feed.type=BaseFeed.TYPE_FEED;
 
@@ -187,7 +274,8 @@ public class JsonUtils {
             {
 
                 Project project=gson.fromJson(jsonArray.getString(i), Project.class);
-                projects.add(project);
+                if(project!=null)
+                    projects.add(project);
             }
 
         }catch (Exception e)
@@ -210,7 +298,13 @@ public class JsonUtils {
             {
                 News news=gson.fromJson(jsonArray.getString(j),News.class);
 
-                newses.add(news);
+                if(news==null||newsTypes.get(news.noti_type)==null)
+                {
+                    continue;
+                }else{
+                    newses.add(news);
+
+                }
 
             }
 
@@ -223,6 +317,16 @@ public class JsonUtils {
     }
 
 
+    /**
+     * 好脑残啊
+     * 这真是恶心至极  让我来分析分析这里是怎么个逻辑 由于写的时间比较久 又不能跟以前格式保持一致 这里我几乎已经忘记了
+     * 先获取一个alltype 对象   并没有放在list中
+     * 又获取一些Comment对象 放在list中
+     * 然后需要考虑的是如何维护负责关系 嗯 这里不需要显示那个回复框 不需要维护 直接删除就好了 对啊
+     * @param firstPageDate
+     * @param msgType
+     * @return
+     */
     public static MsgDetialFragment.MsgFeedEntry parseAllItemType(String firstPageDate, MsgDetialFragment.MsgType msgType) {
 
 
@@ -255,9 +359,6 @@ public class JsonUtils {
             data=jsonObject.getString(type);
 
 
-
-
-
             AllItemType allItemType=new Gson().fromJson(data,AllItemType.class);
 
             allItemType.type=type;
@@ -272,7 +373,8 @@ public class JsonUtils {
             if(jsonArray!=null)
             {
 
-                for(int i=0;i<jsonArray.length();i++)
+                int N=jsonArray.length();
+                for(int i=0;i<N;i++)
                 {
                     String comment=jsonArray.getString(i);
                     Comment cco=new Gson().fromJson(comment,Comment.class);
@@ -284,6 +386,17 @@ public class JsonUtils {
                     cco.feedable_type= AppContants.FEADE_TYPE_COMMON;
                     cco.project_id=allItemType.project.id;
                     cco.parent_id=allItemType.id;
+                    if(i==0)
+                    {
+                        cco.isFirst=true;
+
+                    }
+                    if(i==N)
+                    {
+                        cco.isLast=true;
+                    }
+
+
 
                 }
 

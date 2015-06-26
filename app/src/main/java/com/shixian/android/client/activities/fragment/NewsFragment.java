@@ -3,6 +3,7 @@ package com.shixian.android.client.activities.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -203,7 +204,8 @@ public class NewsFragment extends AbsListViewBaseFragment
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    newsList=tempList;
+                                    newsList.clear();
+                                    newsList.addAll(tempList);
                                     if(adapter==null)
                                     {
                                         adapter=new NewsAdapter();
@@ -318,9 +320,14 @@ public class NewsFragment extends AbsListViewBaseFragment
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-                Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT).show();
-                pullToRefreshListView.onPullUpRefreshComplete();
-                page-=1;
+
+                if(isAdded())
+                {
+                    Toast.makeText(context, R.string.check_net, Toast.LENGTH_SHORT).show();
+                    pullToRefreshListView.onPullUpRefreshComplete();
+                    page-=1;
+                }
+
             }
         });
     }
@@ -357,6 +364,7 @@ public class NewsFragment extends AbsListViewBaseFragment
 
         @Override
         public int getItemViewType(int position) {
+
             if("Notification".equals(newsList.get(position).type))
             {
                 return TYPE_OTHER;
@@ -428,7 +436,6 @@ public class NewsFragment extends AbsListViewBaseFragment
                             switch (news.data.notifiable_type){
                                 case "idea":
                                     catagory="的想法";
-
                                    break;
                                 case "attachment":
                                     catagory="的文件";
@@ -444,6 +451,7 @@ public class NewsFragment extends AbsListViewBaseFragment
                             holder.tv_type.setText(getResources().getString(R.string.agreement_you)+catagory);
 
                             break;
+
 
                         case "invit_follow":
                             holder.tv_content.setVisibility(View.GONE);
@@ -630,7 +638,7 @@ public class NewsFragment extends AbsListViewBaseFragment
 //                                    contentHandler.formatColorContent(holder.tv_content,news.data.content);
                                     break;
 
-                                case "task":
+                                case "Task":
                                     holder.tv_project.setVisibility(View.GONE);
 
                                     holder.tv_content.setVisibility(View.VISIBLE);

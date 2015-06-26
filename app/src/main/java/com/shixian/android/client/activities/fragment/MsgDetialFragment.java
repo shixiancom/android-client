@@ -293,9 +293,13 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
 
 
-                Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
-                pullToRefreshListView.onPullDownRefreshComplete();
-                context.dissProgress();
+                if(isAdded())
+                {
+                    Toast.makeText(context, getString(R.string.check_net), Toast.LENGTH_SHORT).show();
+                    pullToRefreshListView.onPullDownRefreshComplete();
+                    context.dissProgress();
+                }
+
             }
         });
     }
@@ -546,15 +550,12 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                                 holder.iv_agree.setImageResource(R.drawable.liked);
                             }
 
-                            //如果user是自己 则不显示点赞
-                            if(Global.USER_ID==allItemType.user.id)
-                            {
-                                holder.rl_agree.setVisibility(View.GONE);
-                            }
+
 
                             setAllItemCommonClickListener(context, holder, allItemType);
 
-                            setFeedCommonClick(context,allItemType,holder,msgType);
+                            if(!Global.USER_NAME.equals(allItemType.user.username))
+                                setFeedCommonClick(context,allItemType,holder,msgType);
 
 
                         }
@@ -593,9 +594,11 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                     commentHolder.tv_content.setVisibility(View.VISIBLE);
                     // holder.tv_content.setText(comment.content);
 
-                    contentHandler=new ContentHandler(commentHolder.tv_content).longClickCopy();
+                   final  ContentHandler contentHandler2=new ContentHandler(commentHolder.tv_content).longClickMsgDetialCopyAndDelete(comment,adapter,feedEntry.baseFeeds);
 
-                    contentHandler.formatColorContent(commentHolder.tv_content,comment.content);
+
+
+                    contentHandler2.formatColorContent(commentHolder.tv_content,comment.content);
 
                     ImageLoader.getInstance().displayImage(AppContants.ASSET_DOMAIN + comment.user.avatar.small.url, commentHolder.iv_icon, commentOptions, animateFirstListener);
 
@@ -603,10 +606,9 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                     //隐藏回复框
                     commentHolder.tv_response.setVisibility(View.GONE);
 
-
-
                     if(msgType.isComment)
                     {
+                        //这个从消息页面点击过来的回复
                         if(comment.id.equals(msgType.notifiable_id))
                         {
                             mCommentText=commentHolder.tv_content;
@@ -638,7 +640,20 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
 
 
                     //设置点击事件
-                    setFeedOnClickListener(context,commentHolder,comment);
+                    if(Global.USER_NAME.equals(comment.user.username))
+                    {
+
+
+
+                                onClickMyComment(contentHandler2,comment,adapter,feedEntry.baseFeeds);
+
+
+
+                    }else{
+                        setFeedOnClickListener(context, commentHolder, comment);
+                    }
+
+
                     break;
 
 
@@ -650,6 +665,11 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
             return view;
 
         }
+    }
+
+    private void onClickMyComment(final  ContentHandler contentHandler,Comment comment,BaseAdapter adapter, List<BaseFeed> feedList) {
+        contentHandler.clickMsgCopyAndDelete(comment,adapter,feedList);
+
     }
 
 
@@ -697,6 +717,9 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
             });
 
         }
+
+
+
     }
 
     protected void setAllItemCommonClickListener(final BaseActivity context, final FeedHolder holder,final AllItemType allItemType) {
@@ -829,7 +852,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                     feedEntry.baseFeeds.add(feedEntry.baseFeeds.size(), comment);
                     comment.isLast=true;
 
-
                     adapter.notifyDataSetChanged();
                     mEnterLayout.clearContent();
                     hideSoftkeyboard();
@@ -840,9 +862,14 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                 @Override
                 public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
-                    sendAble=true;
-                    hideSoftkeyboard();
-                    Toast.makeText(context, R.string.send_failed, Toast.LENGTH_SHORT).show();
+                    if(isAdded())
+                    {
+                        sendAble=true;
+                        hideSoftkeyboard();
+                        Toast.makeText(context, R.string.send_failed, Toast.LENGTH_SHORT).show();
+
+                    }
+
                 }
             });
 
@@ -994,9 +1021,6 @@ public class MsgDetialFragment extends AbsListViewBaseFragment {
                     url=String.format(AppContants.MSG_RESOPNSE_URL,"user_project_relations",commentable_id);
                 }
             }
-
-
-            Log.i("AAAA",url);
 
 
         }

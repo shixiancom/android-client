@@ -22,6 +22,7 @@ public class AllItemType extends  BaseFeedItem{
 
 
 
+
     public static class Attachment {
         public String url;
 

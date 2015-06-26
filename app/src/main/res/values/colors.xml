@@ -16,6 +16,10 @@
 
     <color name="gray_bk">#FAFAFA</color>
 
+    <color name="card_bk">#F2F2F2</color>
+
+
+
    <!--<color name="menu_item">#EFEDEE</color>-->
     <color name="menu_item">#83d1ee</color>
 </resources>

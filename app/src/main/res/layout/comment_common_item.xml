@@ -6,7 +6,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/ll_comm_feed"
+    android:background="@color/gray_bk"
+    android:paddingLeft="@dimen/global_padding"
+    android:paddingRight="@dimen/global_padding"
     >
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/layer_card_comment"
+        android:id="@+id/ll_card"
+        >
     
     <RelativeLayout
         android:id="@+id/rl_title"
@@ -114,6 +126,7 @@
         <!--android:layout_marginTop="@dimen/main_content_top"-->
 
         <!--/>-->
+        </LinearLayout>
 
 </LinearLayout>
 

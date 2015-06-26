@@ -126,10 +126,13 @@ public abstract class BaseFeedFragment extends AbsListViewBaseFragment {
                     Comment comment = gson.fromJson(new String(bytes), Comment.class);
                     comment.feedable_type = AppContants.FEADE_TYPE_COMMON;
 
-                    //点击的
+
+
+                    //点击的回复框
                     if (baseFeed instanceof Comment) {
                         comment.parent_id = ((Comment) baseFeed).parent_id;
                         comment.project_id = ((Comment) baseFeed).project_id;
+
                         ((Comment) baseFeed).isLast = false;
 
                         if (((Comment) baseFeed).parent.hasChildren) {
@@ -139,12 +142,16 @@ public abstract class BaseFeedFragment extends AbsListViewBaseFragment {
                         int position = ++((Comment) baseFeed).parent.lastChildPosition;
                         feedList.add(position + ((Comment) baseFeed).parent.position, comment);
                         comment.parent = ((Comment) baseFeed).parent;
+                        comment.isFirst=false;
+
                     } else {
                         if (comment != null) {
+                            comment.isFirst=true;
                             comment.parent_id = baseFeed.id;
                             comment.project_id = ((Feed2) baseFeed).project_id;
 
                             if (((Feed2) baseFeed).hasChildren) {
+                                comment.isFirst=false;
                                 ((Comment) feedList.get(((Feed2) baseFeed).lastChildPosition + ((Feed2) baseFeed).position)).isLast = false;
                             }
                             ((Feed2) baseFeed).hasChildren = true;
@@ -461,6 +468,8 @@ public abstract class BaseFeedFragment extends AbsListViewBaseFragment {
         public TextView tv_response;
         //        public View v_line;
         public LinearLayout ll_body;
+
+        public LinearLayout ll_card;
 
     }
 

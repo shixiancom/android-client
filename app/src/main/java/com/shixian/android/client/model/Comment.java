@@ -1,5 +1,6 @@
 package com.shixian.android.client.model;
 
+import com.shixian.android.client.model.feeddate.AllItemType;
 import com.shixian.android.client.model.feeddate.BaseFeed;
 
 /**

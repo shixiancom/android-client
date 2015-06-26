@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.shixian.android.client.contants.AppContants;
 import com.shixian.android.client.engine.BootEngine;
+import com.shixian.android.client.engine.CommentEngine;
 import com.shixian.android.client.engine.ProjectEngine;
 import com.shixian.android.client.handler.content.ContentHandler;
 import com.shixian.android.client.model.BaseBoot;
@@ -29,6 +30,21 @@ public class Test extends InstrumentationTestCase {
 
 
 
+
+    public  void test2()
+    {
+        CommentEngine.deleteComment(getInstrumentation().getContext(),"ideas","9021","27712",new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, Header[] headers, byte[] bytes) {
+
+            }
+
+            @Override
+            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+
+            }
+        });
+    }
 
 
     public void testpostxxx()

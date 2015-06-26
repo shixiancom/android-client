@@ -61,6 +61,7 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 
 /**
  * Created by tangtang on 15/4/2.
+ * 抽取的公共的feedactivity  这个和 basefeedFrament方法基本一致  只不过是租用再activity的
  */
 public abstract class BaseFeedActivity extends SwipeActivity {
 
@@ -244,6 +245,7 @@ public abstract class BaseFeedActivity extends SwipeActivity {
                         comment.parent = ((Comment) baseFeed).parent;
                     } else {
                         if (comment != null) {
+                            comment.isFirst=true;
                             comment.parent_id = baseFeed.id;
                             comment.project_id = ((Feed2) baseFeed).project_id;
 
